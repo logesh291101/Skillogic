@@ -1,5 +1,6 @@
 import 'package:datamites/helper/auth.dart';
 import 'package:datamites/helper/color.dart';
+import 'package:datamites/pages/candidate_portal/payment_page.dart';
 import 'package:datamites/pages/freshdesk/ticket_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -110,8 +111,8 @@ class _AccountScreenState extends State<AccountScreen> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30.0),
                                 // color: Colors.green,
-                                image: DecorationImage(
-                                    image: NetworkImage(user_image), fit: BoxFit.cover)),
+                                image: const DecorationImage(
+                                    image: AssetImage("assets/skillogic_icon.png"), fit: BoxFit.cover)),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,6 +185,32 @@ class _AccountScreenState extends State<AccountScreen> {
                     Text("Notification",
                         style: userStyle.copyWith(
                             fontSize: 14, fontWeight: FontWeight.w500))
+                  ],
+                ),
+              ),
+              MaterialButton(
+                height: 50,
+                padding: const EdgeInsets.all(0),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CandidatePaymentPage(
+                              pageTitle: "My Payments"
+                          )));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.payment_sharp,
+                      color: MainColor.textColorConst,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text("My Payments",
+                        style: userStyle.copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),
@@ -320,7 +347,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Icon(
                       Icons.logout_sharp,
-                      color: MainColor.darkRed,
+                      color: MainColor.skillogicRed,
                     ),
                     const SizedBox(
                       width: 8,
@@ -329,7 +356,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         style: userStyle.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: MainColor.darkRed)),
+                            color: MainColor.skillogicRed)),
                   ],
                 ),
               ),

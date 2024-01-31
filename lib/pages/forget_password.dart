@@ -115,7 +115,7 @@ class _ResetScreenState extends State<ResetScreen> {
                 ),
                 MaterialButton(
                   elevation: 0,
-                  color: Colors.blue,
+                  color: MainColor.skillogicBlue,
                   onPressed: () {
                     FocusScope.of(context).unfocus();
                     setState(() {});
@@ -146,7 +146,7 @@ class _ResetScreenState extends State<ResetScreen> {
                 const SizedBox(height: 16,),
                 MaterialButton(
                   elevation: 1,
-                  color: Colors.white,
+                  color: MainColor.skillogicRed,
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -154,7 +154,7 @@ class _ResetScreenState extends State<ResetScreen> {
                   height: 55.0,
                   child: const Text(
                     "Go back",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 )
               ],

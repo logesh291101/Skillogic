@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:country_code_picker/country_code_picker.dart';
+// import 'package:country_picker/country_picker.dart';
 import 'package:datamites/helper/color.dart';
 import 'package:datamites/model/freshdesk/message_model.dart';
 import 'package:flutter/foundation.dart';
@@ -306,6 +307,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   }
 
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -392,9 +394,36 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           ],
         ));
 
+    // Define a function to show the country picker dialog
+    // void _showCountryPicker(BuildContext context) {
+    //   // showCountryPicker(
+    //   //   context: context,
+    //   //   showPhoneCode: false, // Optionally, show the phone code in the picker
+    //   //   onSelect: (Country country) {
+    //   //     // Handle the selected country
+    //   //     print('Selected country: ${country.displayName}');
+    //   //     // Update your countryCode variable here
+    //   //     countryCode = country.countryCode; // Or any other property you need
+    //   //   },
+    //   // );
+    // }
+
     final phoneCard = Card(
       child: Row(
         children: <Widget>[
+          // InkWell(
+          //   onTap: () {
+          //     _showCountryPicker(context);
+          //   },
+          //   child: Container(
+          //     child: Row(
+          //       children: [
+          //         Text('Selected Country: $countryCode'),
+          //         Icon(Icons.arrow_drop_down), // Optionally, add an icon
+          //       ],
+          //     ),
+          //   ),
+          // ),
           CountryCodePicker(
             onChanged: (text) {
               if (kDebugMode) {
@@ -505,7 +534,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     final submitButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: const Color(0xffe37528),
+      color: const Color(0xffb62451),
       child: MaterialButton(
         focusNode: _buttonFocusNode,
         minWidth: 150.0,

@@ -314,7 +314,7 @@ class GetCampaignService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var auth_url = prefs.getString("auth_url")??"";
     http.Response res =
-    await http.get(Uri.parse(auth_url + "campaign"));
+      await http.get(Uri.parse(auth_url + "campaign"));
 
     if (res.statusCode == 200) {
       var campaigns = json.decode(res.body);

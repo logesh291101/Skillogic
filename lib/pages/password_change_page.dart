@@ -183,7 +183,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                 ),
                 MaterialButton(
                   elevation: 0,
-                  color: Colors.blue,
+                  color: MainColor.skillogicBlue,
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
 
@@ -225,14 +225,14 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                 SizedBox(height: 16,),
                 MaterialButton(
                   elevation: 0,
-                  color: Colors.white,
+                  color: MainColor.skillogicRed,
                   onPressed: () async {
                     FocusScope.of(context).unfocus();
                     Navigator.pop(context);
                   },
                   child: Text(
                     "Go back",
-                    style: TextStyle(color: MainColor.textColorConst, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   minWidth: double.infinity,
                   height: 55.0,

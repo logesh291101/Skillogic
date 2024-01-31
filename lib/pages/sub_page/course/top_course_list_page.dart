@@ -57,7 +57,7 @@ class _TopCourseListPageState extends State<TopCourseListPage> {
           ),
           body: FutureBuilder(builder: (BuildContext context, snapshot) {
             return CourseListPage(coursesList: coursesList, title: title) ;
-          })
+          }, future: null,)
         );
       else
         return Scaffold(
@@ -67,6 +67,6 @@ class _TopCourseListPageState extends State<TopCourseListPage> {
           body: CardCoursePreviewShimmer(),
         );
       return new Text("no data yet");
-    });
+    }, future: null,);
   }
 }

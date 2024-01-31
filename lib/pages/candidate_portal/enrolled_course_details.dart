@@ -105,13 +105,13 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: selected ? MainColor.lightGreen : MainColor.lightRed,
+          color: selected ? MainColor.skillogicBlue : MainColor.skillogicRed,
           borderRadius: BorderRadius.circular(8.0)),
       child: Text(
         text,
         style: TextStyle(
             fontSize: 12,
-            color: selected ? MainColor.darkGreen : MainColor.darkRed,
+            color: selected ? MainColor.skillogicBlue : MainColor.skillogicRed,
             decoration: selected ? null : TextDecoration.lineThrough),
       ),
     );
@@ -168,8 +168,11 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                           border: Border.all(width: 1.0, color: Colors.black38),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child:
-                            Text("INR ${widget.enrollmentModel.agreed_price}"),
+                        //@utsav enrollment_type condition 25-01-2024
+                        child: widget.enrollmentModel.enroll_type != "1"
+                            ? Text("INR ${widget.enrollmentModel.agreed_price}")
+                            : null, // If enrollment_type is 1, set child to null
+                            //Text("INR ${widget.enrollmentModel.agreed_price}"),
                       )
                     ],
                   ),
@@ -251,8 +254,8 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                                             "0" &&
                                             course.course_event_status
                                                 .isNotEmpty
-                                            ? MainColor.darkGreen
-                                            : MainColor.darkRed),
+                                            ? MainColor.skillogicBlue
+                                            : MainColor.skillogicRed),
                                     child: Text(
                                       course.course_event_status == "1"
                                           ? "Scheduled"
@@ -288,11 +291,11 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                                         color: course.courses.first
                                             .course_level ==
                                             "1"
-                                            ? MainColor.darkGreen
+                                            ? MainColor.skillogicBlue
                                             : course.courses.first
                                             .course_level ==
                                             "2"
-                                            ? MainColor.datamiteOrange
+                                            ? MainColor.skillogicRed
                                             : MainColor.darkRed),
                                     child: Text(
                                       course.courses.first.course_level ==
@@ -364,7 +367,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                                                         courseSchedules:
                                                             course.schedules)));
                                       },
-                                color: MainColor.darkGreen,
+                                color: MainColor.skillogicBlue,
                                 minWidth: double.infinity,
                                 child: course.schedules.isNotEmpty
                                     ? const Text(
@@ -373,7 +376,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                                       )
                                     : const Text(
                                         "No Schedule",
-                                        style: TextStyle(color: Colors.red),
+                                        style: TextStyle(color: Color(0xffb62451)),
                                       ))
                           ],
                         )),

@@ -348,7 +348,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
 
     _setWidth();
 
-    darkCashColor = MainColor.textBlue;
+    darkCashColor = MainColor.skillogicBlue;
     lightCashColor = MainColor.lightBlue;
 
     darkCourseColor = MainColor.darkGrey;
@@ -378,7 +378,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       // cashWidth = minWidth + 8;
       creditHeight = 220;
       // bannerText = summarizedText;
-      darkCashColor = MainColor.textBlue;
+      darkCashColor = MainColor.skillogicBlue;
       lightCashColor = MainColor.lightBlue;
       darkCourseColor = MainColor.darkGrey;
       lightCourseColor = MainColor.lightGrey;
@@ -389,7 +389,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       // cashWidth = minWidth - 8;
       courseHeight = 220;
       // bannerText = summarizedText;
-      darkCourseColor = MainColor.textBlue;
+      darkCourseColor = MainColor.skillogicBlue;
       lightCourseColor = MainColor.lightBlue;
       darkCashColor = MainColor.darkGrey;
       lightCashColor = MainColor.lightGrey;
@@ -642,7 +642,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                             margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
                             height: widget.width * 0.30,
                             decoration: BoxDecoration(
-                                color: MainColor.datamiteOrange,
+                                color: MainColor.skillogicRed,
                                 borderRadius: BorderRadius.circular(12.0)),
                             child: MaterialButton(
                               // color: MainColor.datamiteOrange,
@@ -1145,7 +1145,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                       builder: (context) =>
                                           ReferralFullScreen()));
                             },
-                            color: MainColor.textBlue,
+                            color: MainColor.skillogicBlue,
                             child: Text(
                               "See all referrals",
                               style: TextStyle(color: Colors.white),

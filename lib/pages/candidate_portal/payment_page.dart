@@ -100,7 +100,7 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
                             MaterialButton(
                                 elevation: 1,
 
-                                color: MainColor.darkGreen,
+                                color: MainColor.skillogicRed,
                                 onPressed: _getPayments,
                                 child: const Text("Refresh", style: TextStyle(color: Colors.white),)),
                           ],

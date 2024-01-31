@@ -59,7 +59,7 @@ class _CategoryCourseListPageState extends State<CategoryCourseListPage> {
             ),
             body: FutureBuilder(builder: (BuildContext context, snapshot) {
               return CourseListPage(coursesList: coursesList, title: title) ;
-            })
+            }, future: null,)
         );
       else
         return Scaffold(
@@ -69,6 +69,6 @@ class _CategoryCourseListPageState extends State<CategoryCourseListPage> {
           body: CardCoursePreviewShimmer(),
         );
       return new Text("no data yet");
-    });
+    }, future: null,);
   }
 }

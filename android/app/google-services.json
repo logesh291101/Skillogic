@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "587203888035",
+    "project_id": "datamties-v3-a59d3",
+    "storage_bucket": "datamties-v3-a59d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587203888035:android:71da06dd5ce7f02879d016",
+        "android_client_info": {
+          "package_name": "com.dmrefer.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587203888035-51mbq1cv29ud1kk6v2pvg5dt7a88a6lm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dmrefer.mobile",
+            "certificate_hash": "5f7aa7dc1007f20e9e66acc64082932678a95895"
+          }
+        },
+        {
+          "client_id": "587203888035-msd3rcnr3b5806he1akjblfcjrisdb8r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dmrefer.mobile",
+            "certificate_hash": "3c9ab075150d7112781af2077afd9f1cafd93b92"
+          }
+        },
+        {
+          "client_id": "587203888035-qb777e7tlcngagjmqgq27ghk70hsh5en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeA10m8WBRqTru7yuA7333o3oz0hdPGds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587203888035-qb777e7tlcngagjmqgq27ghk70hsh5en.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "587203888035-6422edbqi8g4gvs3do2e61u7u5e70km5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dmrefer.mobile",
+                "app_store_id": "1509664090"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

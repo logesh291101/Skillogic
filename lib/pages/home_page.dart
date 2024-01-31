@@ -6,6 +6,7 @@ import 'package:datamites/model/category_model.dart';
 import 'package:datamites/model/course/course_list_model.dart';
 import 'package:datamites/model/user_model.dart';
 import 'package:datamites/pages/candidate_portal/enrolled_course.dart';
+import 'package:datamites/pages/qr_scanner/qr_scanner.dart';
 import 'package:datamites/pages/referral/new_referral.dart';
 import 'package:datamites/pages/referral/referral_page_scaffold.dart';
 import 'package:datamites/pages/sub_page/category_page.dart';
@@ -19,6 +20,7 @@ import 'package:datamites/widgets/carousel_shimmer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,6 +28,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../helper/connection.dart';
 import '../model/carousel_model.dart';
 import '../model/carousel_response_model.dart';
+import 'candidate_portal/enrolled_certificate.dart';
 import 'candidate_portal/payment_page.dart';
 import 'candidate_portal/rating_page.dart';
 import 'contact_us.dart';
@@ -228,19 +231,20 @@ class _HomePageState extends State<HomePage> {
             return Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Carousel(carouselList: carouselList));
-          });
+          }, future: null,);
         } else {
           return const CarouselShimmer();
         }
         return const Text("no data yet");
-      });
+      }, future: null,);
     }
   }
 
   Widget _futureSuccessStories() {
     CarouselModel succesStory1 = CarouselModel(
         id: "1",
-        image: "https://datamites.com/resource/images/mob/DM-mob-sc-2.png",
+        // image: "https://datamites.com/resource/images/mob/DM-mob-sc-2.png",
+        image: "https://i9.ytimg.com/vi_webp/Ecjj7SclWog/maxresdefault.webp?v=5d0ccaf9&sqp=CJyK460G&rs=AOn4CLC8sqCAfQjAHB8ez6kzmVY-ai9Vqg",
         action: "3",
         sub_action: "",
         external_url:
@@ -248,7 +252,8 @@ class _HomePageState extends State<HomePage> {
         external_action: "1");
     CarouselModel succesStory2 = CarouselModel(
         id: "2",
-        image: "https://datamites.com/resource/images/mob/DM-mob-sc-1.png",
+        // image: "https://datamites.com/resource/images/mob/DM-mob-sc-1.png",
+        image: "https://i9.ytimg.com/vi_webp/yDf_VN8aNwo/maxresdefault.webp?v=5cee7b70&sqp=CJyK460G&rs=AOn4CLB_idUJCBdAIveEz_vaMw8qq0b-GQ",
         action: "3",
         sub_action: "",
         external_url:
@@ -261,11 +266,11 @@ class _HomePageState extends State<HomePage> {
           return Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Carousel(carouselList: carouselsList));
-        });
+        }, future: null,);
       } else {
         return Container();
       }
-    });
+    }, future: null,);
     return Container();
   }
 
@@ -277,12 +282,12 @@ class _HomePageState extends State<HomePage> {
             coursesList: coursesList,
             title: "Our Courses",
           );
-        });
+        }, future: null,);
       } else {
         return const CardCoursePreviewShimmer();
       }
       return const Text("no data yet");
-    });
+    }, future: null,);
   }
 
   Widget _userActivityBuilder() {
@@ -583,9 +588,13 @@ class _HomePageState extends State<HomePage> {
             MaterialButton(
               padding: const EdgeInsets.all(0),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Coming soon", textAlign: TextAlign.center),
-                ));
+                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                //   content: Text("Coming soon", textAlign: TextAlign.center),
+                // ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EnrolledCertificate()));
               },
               child: Container(
                 margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
@@ -606,63 +615,111 @@ class _HomePageState extends State<HomePage> {
                       height: 8.0,
                     ),
                     Text(
-                      "Certificates",
+                      "\nCertificates",
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff3038c2)),
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      "(coming soon)",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff3038c2)),
-                      textAlign: TextAlign.center,
-                    )
+                    // Text(
+                    //   "(coming soon)",
+                    //   style: TextStyle(
+                    //       fontSize: 10,
+                    //       fontWeight: FontWeight.w500,
+                    //       color: Color(0xff3038c2)),
+                    //   textAlign: TextAlign.center,
+                    // )
                   ],
                 ),
               ),
             ),
           ],
-        )
+        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     MaterialButton(
+        //       padding: const EdgeInsets.all(0),
+        //       onPressed: () {
+        //         goToQR();
+        //       },
+        //       child: Container(
+        //         margin: EdgeInsets.fromLTRB(8, 8, 0, 0),
+        //         width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+        //         padding: EdgeInsets.fromLTRB(4, 16, 4, 16),
+        //         decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.circular(10.0),
+        //             color: const Color(0xffa2c0c6)),
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           children: const [
+        //             Icon(
+        //               Icons.co_present_outlined,
+        //               color: Color(0xff305a63),
+        //               size: 40,
+        //             ),
+        //             SizedBox(
+        //               height: 8.0,
+        //             ),
+        //             Text(
+        //               "Attendance",
+        //               style: TextStyle(
+        //                   fontSize: 14,
+        //                   fontWeight: FontWeight.w500,
+        //                   color: Color(0xff305a63)),
+        //               textAlign: TextAlign.center,
+        //             ),
+        //             Text(
+        //               "(QR scan)",
+        //               style: TextStyle(
+        //                   fontSize: 10,
+        //                   fontWeight: FontWeight.w500,
+        //                   color: Color(0xff305a63)),
+        //               textAlign: TextAlign.center,
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ]
+        // )
       ],
     );
   }
 
-  Widget _futureCategoryBuilder() {
-    return FutureBuilder<String>(builder: (context, snapshot) {
-      if (categoryList.isNotEmpty) {
-        return FutureBuilder(builder: (BuildContext context, snapshot) {
-          return CategoryPage(categoryList: categoryList);
-        });
-      } else {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 0, 8),
-                width: 200.0,
-                height: 20.0,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: const Color(0x45b6b6b6))),
-            Container(
-              height: 80,
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [1, 2, 3, 4, 5]
-                    .map((test) => const CardCategoryShimmer())
-                    .toList(),
-              ),
-            )
-          ],
-        );
-      }
-    });
-  }
+  // Widget _futureCategoryBuilder() {
+  //   return FutureBuilder<String>(builder: (context, snapshot) {
+  //     if (categoryList.isNotEmpty) {
+  //       return FutureBuilder(builder: (BuildContext context, snapshot) {
+  //         return CategoryPage(categoryList: categoryList);
+  //       }, future: null,);
+  //     } else {
+  //       return Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Container(
+  //               margin: const EdgeInsets.fromLTRB(16, 0, 0, 8),
+  //               width: 200.0,
+  //               height: 20.0,
+  //               decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(6.0),
+  //                   color: const Color(0x45b6b6b6))),
+  //           Container(
+  //             height: 80,
+  //             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+  //             child: ListView(
+  //               scrollDirection: Axis.horizontal,
+  //               children: [1, 2, 3, 4, 5]
+  //                   .map((test) => const CardCategoryShimmer())
+  //                   .toList(),
+  //             ),
+  //           )
+  //         ],
+  //       );
+  //     }
+  //   }, future: null,);
+  // }
 
   _refreshMain() async {
     bool connected = await ConnectionCheck.isAvailable();
@@ -693,6 +750,65 @@ class _HomePageState extends State<HomePage> {
       _getCourses();
       _getCategory();
       _getBanner();
+    }
+  }
+
+  //QR code
+  getCameraPermissionStatus() async {
+    return Permission.camera.status.isGranted;
+  }
+
+  goTOQRCheck() async {
+    print(await Permission.camera.status);
+
+    bool status = await getCameraPermissionStatus();
+    print("Status is $status");
+    if (await getCameraPermissionStatus()) {
+      return true;
+    } else {
+      await Permission.camera.request();
+      if (await Permission.camera.isDenied ||
+          await Permission.camera.isPermanentlyDenied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Message"),
+              content: const Text(
+                  "You need to give permission from system setting."),
+              actions: [
+                MaterialButton(
+                  child: const Text("Cancel"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                MaterialButton(
+                  child: const Text("Ok"),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    openAppSettings();
+                  },
+                ),
+              ],
+              elevation: 5,
+            );
+          },
+        );
+      } else {
+        await Permission.camera.request();
+      }
+    }
+    return await getCameraPermissionStatus();
+  }
+
+  goToQR() async {
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QRScanner()));
+    bool status = await goTOQRCheck();
+    print("Final Status is ${status}");
+    if (status) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QRScanner()));
     }
   }
 
@@ -813,7 +929,7 @@ class _HomePageState extends State<HomePage> {
                 ),
 
 
-              _futureCategoryBuilder(),
+              // _futureCategoryBuilder(),
               // const SizedBox(
               //   height: 16.0,
               // ),
@@ -845,7 +961,7 @@ class _HomePageState extends State<HomePage> {
                             width: 88,
                             height: 88,
                             decoration: BoxDecoration(
-                                color: MainColor.datamiteOrange,
+                                color: MainColor.skillogicRed,
                                 borderRadius: BorderRadius.circular(8)),
                             child: const Center(
                               child: Icon(

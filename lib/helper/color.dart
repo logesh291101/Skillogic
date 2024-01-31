@@ -18,6 +18,8 @@ class MainColor {
   static Color datamiteOrange = const Color(0xffF38F1E);
   static Color lightGrey = const Color(0xffDEDEDE);
   static Color darkGrey = const Color(0xff4D4D4D);
+  static Color skillogicRed = const Color(0xffb62451);
+  static Color skillogicBlue = const Color(0xff286078);
 
   Color getMainColor() {
     return textColor;

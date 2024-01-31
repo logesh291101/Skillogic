@@ -12,7 +12,7 @@ class CustomWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
-              "assets/datamites.png",
+              "assets/skillogic.png",
               height: 24,
               fit: BoxFit.contain,
             ),
@@ -52,12 +52,13 @@ class CustomWidget {
                             height: 120.0,
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(60.0),
-                                child: Image.network(userModel.userImage, fit: BoxFit.cover,),
-                                // child: FadeInImage(
-                                //   placeholder: AssetImage("assets/datamites_icon.png"),
-                                //   image: NetworkImage(userModel.userImage),
-                                //   fit: BoxFit.cover,
-                                // )
+                                // child: Image.network(userModel.userImage, fit: BoxFit.cover,),
+                                child: FadeInImage(
+                                  placeholder: AssetImage("assets/skillogic_icon.png"),
+                                  // image: NetworkImage(userModel.userImage),
+                                  image: AssetImage("assets/skillogic_icon.png"),
+                                  fit: BoxFit.cover,
+                                )
                             ))),
                   )
               ],

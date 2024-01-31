@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 32.0),
                         child: MaterialButton(
-                          color: Colors.blue,
+                          color: MainColor.skillogicBlue,
                           onPressed: () {
                             if (_loginKey.currentState!.validate()) {
                               // ScaffoldMessenger.of(context).showSnackBar(
@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
                         child: MaterialButton(
                           elevation: 1,
-                          color: Colors.white,
+                          color: MainColor.skillogicRed,
                           onPressed: () {
                             Navigator.of(context).push(
                                 MaterialPageRoute(builder: (context) => const ResetScreen())
@@ -226,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Center(
                               child: Text(
                                 "Forget your password? RESET",
-                                style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
                               ),
                             ),
                           ),

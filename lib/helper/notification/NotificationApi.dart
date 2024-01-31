@@ -9,7 +9,8 @@ class NotificationApi {
   static void init() {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+        // AndroidFlutterLocalNotificationsPlugin>()?.requestPermission(); //change this line of code due to dependency version
+        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission(); //change this line of code due to dependency version
     _notification.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),

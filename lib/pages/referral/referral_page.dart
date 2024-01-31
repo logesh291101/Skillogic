@@ -1,3 +1,4 @@
+import 'package:datamites/helper/color.dart';
 import 'package:datamites/pages/contact_us.dart';
 import 'package:datamites/provider/search_provider.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +101,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                         Text("Seems like you are not logged in!!!"),
                         MaterialButton(
                           minWidth: 120,
-                          color: Colors.blueAccent,
+                          color: MainColor.skillogicBlue,
                           onPressed: () => {
                             Navigator.push(
                                 context,

@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+// // Import for Android features.
+// import 'package:webview_flutter_android/webview_flutter_android.dart';
+// // Import for iOS features.
+// import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
+
 class InternalWebView extends StatefulWidget {
   late String external_url;
 

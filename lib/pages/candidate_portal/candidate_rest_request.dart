@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:datamites/pages/candidate_portal/data_model/CertificateModel.dart';
 import 'package:datamites/pages/candidate_portal/data_model/CourseEventModel.dart';
 import 'package:datamites/pages/candidate_portal/data_model/RatingModel.dart';
 import 'package:flutter/foundation.dart';
@@ -191,5 +192,43 @@ class CandidateRestRequest {
       ));
       return false;
     }
+  }
+
+  //@utsav added rest request to get certificate 23-01-2024
+  Future<List<CertificateModel>> getCertificate(
+      BuildContext context) async {
+    List<CertificateModel> earnedCertificate = [];
+    var prefs = await SharedPreferences.getInstance();
+    // var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
+    var user_email = prefs.getString("user_email") ?? "";
+    var finalUrl =
+        // "${candidate_portal_url}dm-api/lma/getCourse?user_email=$user_email";
+        "http://192.168.1.19/akshayacorp/tm-v1/mobile-api/CandidateCertifications?email=$user_email";
+    http.Response response = await http.get(Uri.parse(finalUrl));
+    if (kDebugMode) {
+      print(finalUrl);
+      print("Response body");
+      print(response.body);
+    }
+
+    try {
+      var responseBody = json.decode(response.body);
+      if (response.statusCode == 200) {
+        List<dynamic> body = responseBody['data'] as List;
+        earnedCertificate = body
+            .map(
+              (dynamic item) => CertificateModel.fromJson(item),
+        )
+            .toList();
+      } else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(responseBody['msg'], textAlign: TextAlign.center),
+        ));
+      }
+    } catch (err) {
+      print(err);
+    }
+    return earnedCertificate;
   }
 }

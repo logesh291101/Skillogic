@@ -142,7 +142,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       children: [
                         Text("Seems like you are not logged in"),
                         MaterialButton(
-                          color: Colors.blueAccent,
+                          color: MainColor.skillogicBlue,
                           onPressed: () => {
                             _verifyEmail()
                           },
@@ -172,7 +172,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               children: [
                                 Text("Seems like you are not logged in"),
                                 MaterialButton(
-                                  color: Colors.blueAccent,
+                                  color: MainColor.skillogicBlue,
                                   onPressed: () => {
                                     Navigator.push(
                                         context,

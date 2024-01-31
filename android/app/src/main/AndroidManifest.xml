@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dmrefer.mobile">
    <application
-        android:label="datamites"
+        android:label="Skillogic"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

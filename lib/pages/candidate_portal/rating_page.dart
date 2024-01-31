@@ -359,7 +359,7 @@ class _RatingPageState extends State<RatingPage> {
                     Text("No any rating found!"),
                     MaterialButton(
                         elevation: 1,
-                      color: MainColor.darkGreen,
+                      color: MainColor.skillogicBlue,
                         onPressed: getRatings,
                       child: const Text("Refresh", style: TextStyle(color: Colors.white),))
                   ],
@@ -412,7 +412,7 @@ class _RatingPageState extends State<RatingPage> {
                                     context.read<RatingProviderAll>().submit =
                                         true;
                                   },
-                                  color: MainColor.darkGreen,
+                                  color: MainColor.skillogicBlue,
                                   child: const Text(
                                     "Submit",
                                     style: TextStyle(color: Colors.white),
@@ -620,7 +620,7 @@ class _RatingPageState extends State<RatingPage> {
                                                 showFeedback = true;
                                                 setState(() {});
                                               },
-                                              color: MainColor.darkGreen,
+                                              color: MainColor.skillogicBlue,
                                               child: const Text(
                                                 "Rate this class",
                                                 style: TextStyle(

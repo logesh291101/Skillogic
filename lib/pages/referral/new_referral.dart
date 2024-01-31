@@ -316,7 +316,7 @@ class _AddReferralState extends State<AddReferral> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         new CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                            valueColor: AlwaysStoppedAnimation(MainColor.skillogicRed)),
                         new Text(
                           "     Adding your referral.",
                           style: new TextStyle(fontSize: 18.0),
@@ -369,7 +369,7 @@ class _AddReferralState extends State<AddReferral> {
     final referBtn = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(12.0),
-      color: Color(0xffe37528),
+      color: Color(0xffb62451),
       child: MaterialButton(
         minWidth: 250.0,
         height: 50.0,
@@ -405,7 +405,7 @@ class _AddReferralState extends State<AddReferral> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text("Refer".toUpperCase()),
-          backgroundColor: Color(0xffe37528),
+          backgroundColor: Color(0xffb62451),
         ),
         body: Stack(
           children: <Widget>[
@@ -575,7 +575,7 @@ class _AddReferralState extends State<AddReferral> {
                                   width: 20.0,
                                   child: CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation(
-                                          Colors.orange)))),
+                                          MainColor.skillogicRed)))),
                           // )
                         ],
                       ),
@@ -687,7 +687,7 @@ class _AddReferralState extends State<AddReferral> {
                                                     isChecked = !isChecked;
                                                   });
                                                 },
-                                                activeColor: Colors.orange,
+                                                activeColor: MainColor.skillogicRed,
                                                 checkColor: Colors.white,
                                                 tristate: false,
                                               ),
@@ -709,7 +709,7 @@ class _AddReferralState extends State<AddReferral> {
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
-                                            color: Color(0xffe37528),
+                                            color: Color(0xffb62451),
                                             onPressed: () {
                                               setState(() {
                                                 sharedOption = false;

@@ -402,10 +402,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                                         BorderRadius.circular(
                                                             60.0),
                                                     child: FadeInImage(
-                                                      placeholder: NetworkImage(
-                                                          "https://cdn5.vectorstock.com/i/1000x1000/04/09/user-icon-vector-5770409.jpg"),
-                                                      image:
-                                                          NetworkImage(image),
+                                                      // placeholder: NetworkImage(
+                                                      //     "https://cdn5.vectorstock.com/i/1000x1000/04/09/user-icon-vector-5770409.jpg"),
+                                                      // image:
+                                                      //     NetworkImage(image),
+                                                      placeholder: AssetImage("assets/skillogic_icon.png"),
+                                                      image: AssetImage("assets/skillogic_icon.png"),
                                                       fit: BoxFit.cover,
                                                     )))
                                             : Container(
@@ -639,7 +641,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   height: 32,
                                 ),
                                 MaterialButton(
-                                  color: Colors.blue,
+                                  color: MainColor.skillogicBlue,
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
                                     // showError = true;
@@ -718,7 +720,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   height: 8,
                                 ),
                                 MaterialButton(
-                                  color: Colors.red,
+                                  color: MainColor.skillogicRed,
                                   onPressed: () {
                                     Navigator.push(
                                         context,

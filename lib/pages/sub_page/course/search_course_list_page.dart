@@ -67,7 +67,7 @@ class _SearchCourseListPageState extends State<SearchCourseListPage> {
             ),
             body: FutureBuilder(builder: (BuildContext context, snapshot) {
               return CourseListPage(coursesList: coursesList, title: "Search results for: $title") ;
-            })
+            }, future: null,)
         );
       else
         return Scaffold(
@@ -77,6 +77,6 @@ class _SearchCourseListPageState extends State<SearchCourseListPage> {
           body: (loading) ? CardCoursePreviewShimmer(): Center(child: Text("No search result found."),),
         );
       return new Text("no data yet");
-    });
+    }, future: null,);
   }
 }

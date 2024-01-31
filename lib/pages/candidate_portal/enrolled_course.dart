@@ -105,7 +105,7 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
                           onPressed: () {
                             loadData();
                           },
-                          color: MainColor.darkGreen,
+                          color: MainColor.skillogicRed,
                           child: const Text("Refresh", style: TextStyle(color: Colors.white),),
                         )
                       ],
@@ -144,7 +144,9 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text("INR ${enrolledCourse.agreed_price}",
+                                //@utsav enrollment_type condition 25-01-2024
+                                if (enrolledCourse.enroll_type != "1")
+                                  Text("INR ${enrolledCourse.agreed_price}",
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w600,

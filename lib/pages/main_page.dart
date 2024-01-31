@@ -138,7 +138,7 @@ class _MainPageState extends State<MainPage> {
     RemoteConfigModel remoteConfigModel = await getConfig(context);
     await remoteConfigModel.saveConfigToPrefs(context);
     await setupMessaging();
-    if (remoteConfigModel.ios_version != "1.0.7"){
+    if (remoteConfigModel.ios_version != "1.0.9"){
       showUpdateDialog = true;
       if (remoteConfigModel.force_update == "true"){
         forceUpdate = true;
@@ -149,7 +149,19 @@ class _MainPageState extends State<MainPage> {
       // if (kDebugMode) print("token $token");
       storeFirebaseToken(token!);
     });
-    
+
+    // // Android version check
+    // if (remoteConfigModel.new_version != "16.0.0") {
+    //   showUpdateDialog = true;
+    //   if (remoteConfigModel.force_update == "true") {
+    //     forceUpdate = true;
+    //   }
+    // }
+    //
+    // FirebaseMessaging.instance.getToken().then((token) {
+    //   storeFirebaseToken(token!);
+    // });
+
     if (showUpdateDialog){
       showDialog(
         context: context,
@@ -439,7 +451,7 @@ class _MainPageState extends State<MainPage> {
           height: double.infinity,
           child: Center(
             child: Image.asset(
-              "assets/datamites_icon.png",
+              "assets/skillogic_icon.png",
               height: 80,
               width: 80,
               fit: BoxFit.contain,

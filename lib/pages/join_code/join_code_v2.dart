@@ -444,7 +444,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
                             const Text("Seems like you are not logged in"),
                             MaterialButton(
                               minWidth: 120,
-                              color: Colors.blueAccent,
+                              color: MainColor.skillogicBlue,
                               onPressed: () => {_verifyEmail()},
                               child: const Text(
                                 "Verify Email",
@@ -491,7 +491,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                         "Seems like you are not logged in!!!"),
                                     MaterialButton(
                                       minWidth: 120,
-                                      color: Colors.blueAccent,
+                                      color: MainColor.skillogicBlue,
                                       onPressed: () => {
                                         Navigator.push(
                                             context,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:datamites/helper/HexColor.dart';
 import 'package:datamites/helper/auth.dart';
+import 'package:datamites/helper/color.dart';
 import 'package:datamites/helper/user_details.dart';
 import 'package:datamites/pages/login_page.dart';
 import 'package:datamites/pages/verify_otp.dart';
@@ -216,7 +217,7 @@ class _ClassCodeState extends State<ClassCode> {
                             const Text("Seems like you are not logged in"),
                             MaterialButton(
                               minWidth: 120,
-                              color: Colors.blueAccent,
+                              color: MainColor.skillogicBlue,
                               onPressed: () => {_verifyEmail()},
                               child: const Text(
                                 "Verify Email",
@@ -262,7 +263,7 @@ class _ClassCodeState extends State<ClassCode> {
                                     const Text("Seems like you are not logged in!!!"),
                                     MaterialButton(
                                       minWidth: 120,
-                                      color: Colors.blueAccent,
+                                      color: MainColor.skillogicBlue,
                                       onPressed: () => {
                                         Navigator.push(
                                             context,

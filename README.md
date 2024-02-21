@@ -1,4 +1,4 @@
-# datamites
+# skillogic
 
 A new Flutter project.
 

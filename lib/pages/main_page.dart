@@ -1,12 +1,13 @@
-import 'package:datamites/helper/notification_navigation_helper.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/model/user_model.dart';
-import 'package:datamites/pages/account_page.dart';
-import 'package:datamites/pages/home_page.dart';
-import 'package:datamites/pages/join_code/join_code_v2.dart';
-import 'package:datamites/pages/referral/referral_page.dart';
-import 'package:datamites/provider/rating_provider_all.dart';
-import 'package:datamites/widgets/CustomWidget.dart';
+import 'dart:convert';
+
+import 'package:skillogic/helper/notification_navigation_helper.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/model/user_model.dart';
+import 'package:skillogic/pages/account_page.dart';
+import 'package:skillogic/pages/home_page.dart';
+import 'package:skillogic/pages/join_code/join_code_v2.dart';
+import 'package:skillogic/provider/rating_provider_all.dart';
+import 'package:skillogic/widgets/CustomWidget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -18,6 +19,7 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 import '../helper/auth.dart';
 import '../helper/color.dart';
@@ -99,7 +101,9 @@ class _MainPageState extends State<MainPage> {
         tos: _remoteConfig.getString('tos'),
         freshdesk_key: _remoteConfig.getString('freshdesk_key'),
         add_firebase_token: _remoteConfig.getString('add_firebase_token'),
-        update_reason: _remoteConfig.getString('update_reason'));
+        update_reason: _remoteConfig.getString('update_reason'),
+        certificate_text: _remoteConfig.getString('certificate_text'),
+        certificate_subject: _remoteConfig.getString('certificate_subject'));
   }
 
 
@@ -110,7 +114,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   storeFirebaseToken(String firebaseToken) async {
-    print("Token example");
+    if (kDebugMode) {
+      print("Token example");
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var add_firebase_token = prefs.getString("add_firebase_token")!;
     var token = prefs.getString("jwtToken")??"";
@@ -138,7 +144,7 @@ class _MainPageState extends State<MainPage> {
     RemoteConfigModel remoteConfigModel = await getConfig(context);
     await remoteConfigModel.saveConfigToPrefs(context);
     await setupMessaging();
-    if (remoteConfigModel.ios_version != "1.0.9"){
+    if (remoteConfigModel.new_version != "3.0.0"){
       showUpdateDialog = true;
       if (remoteConfigModel.force_update == "true"){
         forceUpdate = true;
@@ -177,20 +183,20 @@ class _MainPageState extends State<MainPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("New version available: ${remoteConfigModel.ios_version}",style: TextStyle(fontSize: 18.0)),
-                        SizedBox(height: 16,),
+                        Text("New version available: ${remoteConfigModel.new_version}",style: const TextStyle(fontSize: 18.0)),
+                        const SizedBox(height: 16,),
                         Html(data: remoteConfigModel.update_reason,),
-                        SizedBox(height: 32,),
+                        const SizedBox(height: 32,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (!forceUpdate) MaterialButton(onPressed: ()  async {
                               Navigator.pop(context);
                               await _proceedFurther();
-                            }, child: Text("Update Later"), ),
+                            }, child: const Text("Update Later"), ),
                             MaterialButton(onPressed: (){
-                              launchUrl(Uri.parse(remoteConfigModel.appstore_url));
-                              } , child: Text("Update", style: TextStyle(color: Colors.white),), color: MainColor.darkGreen, )
+                              launchUrl(Uri.parse(remoteConfigModel.playstore_url));
+                              } , child: const Text("Update", style: TextStyle(color: Colors.white),), color: MainColor.darkGreen, )
                           ],
                         )
                       ],
@@ -204,31 +210,138 @@ class _MainPageState extends State<MainPage> {
   }
 
 
+  // _checkLogin() async {
+  //   setState(() {
+  //     refreshing = true;
+  //   });
+  //   refreshed = await _userAuth.tokenLogin(context);
+  //   if (refreshed == 1) {
+  //     _navigationOptions = <Widget>[
+  //       const HomePage(),
+  //       MultiProvider(providers: [
+  //         ChangeNotifierProvider(create: (_) => RatingProviderAll()),
+  //       ], child: const JoinCodeV2()),
+  //       // DTribePage(),
+  //       // const ReferralScreen(),
+  //       const AccountScreen()
+  //     ];
+  //   } else{
+  //     refreshed = await _userAuth.tokenRefresh(context);
+  //     if(refreshed == 1) {
+  //       _checkLogin();
+  //     } else {
+  //       UserDetails userDetails = UserDetails();
+  //       await userDetails.logoutOnly(context);
+  //     }
+  //   }
+  //   refreshing = false;
+  //   _firebaseMessaging();
+  //   setState(() {});
+  // }
+
   _checkLogin() async {
     setState(() {
       refreshing = true;
     });
     refreshed = await _userAuth.tokenLogin(context);
+    final prefs = await SharedPreferences.getInstance();
+    final userSession = prefs.getString('userSession');
+    final session = prefs.getString('session');
+
+    if (userSession == null || session == null || userSession != session) {
+      UserDetails userDetails = UserDetails();
+      await userDetails.logoutOnly(context);
+      setState(() {
+        refreshed = 0;
+        refreshing = false;
+      });
+      return;
+    }
+
     if (refreshed == 1) {
       _navigationOptions = <Widget>[
         const HomePage(),
-        MultiProvider(providers: [
-          ChangeNotifierProvider(create: (_) => RatingProviderAll()),
-        ], child: const JoinCodeV2()),
-        // DTribePage(),
-        const ReferralScreen(),
-        const AccountScreen()
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => RatingProviderAll()),
+          ],
+          child: const JoinCodeV2(),
+        ),
+        const AccountScreen(),
       ];
-    } else{
-      UserDetails userDetails = UserDetails();
-      await userDetails.logoutOnly(context);
     }
+    else {
+      refreshed = await _userAuth.tokenRefresh(context);
+      if (refreshed == 1) {
+        final prefs = await SharedPreferences.getInstance();
+        final userSession = prefs.getString('userSession');
+        final session = prefs.getString('session');
+
+        if (userSession == null || session == null || userSession != session) {
+          UserDetails userDetails = UserDetails();
+          await userDetails.logoutOnly(context);
+          setState(() {
+            refreshed = 0;
+            refreshing = false;
+          });
+          return;
+        }
+        _checkLogin();
+      }
+      else {
+        UserDetails userDetails = UserDetails();
+        await userDetails.logoutOnly(context);
+        setState(() {
+          refreshed = 0;
+        });
+      }
+    }
+
     refreshing = false;
     _firebaseMessaging();
     setState(() {});
   }
 
+  // Future<bool> _getSession() async {
+  //   final response = await http.get(Uri.parse('http://13.232.222.140/akc-erp/skl-api-mob/api/FetchSession?user_email=sowmya@rubixe.com'));
+  //   if (response.statusCode == 200) {
+  //     final responseData = json.decode(response.body);
+  //     final currentSessionId = responseData['current_active_session_id'];
+  //     final prefs = await SharedPreferences.getInstance();
+  //     final storedSessionId = prefs.getString('session');
+  //
+  //     if (storedSessionId == currentSessionId) {
+  //       if (kDebugMode) {
+  //         print('User is logged in');
+  //       }
+  //       return true;
+  //     }
+  //     else {
+  //       if (kDebugMode) {
+  //         print('User is logged out');
+  //       }
+  //       // refreshing = true;
+  //       UserDetails userDetails = UserDetails();
+  //       await userDetails.logoutOnly(context);
+  //       setState(() {
+  //         refreshed = 0;
+  //       });
+  //       return false;
+  //     }
+  //   }
+  //   else {
+  //     if (kDebugMode) {
+  //       print('Failed to fetch session: ${response.statusCode}');
+  //     }
+  //     setState(() {
+  //       refreshing = true;
+  //     });
+  //     return false;
+  //   }
+  // }
+
   void _onItemTapped(int index) {
+    // _getSession();
     setState(() {
       _selectedIndex = index;
     });
@@ -275,7 +388,9 @@ class _MainPageState extends State<MainPage> {
     showFlutterNotification(message);
     // If you're going to use other Firebase services in the background, such as Firestore,
     // make sure you call `initializeApp` before using other Firebase services.
-    print('Handling a background message ${message.messageId}');
+    if (kDebugMode) {
+      print('Handling a background message ${message.messageId}');
+    }
   }
 
   /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -352,8 +467,12 @@ class _MainPageState extends State<MainPage> {
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        print('A new onMessageOpenedApp event was published!');
-        print(message.data);
+        if (kDebugMode) {
+          print('A new onMessageOpenedApp event was published!');
+        }
+        if (kDebugMode) {
+          print(message.data);
+        }
         NotificationNavigationHelper navigationHelper =
         NotificationNavigationHelper();
         navigationHelper.context = context;
@@ -375,8 +494,12 @@ class _MainPageState extends State<MainPage> {
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        print('A new onMessageOpenedApp event was published!');
-        print(message.data);
+        if (kDebugMode) {
+          print('A new onMessageOpenedApp event was published!');
+        }
+        if (kDebugMode) {
+          print(message.data);
+        }
         NotificationNavigationHelper navigationHelper =
         NotificationNavigationHelper();
         navigationHelper.context = context;
@@ -390,8 +513,12 @@ class _MainPageState extends State<MainPage> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      print(message.data);
+      if (kDebugMode) {
+        print('A new onMessageOpenedApp event was published!');
+      }
+      if (kDebugMode) {
+        print(message.data);
+      }
       NotificationNavigationHelper navigationHelper =
       NotificationNavigationHelper();
       navigationHelper.context = context;
@@ -461,7 +588,7 @@ class _MainPageState extends State<MainPage> {
       ),
     ): Scaffold(
       appBar
-          : CustomWidget.getDatamitesAppBar(context, userModel, refreshed),
+          : CustomWidget.getSkillogicAppBar(context, userModel, refreshed),
       backgroundColor: Colors.white,
       body:IndexedStack(
               index: _selectedIndex,
@@ -473,11 +600,13 @@ class _MainPageState extends State<MainPage> {
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.school_outlined),
-                  label: 'Classroom',
+                  icon: Icon(Icons.account_circle_outlined),
+                  activeIcon: Icon(Icons.account_circle),
+                  label: 'Account',
                 ),
               ],
             )
@@ -489,23 +618,26 @@ class _MainPageState extends State<MainPage> {
                   items: const <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined),
+                      activeIcon: Icon(Icons.home),
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.school_outlined),
+                      activeIcon: Icon(Icons.school),
                       label: 'Classroom',
                     ),
+                    // BottomNavigationBarItem(
+                    //   icon: Icon(Icons.person_add_alt_rounded),
+                    //   label: 'Referral',
+                    // ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.person_add_alt_rounded),
-                      label: 'Referral',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.more_vert_rounded),
-                      label: "More",
+                      icon: Icon(Icons.account_circle_outlined),
+                      activeIcon: Icon(Icons.account_circle),
+                      label: "Account",
                     ),
                   ],
                   currentIndex: _selectedIndex,
-                  selectedItemColor: Colors.blue,
+                  selectedItemColor: MainColor.skillogicBlue,
                   onTap: _onItemTapped,
                 )
               : BottomNavigationBar(
@@ -515,15 +647,17 @@ class _MainPageState extends State<MainPage> {
                   items: const <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined),
+                      activeIcon: Icon(Icons.home),
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.school_outlined),
-                      label: 'Classroom',
+                      icon: Icon(Icons.account_circle_outlined),
+                      activeIcon: Icon(Icons.account_circle),
+                      label: 'Account',
                     ),
                   ],
                   currentIndex: _selectedIndex,
-                  selectedItemColor: Colors.blue,
+                  selectedItemColor: MainColor.skillogicBlue,
                   onTap: _onItemTapped,
                 ),
     );

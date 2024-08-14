@@ -1,4 +1,4 @@
-import 'package:datamites/pages/candidate_portal/data_model/ScheduleModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/ScheduleModel.dart';
 
 import 'CourseModel.dart';
 

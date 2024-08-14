@@ -1,9 +1,9 @@
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/candidate_portal/candidate_rest_request.dart';
-import 'package:datamites/pages/candidate_portal/course_schedules.dart';
-import 'package:datamites/pages/candidate_portal/data_model/CourseEventModel.dart';
-import 'package:datamites/pages/candidate_portal/data_model/EnrollmentModel.dart';
-import 'package:datamites/pages/candidate_portal/data_model/ScheduleModel.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/pages/candidate_portal/candidate_rest_request.dart';
+import 'package:skillogic/pages/candidate_portal/course_schedules.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/CourseEventModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/EnrollmentModel.dart';
 import 'package:flutter/material.dart';
 
 import '../../helper/connection.dart';
@@ -11,8 +11,6 @@ import '../../helper/user_details.dart';
 import '../../model/user_model.dart';
 import '../../widgets/CustomWidget.dart';
 import '../main_page.dart';
-import '../update_profile_page.dart';
-import 'data_model/CourseModel.dart';
 
 class EnrolledCourseDetails extends StatefulWidget {
   final EnrollmentModel enrollmentModel;
@@ -34,22 +32,20 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
 
   void getStartEndDate() {
     for (CourseEventModel course in courses) {
-      for (ScheduleModel scheduleModel in course.schedules) {
-        if (startDate.isEmpty) {
-          if (scheduleModel.event_start_date.isNotEmpty) {
-            startDate = scheduleModel.event_start_date;
-          }
-        }
-        if (scheduleModel.event_start_date.isNotEmpty) {
-          endDate = scheduleModel.event_start_date;
-        }
+      if (startDate.isEmpty && course.course_event_start_date.isNotEmpty) {
+        startDate = course.course_event_start_date;
+      }
+      if (course.course_event_end_time.isNotEmpty) {
+        endDate = course.course_event_end_time;
       }
     }
     setState(() {});
   }
 
   void getCourses(String bundle_event_id) async {
-    print("Getting courses");
+    if (kDebugMode) {
+      print("Getting courses");
+    }
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
       showDialog(
@@ -105,7 +101,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: selected ? MainColor.skillogicBlue : MainColor.skillogicRed,
+          color: selected ? MainColor.lightskillogicBlue : MainColor.lightskillogicRed,
           borderRadius: BorderRadius.circular(8.0)),
       child: Text(
         text,
@@ -121,7 +117,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomWidget.getDatamitesAppBar(context, userModel, 1),
+      appBar: CustomWidget.getSkillogicAppBar(context, userModel, 1),
       body: loaded
           ? Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -136,7 +132,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                   Text(
                     widget.enrollmentModel.bundle_name,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.w600),
+                        fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
                     height: 8,
@@ -147,7 +143,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Start date: $startDate (IST)"),
+                          Text("Bundle date: $startDate (IST)"),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,10 +165,10 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         //@utsav enrollment_type condition 25-01-2024
-                        child: widget.enrollmentModel.enroll_type != "1"
-                            ? Text("INR ${widget.enrollmentModel.agreed_price}")
-                            : null, // If enrollment_type is 1, set child to null
-                            //Text("INR ${widget.enrollmentModel.agreed_price}"),
+                        // child: widget.enrollmentModel.enroll_type != "1"
+                        //     ? Text("INR ${widget.enrollmentModel.agreed_price}")
+                        //     : null, // If enrollment_type is 1, set child to null
+                            child: Text("INR ${widget.enrollmentModel.agreed_price}"),
                       )
                     ],
                   ),
@@ -194,7 +190,7 @@ class _EnrolledCourseDetailsState extends State<EnrolledCourseDetails> {
                               course.courses.first.course_name,
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 18),
+                                  fontSize: 16),
                             ),
 
                             if (course.courses.first.course_code.isNotEmpty)

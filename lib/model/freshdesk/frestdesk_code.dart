@@ -1,4 +1,4 @@
-import 'package:datamites/helper/color.dart';
+import 'package:skillogic/helper/color.dart';
 import 'package:flutter/cupertino.dart';
 
 class FreshDeskConstant {

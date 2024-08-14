@@ -1,9 +1,10 @@
 
 import 'dart:convert';
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/forget_password.dart';
-import 'package:datamites/pages/referral/referral_widgets/neomorphism.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/pages/forget_password.dart';
+import 'package:skillogic/pages/referral/referral_widgets/neomorphism.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -27,8 +28,12 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
   final FocusNode _newPFocusNode = new FocusNode();
 
   _changePassword(context, String oldPassword, String newPassword) async {
-    print("changing password");
-    print(oldPassword + newPassword);
+    if (kDebugMode) {
+      print("changing password");
+    }
+    if (kDebugMode) {
+      print(oldPassword + newPassword);
+    }
     ChangePasswordService changePasswordService = new ChangePasswordService();
     changePasswordService.setContext = context;
     changePasswordService.setOldP = oldPassword.trim();
@@ -50,7 +55,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
         child: AbsorbPointer(
           absorbing: !disable,
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(32.0),
+            padding: const EdgeInsets.all(32.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -59,32 +64,32 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                   height: 60,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      color: Color(0xfff6f6f6)),
+                      color: const Color(0xfff6f6f6)),
                   child: IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      icon: Icon(Icons.arrow_back)),
+                      icon: const Icon(Icons.arrow_back)),
                 ).addNeumorphism(
-                    blurRadius: 16, borderRadius: 16, offset: Offset(2, 2)),
+                    blurRadius: 16, borderRadius: 16, offset: const Offset(2, 2)),
                 const SizedBox(
                   height: 16.0,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 32.0,
                 ),
                 Text("Hey,\nChange Password",
                     style: TextStyle(
                         color: MainColor.textColorConst,
                         fontSize: 24)),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Form(
                     key: _loginFormKey,
                     child: Column(
                       children: [
                         Container(
-                            margin: EdgeInsets.fromLTRB(0, 32, 0, 0),
-                            padding: EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+                            padding: const EdgeInsets.all(8.0),
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -112,8 +117,8 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                               },
                             )),
                         Container(
-                            margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                            padding: EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                            padding: const EdgeInsets.all(8.0),
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.0),
@@ -144,12 +149,12 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                             )),
                       ],
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       "Forget Passcode? /",
                       style: TextStyle(color: Colors.grey, fontSize: 14),
                     ),
@@ -158,7 +163,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ResetScreen()),
+                              builder: (context) => const ResetScreen()),
                         );
                       },
                       child: Text(
@@ -168,14 +173,14 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 32,
                 ),
                 Center(
                   child: Visibility(
                       visible: showProgress,
                       child: Padding(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: CircularProgressIndicator(
                               valueColor: new AlwaysStoppedAnimation<Color>(
                                 MainColor.textColorConst,
@@ -190,7 +195,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                     if (!_loginFormKey.currentState!.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Enter the valid input',
                             textAlign: TextAlign.center),
                       ));
@@ -198,7 +203,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                       if (!_loginFormKey.currentState!.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Enter the valid input',
                               textAlign: TextAlign.center),
                         ));
@@ -211,7 +216,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                       }
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     "Change password",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
@@ -220,9 +225,9 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                 ).addNeumorphism(
                   blurRadius: 8,
                   borderRadius: 8,
-                  offset: Offset(2, 2),
+                  offset: const Offset(2, 2),
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 MaterialButton(
                   elevation: 0,
                   color: MainColor.skillogicRed,
@@ -230,7 +235,7 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                     FocusScope.of(context).unfocus();
                     Navigator.pop(context);
                   },
-                  child: Text(
+                  child: const Text(
                     "Go back",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
@@ -239,18 +244,18 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                 ).addNeumorphism(
                   blurRadius: 8,
                   borderRadius: 8,
-                  offset: Offset(2, 2),
+                  offset: const Offset(2, 2),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 16, 0, 8),
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
                   child: MaterialButton(
                     elevation: 0,
                     onPressed: () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => ResetScreen())
+                          MaterialPageRoute(builder: (context) => const ResetScreen())
                       );
                     },
-                    child: SizedBox(
+                    child: const SizedBox(
                       height: 48,
                       child: Center(
                         child: Text(
@@ -261,8 +266,8 @@ class _PasswordChangeScreenState extends State<PasswordChangeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16,),
-                SizedBox(
+                const SizedBox(height: 16,),
+                const SizedBox(
                   height: 32,
                 ),
               ],
@@ -302,7 +307,9 @@ class ChangePasswordService {
     authUrl = prefs.getString("auth_url") ?? "";
     token = prefs.getString("jwtToken")!;
     finalUrl = authUrl + apiPath;
-    print(finalUrl);
+    if (kDebugMode) {
+      print(finalUrl);
+    }
 
     http.Response res = await http.post(Uri.parse(finalUrl),
         headers: {"jwt": token}, body: {"oldpass": oldP, "newpass": newP});

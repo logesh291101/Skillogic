@@ -1,5 +1,5 @@
-import 'package:datamites/provider/rating_provider_all.dart';
-import 'package:datamites/widgets/feedback_item.dart';
+import 'package:skillogic/provider/rating_provider_all.dart';
+import 'package:skillogic/widgets/feedback_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

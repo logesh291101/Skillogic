@@ -1,4 +1,4 @@
-import 'package:datamites/model/carousel_model.dart';
+import 'package:skillogic/model/carousel_model.dart';
 
 class CarouselResponseModel {
   final String msg;

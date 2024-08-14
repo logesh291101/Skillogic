@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/auth.dart';
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/pages/login_page.dart';
-import 'package:datamites/pages/verify_otp.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/auth.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/pages/login_page.dart';
+import 'package:skillogic/pages/verify_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,10 +40,14 @@ class _NotificationPageState extends State<NotificationPage> {
     UserAuth _userAuth = UserAuth();
     refreshing = true;
     int refreshed = await _userAuth.tokenRefresh(context);
-    print("Refreshed first: "+refreshed.toString());
+    if (kDebugMode) {
+      print("Refreshed first: $refreshed");
+    }
     if (refreshed == 1) {
       refreshed = await _userAuth.tokenLogin(context);
-      print("Refreshed second: "+refreshed.toString());
+      if (kDebugMode) {
+        print("Refreshed second: $refreshed");
+      }
     } else if(refreshed == 3){
       showError = false;
       showLogin = false;
@@ -65,14 +70,18 @@ class _NotificationPageState extends State<NotificationPage> {
   _getNotification() async {
     await _refreshToken();
     if(!showError && !showLogin){
-      print("refreshing");
+      if (kDebugMode) {
+        print("refreshing");
+      }
       notificationService.setContext = context;
       notModel = (await notificationService.getNotification)!;
       notLoaded = true;
     }
 
     setState(() {});
-    print("refreshed");
+    if (kDebugMode) {
+      print("refreshed");
+    }
     _refreshController.refreshCompleted();
 
   }
@@ -85,7 +94,7 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   _fetchOfflineData() async {
-    Database db = await _getDb('datamite.db');
+    Database db = await _getDb('skillogic.db');
     var store = StoreRef.main();
     var data = await store.record('notification').get(db) as Map<String, dynamic>;
     offlineNotModel = NotificationResponseModel.fromJson(data);
@@ -129,7 +138,7 @@ class _NotificationPageState extends State<NotificationPage> {
             height: MediaQuery.of(context).size.height,
             child: SmartRefresher(
                 enablePullDown: true,
-                header: WaterDropHeader(),
+                header: const WaterDropHeader(),
                 controller: _refreshController,
                 onRefresh: _getNotification,
                 child: emailNotVerified?Container(
@@ -140,13 +149,13 @@ class _NotificationPageState extends State<NotificationPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Seems like you are not logged in"),
+                        const Text("Seems like you are not logged in"),
                         MaterialButton(
                           color: MainColor.skillogicBlue,
                           onPressed: () => {
                             _verifyEmail()
                           },
-                          child: Text(
+                          child: const Text(
                             "Verify Email",
                             style: TextStyle(color: Colors.white),
                           ),
@@ -157,7 +166,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         width: double.infinity,
                         height: 200,
                         color: Colors.white,
-                        child: Center(
+                        child: const Center(
                           child: Text("Something went wrong!"),
                         ),
                       )
@@ -170,16 +179,16 @@ class _NotificationPageState extends State<NotificationPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text("Seems like you are not logged in"),
+                                const Text("Seems like you are not logged in"),
                                 MaterialButton(
                                   color: MainColor.skillogicBlue,
                                   onPressed: () => {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()))
+                                            builder: (context) => const LoginPage()))
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     "Login",
                                     style: TextStyle(color: Colors.white),
                                   ),
@@ -194,7 +203,9 @@ class _NotificationPageState extends State<NotificationPage> {
                                         notModel!.notificationList.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      print(index);
+                                      if (kDebugMode) {
+                                        print(index);
+                                      }
                                       // access element from list using index
                                       // you can create and return a widget of your choice
 
@@ -202,7 +213,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                           notification: notModel!
                                               .notificationList[index]);
                                     })
-                                : Center(
+                                : const Center(
                                     child: Text("No notifications"),
                                   )
                             : (offlineNotModel != null)
@@ -212,7 +223,9 @@ class _NotificationPageState extends State<NotificationPage> {
                                         .notificationList.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      print(index);
+                                      if (kDebugMode) {
+                                        print(index);
+                                      }
                                       // access element from list using index
                                       // you can create and return a widget of your choice
 
@@ -221,8 +234,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                               .notificationList[index]);
                                     })
                                 : Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
+                                    padding: const EdgeInsets.all(16),
+                                    child: const Center(
                                       child: CircularProgressIndicator(),
                                     ),
                                   )),
@@ -258,21 +271,24 @@ class NotificationService {
   }
 
   Future<NotificationResponseModel?> get getNotification async {
-    print("Getting segmented");
+    if (kDebugMode) {
+      print("Getting segmented");
+    }
     prefs = await SharedPreferences.getInstance();
     String authUrl = prefs.getString("auth_url") ?? "";
-    finalUrl = authUrl +
-        'notification/getNotifications?page=0&limit=1000';
+    finalUrl = '${authUrl}notification/getNotifications?page=0&limit=1000';
 
     http.Response response = await http.get(Uri.parse(finalUrl),
         headers: {"jwt": prefs.getString("jwtToken")!});
     var segRef;
     if (response.statusCode == 200) {
       segRef = json.decode(response.body);
-      Database db = await _getDb('datamite.db');
+      Database db = await _getDb('skillogic.db');
       var store = StoreRef.main();
       await store.record('notification').put(db, segRef);
-      print("Notification written");
+      if (kDebugMode) {
+        print("Notification written");
+      }
       notModel = NotificationResponseModel.fromJson(segRef);
 
       // segRefModel = segRef.map(

@@ -20,7 +20,8 @@ class MainColor {
   static Color darkGrey = const Color(0xff4D4D4D);
   static Color skillogicRed = const Color(0xffb62451);
   static Color skillogicBlue = const Color(0xff286078);
-
+  static Color lightskillogicRed = const Color(0xfffbeaef);
+  static Color lightskillogicBlue = const Color(0xffd9ebf2);
   Color getMainColor() {
     return textColor;
   }

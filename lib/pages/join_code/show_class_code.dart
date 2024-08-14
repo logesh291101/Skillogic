@@ -1,6 +1,5 @@
-import 'package:datamites/helper/hex_color.dart';
-import 'package:datamites/model/class_code.dart';
-import 'package:datamites/model/class_code_v2.dart';
+import 'package:skillogic/helper/hex_color.dart';
+import 'package:skillogic/model/class_code_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';

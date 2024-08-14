@@ -1,14 +1,11 @@
-import 'package:datamites/helper/auth.dart';
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/candidate_portal/payment_page.dart';
-import 'package:datamites/pages/freshdesk/ticket_page.dart';
+import 'package:skillogic/helper/auth.dart';
+import 'package:skillogic/helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../helper/user_details.dart';
-import 'contact_us.dart';
 import 'notification_page.dart';
 import 'update_profile_page.dart';
 
@@ -25,6 +22,7 @@ class _AccountScreenState extends State<AccountScreen> {
       user_phone,
       user_dob,
       user_image,
+      user_session,
       playstore_url;
   bool userLoaded = false;
   UserDetails userDetails = UserDetails();
@@ -43,8 +41,9 @@ class _AccountScreenState extends State<AccountScreen> {
     user_phone = user.userPhone;
     user_dob = user.userDob;
     user_image = user.userImage;
+    user_session = user.userSession;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    playstore_url = prefs.getString("appstore_url")??"";
+    playstore_url = prefs.getString("playstore_url")??"";
     setState(() {
       userLoaded = true;
     });
@@ -62,8 +61,8 @@ class _AccountScreenState extends State<AccountScreen> {
     Phoenix.rebirth(context);
   }
 
-  void _launchURL(_url) async => await canLaunch(_url)
-      ? await launch(_url)
+  void _launchURL(_url) async => await canLaunchUrl(_url)
+      ? await launchUrl(_url)
       : throw 'Could not launch $_url';
 
   _gotoUrl(String page) async {
@@ -188,92 +187,66 @@ class _AccountScreenState extends State<AccountScreen> {
                   ],
                 ),
               ),
-              MaterialButton(
-                height: 50,
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CandidatePaymentPage(
-                              pageTitle: "My Payments"
-                          )));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.payment_sharp,
-                      color: MainColor.textColorConst,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text("My Payments",
-                        style: userStyle.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-              ),
-              MaterialButton(
-                height: 50,
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TicketPage(
-                          )));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.message,
-                      color: MainColor.textColorConst,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text("Tickets",
-                        style: userStyle.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-              ),
-              MaterialButton(
-                height: 50,
-                padding: const EdgeInsets.all(0),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ContactUsScreen(
-                            title: "Raise a ticket",
-                                message: "",
-                              )));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.question_answer_outlined,
-                      color: MainColor.textColorConst,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text("Raise a ticket",
-                        style: userStyle.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-
-              Text(
-                "More",
-                style: userStyle.copyWith(fontSize: 16),
-              ),
+              // MaterialButton(
+              //   height: 50,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const TicketPage(
+              //             )));
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(
+              //         Icons.message,
+              //         color: MainColor.textColorConst,
+              //       ),
+              //       const SizedBox(
+              //         width: 8,
+              //       ),
+              //       Text("Tickets",
+              //           style: userStyle.copyWith(
+              //               fontSize: 14, fontWeight: FontWeight.w500)),
+              //     ],
+              //   ),
+              // ),
+              // MaterialButton(
+              //   height: 50,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const ContactUsScreen(
+              //               title: "Raise a ticket",
+              //                   message: "",
+              //                 )));
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(
+              //         Icons.question_answer_outlined,
+              //         color: MainColor.textColorConst,
+              //       ),
+              //       const SizedBox(
+              //         width: 8,
+              //       ),
+              //       Text("Raise a ticket",
+              //           style: userStyle.copyWith(
+              //               fontSize: 14, fontWeight: FontWeight.w500)),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 32,
+              // ),
+              //
+              // Text(
+              //   "More",
+              //   style: userStyle.copyWith(fontSize: 16),
+              // ),
               MaterialButton(
                 height: 50,
                 padding: const EdgeInsets.all(0),
@@ -304,7 +277,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.book_outlined,
+                      Icons.miscellaneous_services_outlined,
                       color: MainColor.textColorConst,
                     ),
                     const SizedBox(
@@ -316,11 +289,37 @@ class _AccountScreenState extends State<AccountScreen> {
                   ],
                 ),
               ),
+              // MaterialButton(
+              //   height: 50,
+              //   padding: const EdgeInsets.all(0),
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const ContactUs(),
+              //       ),
+              //     );
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(
+              //         Icons.account_balance_outlined,
+              //         color: MainColor.textColorConst,
+              //       ),
+              //       const SizedBox(
+              //         width: 8,
+              //       ),
+              //       Text("Contact US",
+              //           style: userStyle.copyWith(
+              //               fontSize: 14, fontWeight: FontWeight.w500)),
+              //     ],
+              //   ),
+              // ),
               MaterialButton(
                 height: 50,
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
-                  _gotoUrl("appstore_url");
+                  _gotoUrl("playstore_url");
                 },
                 child: Row(
                   children: [

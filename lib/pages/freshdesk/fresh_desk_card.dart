@@ -1,7 +1,7 @@
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/model/freshdesk/freshdesk_response_model.dart';
-import 'package:datamites/model/freshdesk/frestdesk_code.dart';
-import 'package:datamites/pages/freshdesk/ticket_details.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/model/freshdesk/freshdesk_response_model.dart';
+import 'package:skillogic/model/freshdesk/frestdesk_code.dart';
+import 'package:skillogic/pages/freshdesk/ticket_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +33,7 @@ class FreshDeskCard extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.fromLTRB(16, 8, 16, 8),
+        margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
             color: MainColor.textColorFaint),
@@ -42,7 +42,7 @@ class FreshDeskCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(8.0),
@@ -61,65 +61,67 @@ class FreshDeskCard extends StatelessWidget {
                     ),
                   ],
                 )),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40.0),
-                            color: freshDeskConstant
-                                .getStatusColor(freshdeskData.status)[0]),
-                        child: Text(
-                          freshDeskConstant.getStatusName(freshdeskData.status),
-                          style: TextStyle(
-                              fontSize: 8,
-                              color: freshDeskConstant
-                                  .getStatusColor(freshdeskData.status)[1]),
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.0),
+                                color: freshDeskConstant
+                                    .getStatusColor(freshdeskData.status)[0]),
+                            child: Text(
+                              freshDeskConstant.getStatusName(freshdeskData.status),
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: freshDeskConstant
+                                      .getStatusColor(freshdeskData.status)[1]),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.0),
+                                color: freshDeskConstant
+                                    .getPriorityColor(freshdeskData.priority)[0]),
+                            child: Text(
+                              "Priority: ${freshDeskConstant.getPriorityName(freshdeskData.priority)}",
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: freshDeskConstant
+                                      .getPriorityColor(freshdeskData.priority)[1]),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 4,
+                      const SizedBox(
+                        height: 4,
                       ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(16, 4, 16, 4),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40.0),
-                            color: freshDeskConstant
-                                .getPriorityColor(freshdeskData.priority)[0]),
-                        child: Text(
-                          "Priority: ${freshDeskConstant.getPriorityName(freshdeskData.priority)}",
-                          style: TextStyle(
-                              fontSize: 8,
-                              color: freshDeskConstant
-                                  .getPriorityColor(freshdeskData.priority)[1]),
-                        ),
+                      Text(
+                        freshdeskData.type,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
+                      Text(freshdeskData.subject),
+                      Text(
+                        DateFormat()
+                            .format(DateTime.parse(freshdeskData.created_at)),
+                        style: TextStyle(
+                            color: MainColor.textColorConst, fontSize: 10),
+                        textAlign: TextAlign.end,
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    freshdeskData.type,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  Text(freshdeskData.subject),
-                  Text(
-                    DateFormat()
-                        .format(DateTime.parse(freshdeskData.created_at)),
-                    style: TextStyle(
-                        color: MainColor.textColorConst, fontSize: 10),
-                    textAlign: TextAlign.end,
-                  )
-                ],
-              ),
-            ),
+                )),
           ],
         ),
       ),

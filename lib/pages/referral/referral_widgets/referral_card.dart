@@ -1,6 +1,6 @@
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/referral/referral_widgets/neomorphism.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/pages/referral/referral_widgets/neomorphism.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
 
-import 'package:datamites/model/course/course_about_detail_model.dart';
+import 'package:skillogic/model/course/course_about_detail_model.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';

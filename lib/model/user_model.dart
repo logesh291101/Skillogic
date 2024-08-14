@@ -7,6 +7,7 @@ class UserModel {
   late String userId;
   late String userDob;
   late String userPhone;
+  late String userSession;
 
   set setUserName(String userName) => this.userName = userName;
 
@@ -39,4 +40,8 @@ class UserModel {
   set setRefreshKey(String refreshKey) => this.refreshKey = refreshKey;
 
   String get getRefreshKey => refreshKey;
+
+  set setUserSession(String userSession) => this.userSession = userSession;
+
+  String get getUserSession => userSession;
 }

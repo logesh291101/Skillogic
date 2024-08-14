@@ -1,5 +1,5 @@
-import 'package:datamites/model/course/course_list_model.dart';
-import 'package:datamites/widgets/card_course_preview.dart';
+import 'package:skillogic/model/course/course_list_model.dart';
+import 'package:skillogic/widgets/card_course_preview.dart';
 import 'package:flutter/material.dart';
 
 class CourseListPage extends StatelessWidget {

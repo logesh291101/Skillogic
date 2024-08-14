@@ -1,21 +1,19 @@
-import 'package:datamites/pages/candidate_portal/EnrollmentPaymentCard.dart';
-import 'package:datamites/pages/candidate_portal/data_model/PaymentDetailModel.dart';
+import 'package:skillogic/pages/candidate_portal/EnrollmentPaymentCard.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/PaymentDetailModel.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helper/color.dart';
 import '../../helper/connection.dart';
 import '../../helper/user_details.dart';
 import '../../model/user_model.dart';
 import '../../widgets/CustomWidget.dart';
-import '../candidate_payment_card.dart';
 import '../main_page.dart';
 import 'candidate_rest_request.dart';
 
 class CandidatePaymentPage extends StatefulWidget {
   final String pageTitle;
 
-  const CandidatePaymentPage({required this.pageTitle});
+  const CandidatePaymentPage({super.key, required this.pageTitle});
 
   @override
   State<CandidatePaymentPage> createState() => _CandidatePaymentPageState();
@@ -81,7 +79,7 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:CustomWidget.getDatamitesAppBar(context, userModel, 1),
+        appBar:CustomWidget.getSkillogicAppBar(context, userModel, 1),
         body: RefreshIndicator(
           onRefresh: () async {
             await _getPayments();
@@ -89,14 +87,14 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
           child: Container(
               height: double.infinity,
               width: double.infinity,
-              color: Color(0xfff6f6f6),
+              color: const Color(0xfff6f6f6),
               child: loaded
                   ? (candidatePaymentDetails.isEmpty)
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("No any payment found!"),
+                            const Text("No any payment found!"),
                             MaterialButton(
                                 elevation: 1,
 
@@ -106,7 +104,7 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
                           ],
                         )
                       : SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -115,7 +113,7 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
                                 padding: const EdgeInsets.fromLTRB(16.0, 16,16,0),
                                 child: Text(
                                   widget.pageTitle,
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                                 ),
                               ),
                               for (PaymentDetailModel cPayment
@@ -125,7 +123,7 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
                             ],
                           ),
                         )
-                  : Center(
+                  : const Center(
                       child: Text("Loading"),
                     )),
         ));

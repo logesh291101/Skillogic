@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dmrefer.mobile">
+    package="com.slogicrefer.mobile">
    <application
         android:label="Skillogic"
         android:name="${applicationName}"

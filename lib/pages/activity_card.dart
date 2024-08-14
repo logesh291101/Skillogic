@@ -1,4 +1,4 @@
-import 'package:datamites/model/candidate_activities_model.dart';
+import 'package:skillogic/model/candidate_activities_model.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/color.dart';

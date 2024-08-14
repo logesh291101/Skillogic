@@ -1,6 +1,6 @@
 
-import 'package:datamites/model/course/course_price_mode_general.dart';
-import 'package:datamites/model/course/online_schedule_model.dart';
+import 'package:skillogic/model/course/course_price_mode_general.dart';
+import 'package:skillogic/model/course/online_schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

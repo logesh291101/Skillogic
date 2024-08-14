@@ -1,6 +1,7 @@
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/referral/service/rest_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/pages/referral/service/rest_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -32,7 +33,9 @@ class _SegmentedReferralStcreenState extends State<CreditScreen> {
     segmentedCreditResponseModel =
     (await segmentedCreditTransactionService.getSegmented)!;
     setState(() {
-      print("Got referrals");
+      if (kDebugMode) {
+        print("Got referrals");
+      }
       _refreshController.refreshCompleted();
     });
   }
@@ -66,14 +69,16 @@ class _SegmentedReferralStcreenState extends State<CreditScreen> {
       ),
       body: SmartRefresher(
         enablePullDown: true,
-        header: WaterDropHeader(),
+        header: const WaterDropHeader(),
         controller: _refreshController,
         onRefresh: _getData,
         child: ListView.builder(
             shrinkWrap: true,
             itemCount: segmentedCreditResponseModel.creditList.length,
             itemBuilder: (BuildContext context, int index) {
-              print(index);
+              if (kDebugMode) {
+                print(index);
+              }
               // access element from list using index
               // you can create and return a widget of your choice
               return CreditCardSegment(

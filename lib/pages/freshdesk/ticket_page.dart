@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/pages/freshdesk/fresh_desk_card.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/pages/freshdesk/fresh_desk_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class _TicketPageState extends State<TicketPage> {
   int page = 1;
   int limit = 30;
   List<FreshdeskResponseModel> deskList = [];
-  UserDetails userDetails = new UserDetails();
+  UserDetails userDetails = UserDetails();
 
   Future<List<FreshdeskResponseModel>> loadWidget() async {
     deskList = [];
@@ -65,7 +65,7 @@ class _TicketPageState extends State<TicketPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tickets"),
+        title: const Text("Tickets"),
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder(
@@ -89,13 +89,13 @@ class _TicketPageState extends State<TicketPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
+                  children: const [
+                    Icon(
                       Icons.note_outlined,
                       color: Colors.grey,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 16),
+                      padding: EdgeInsets.only(top: 16),
                       child: Text('No any tickets found', textAlign: TextAlign.center,),
                     ),
                   ],
@@ -103,8 +103,10 @@ class _TicketPageState extends State<TicketPage> {
               );
             }
           } else if (snapshot.hasError) {
-            print(snapshot.error);
-            children = Container(
+            if (kDebugMode) {
+              print(snapshot.error);
+            }
+            children = const SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(
@@ -112,7 +114,7 @@ class _TicketPageState extends State<TicketPage> {
               ),
             );
           } else {
-            children = Container(
+            children = const SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(

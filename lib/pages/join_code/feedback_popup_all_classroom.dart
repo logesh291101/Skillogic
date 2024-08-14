@@ -1,11 +1,7 @@
-import 'package:datamites/provider/rating_provider_all.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../helper/color.dart';
 import '../../widgets/rating_widget.dart';
-import 'feedback_screen.dart';
 
 class FeedbackPopupAllClassroom extends StatefulWidget {
   final List<bool> ratingList;
@@ -58,8 +54,8 @@ class _FeedbackPopupAllClassroomState extends State<FeedbackPopupAllClassroom> {
                   Column(
                     children: [
                       Text(
-                        "$className",
-                        style: TextStyle(
+                        className,
+                        style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 18),
                       ),
                       Text(
@@ -70,11 +66,11 @@ class _FeedbackPopupAllClassroomState extends State<FeedbackPopupAllClassroom> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.calendar_today_sharp,
                             size: 14,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Text(
@@ -85,11 +81,11 @@ class _FeedbackPopupAllClassroomState extends State<FeedbackPopupAllClassroom> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.access_time,
                             size: 14,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Text(
@@ -97,7 +93,7 @@ class _FeedbackPopupAllClassroomState extends State<FeedbackPopupAllClassroom> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                     ],

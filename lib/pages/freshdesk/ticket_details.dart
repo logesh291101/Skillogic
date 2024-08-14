@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/model/freshdesk/frestdesk_code.dart';
-import 'package:datamites/pages/freshdesk/fresh_desk_card.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/model/freshdesk/frestdesk_code.dart';
+import 'package:skillogic/pages/freshdesk/fresh_desk_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -81,12 +81,12 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 16,),
+                    const SizedBox(height: 16,),
                     Container(
                       height: 32,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                         color: freshDeskConstant
                           .getStatusColor(detail!.status)[1]
                       ),
@@ -95,15 +95,15 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
                         border: Border.all(color: freshDeskConstant.getStatusColor(detail!.status)[1]),
                       ),
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
                                   color: Colors.white
                               ),
                               child: Row(
@@ -114,7 +114,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: freshDeskConstant.getStatusColor(detail!.status)[0]
                               ),
@@ -126,8 +126,8 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
                                   color: Colors.white
                               ),
                               child: Row(
@@ -138,7 +138,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: freshDeskConstant.getStatusColor(detail!.status)[0]
                               ),
@@ -150,8 +150,8 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
                                   color: Colors.white
                               ),
                               child: Row(
@@ -162,7 +162,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: freshDeskConstant.getStatusColor(detail!.status)[0]
                               ),
@@ -179,8 +179,8 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
                                   color: Colors.white
                               ),
                               child: Row(
@@ -192,10 +192,10 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: freshDeskConstant.getStatusColor(detail!.status)[0],
-                                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
                               ),
                               child: Row(
                                 children: [
@@ -215,8 +215,10 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
-            children = Container(
+            if (kDebugMode) {
+              print(snapshot.error);
+            }
+            children = SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(
@@ -224,7 +226,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
               ),
             );
           } else {
-            children = Container(
+            children = const SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(

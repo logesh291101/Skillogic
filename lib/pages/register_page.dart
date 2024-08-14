@@ -1,10 +1,13 @@
 import 'dart:convert';
 
-import 'package:datamites/pages/verify_otp.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/pages/verify_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../helper/color.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -50,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
     map['paswrd'] = password;
     map['mnumber'] = phone;
     map['profile_pic'] =
-        'https://firebasestorage.googleapis.com/v0/b/datamties-v3-a59d3.appspot.com/o/unnamed.jpg?alt=media&token=812fdfe6-7e2e-466c-97ad-55bc04e0d7ee';
+        'https://firebasestorage.googleapis.com/v0/b/skillogic-a5248.appspot.com/o/skillogic_icon.png?alt=media&token=d4a3da4d-6268-43aa-8e6a-b559054079d9';
     map['dob'] = dob;
     map['email'] = email;
 
@@ -72,9 +75,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ));
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: const Text("Something went wrong", textAlign: TextAlign.center),
+        content: Text("Something went wrong", textAlign: TextAlign.center),
       ));
     }
 
@@ -97,7 +102,9 @@ class _RegisterPageState extends State<RegisterPage> {
             MaterialPageRoute(builder: (context) => VerifyOtp(email: email)));
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
     setState(() {
       loading = false;
@@ -105,7 +112,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _selectDate(BuildContext context, int currentYear) async {
-    print(currentYear);
+    if (kDebugMode) {
+      print(currentYear);
+    }
     if (currentYear < 1000 || currentYear == null || currentYear == "")
       currentYear = 2000;
     final DateTime? pickedDate = await showDatePicker(
@@ -200,7 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             keyboardType: TextInputType.number,
                             controller: _phoneController,
                             decoration: const InputDecoration(
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                               icon: Icon(Icons.phone),
                               labelText: 'Phone *',
                             ),
@@ -251,10 +260,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
                             children: [
-                              Icon(Icons.calendar_month, color: Colors.grey,),
+                              const Icon(Icons.calendar_month, color: Colors.grey,),
                               Container(
                                 width: width-106,
-                                margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                                margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                                 height: 55,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -267,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(currentDateString, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black54),)
+                                      Text(currentDateString, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black54),)
                                     ],
                                   ),
                                 )
@@ -280,7 +289,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 32.0),
                         child: MaterialButton(
-                          color: Colors.blue,
+                          color: MainColor.skillogicBlue,
                           onPressed: () {
                             if (day ==0 || month ==0 || year == 0){
                               setState(() {
@@ -310,7 +319,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: Center(
                               child: Text(
                                 "Register",
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),

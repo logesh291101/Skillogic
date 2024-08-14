@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:datamites/helper/auth.dart';
+import 'package:skillogic/helper/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ _getDb(String dbPath) async {
   var store = StoreRef.main();
   final appDocDir = await getApplicationDocumentsDirectory();
   Database db = await databaseFactoryIo
-      .openDatabase(appDocDir.path + "/" + dbPath, version: 1);
+      .openDatabase("${appDocDir.path}/$dbPath", version: 1);
   // print("Successfully initialized db");
   return db;
 }
@@ -56,7 +56,9 @@ class SegmentedReferralTransactionsService {
   }
 
   set setPhone(String phone) {
-    print(phone);
+    if (kDebugMode) {
+      print(phone);
+    }
   }
 
   String apiPath = '';
@@ -71,11 +73,7 @@ class SegmentedReferralTransactionsService {
     // }
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
-    finalUrl = authUrl +
-        'candidate/gettingSegmentedReferral?status_id=' +
-        statusId.toString() +
-        '&referral_sort_asc=' +
-        referralSortAsc.toString();
+    finalUrl = '${authUrl}candidate/gettingSegmentedReferral?status_id=$statusId&referral_sort_asc=$referralSortAsc';
 
     Map<String, String> qParams = {
       'status_id': statusId.toString(),
@@ -88,23 +86,21 @@ class SegmentedReferralTransactionsService {
     http.Response response = await http.get(Uri.parse(finalUrl),
         headers: {"jwt": prefs.getString("jwtToken")!});
     var segRef;
-    Database db = await _getDb('datamite.db');
+    Database db = await _getDb('skillogic.db');
     var store = StoreRef.main();
     if (response.statusCode == 200) {
       segRef = json.decode(response.body);
       await store
-          .record('referral_cash_' + statusId.toString())
+          .record('referral_cash_$statusId')
           .put(db, segRef);
       // print("referral_cash_" + statusId.toString() + " written");
       segRefModel = SegmentedReferralResponseModel.fromJson(segRef);
     } else if (response.statusCode == 404) {
       // print("referral_cash_" + statusId.toString() + " writing");
       var dataToSave = json.decode(
-          '{"referralData":[], "success":false, "message":"Data unavailable", "referral_amount":0, "final_status":' +
-              statusId.toString() +
-              '}');
+          '{"referralData":[], "success":false, "message":"Data unavailable", "referral_amount":0, "final_status":$statusId}');
       await store
-          .record('referral_cash_' + statusId.toString())
+          .record('referral_cash_$statusId')
           .put(db, dataToSave);
       // print("referral_cash_" + statusId.toString() + " written");
       // print("Returning null");
@@ -144,7 +140,9 @@ class SegmentedCreditTransactionService {
   }
 
   set setPhone(String phone) {
-    print(phone);
+    if (kDebugMode) {
+      print(phone);
+    }
   }
 
   String apiPath = '';
@@ -154,14 +152,12 @@ class SegmentedCreditTransactionService {
   Future<SegmentedCreditResponseModel?> get getSegmented async {
     await _refreshToken(context);
     SegmentedCreditResponseModel? segCreModel;
-    print("Getting segmented");
+    if (kDebugMode) {
+      print("Getting segmented");
+    }
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
-    finalUrl = authUrl +
-        'candidate/gettingSegmentedCredit?status_id=' +
-        statusId.toString() +
-        '&credit_sort_asc=' +
-        creditSortAsc.toString();
+    finalUrl = '${authUrl}candidate/gettingSegmentedCredit?status_id=$statusId&credit_sort_asc=$creditSortAsc';
 
     Uri uri = Uri.parse(finalUrl);
 
@@ -172,7 +168,7 @@ class SegmentedCreditTransactionService {
     var segRef;
     // print(response.statusCode);
     // print(response.body);
-    Database db = await _getDb('datamite.db');
+    Database db = await _getDb('skillogic.db');
     var store = StoreRef.main();
     // print("cash reponse ");
     // print(statusId);
@@ -180,7 +176,7 @@ class SegmentedCreditTransactionService {
     if (response.statusCode == 200) {
       segRef = json.decode(response.body);
       await store
-          .record('referral_credit_' + this.statusId.toString())
+          .record('referral_credit_$statusId')
           .put(db, segRef);
       // print(finalUrl);
       // print("referral_credit_" + this.statusId.toString() + " written");
@@ -190,12 +186,12 @@ class SegmentedCreditTransactionService {
       //   (dynamic item) => SegmentedReferralResponseModel.fromJson(item),
       // ) as SegmentedReferralResponseModel;
     } else if (response.statusCode == 404) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       // print("referral_credit_" + statusId.toString() + " writing");
       var dataToSave = json.decode(
-          '{"creditData":[], "success":false, "message":"Data unavailable", "credit_amount":0, "final_status":' +
-              statusId.toString() +
-              '}');
+          '{"creditData":[], "success":false, "message":"Data unavailable", "credit_amount":0, "final_status":$statusId}');
       // print(dataToSave);
       await store
           .record('referral_credit_' + statusId.toString())
@@ -214,7 +210,9 @@ class SegmentedCreditTransactionService {
         // ));
         return getSegmented;
       } catch (e) {
-        print("Exception " + e.toString());
+        if (kDebugMode) {
+          print("Exception $e");
+        }
         return getSegmented;
       }
     }
@@ -249,8 +247,9 @@ class ReferralListService {
   set setRererralSort(bool referral_sort_asc) {
     if (referral_sort_asc) {
       this.referral_sort_asc = '1';
-    } else
+    } else {
       this.referral_sort_asc = '0';
+    }
   }
 
   Future<List<ReferralModel>?> get getReferralList async {
@@ -265,11 +264,7 @@ class ReferralListService {
     List<ReferralModel> referralList = [];
 
     resp = await http.get(
-        Uri.parse(base_url +
-            "candidate/getTotalRef?query_string=" +
-            query_string +
-            "&sort_asc=" +
-            referral_sort_asc.toString()),
+        Uri.parse("${base_url}candidate/getTotalRef?query_string=$query_string&sort_asc=$referral_sort_asc"),
         headers: {"jwt": token});
 
     if (resp.statusCode == 200) {
@@ -287,7 +282,9 @@ class ReferralListService {
 
         return referralList;
       } catch (e) {
-        print("Exception " + e.toString());
+        if (kDebugMode) {
+          print("Exception $e");
+        }
         return getReferralList;
       }
     } else if (resp.statusCode == 404) {
@@ -314,7 +311,7 @@ class GetCampaignService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var auth_url = prefs.getString("auth_url")??"";
     http.Response res =
-      await http.get(Uri.parse(auth_url + "campaign"));
+      await http.get(Uri.parse("${auth_url}campaign"));
 
     if (res.statusCode == 200) {
       var campaigns = json.decode(res.body);
@@ -331,7 +328,9 @@ class GetCampaignService {
       return campaignList;
     } else {
       // throw "Can't get referrals.";
-      print("Error in getting referrals");
+      if (kDebugMode) {
+        print("Error in getting referrals");
+      }
       return getCampaign;
     }
     return campaignList;

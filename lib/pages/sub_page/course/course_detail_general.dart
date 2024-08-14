@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:datamites/model/course/course_detail_model.dart';
-import 'package:datamites/model/course/course_price_mode_general.dart';
-import 'package:datamites/widgets/course_detail_list_item.dart';
-import 'package:datamites/widgets/syllabus_list_item.dart';
-import 'package:datamites/widgets/training_schedule_card.dart';
+import 'package:skillogic/model/course/course_detail_model.dart';
+import 'package:skillogic/model/course/course_price_mode_general.dart';
+import 'package:skillogic/widgets/course_detail_list_item.dart';
+import 'package:skillogic/widgets/syllabus_list_item.dart';
+import 'package:skillogic/widgets/training_schedule_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -958,7 +958,7 @@ class _CourseDetailgeneralState extends State<CourseDetailgeneral> {
                               ),
                             ),
                             if (iconColor == Colors.black)
-                              Image.asset("assets/datamites.png",
+                              Image.asset("assets/skillogic.png",
                                   width: width / 2.5,
                                   height: height - 1,
                                   fit: BoxFit.contain),
@@ -969,7 +969,7 @@ class _CourseDetailgeneralState extends State<CourseDetailgeneral> {
                                   color: iconColor,
                                 ),
                                 onPressed: () {
-                                  Share.share("https://www.datamites.com/" +
+                                  Share.share("https://www.skillfloor.com/" +
                                       generalCourseDetailModel
                                           .courseModel.permalink);
                                 },

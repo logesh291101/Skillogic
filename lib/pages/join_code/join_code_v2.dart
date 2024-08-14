@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/connection.dart';
-import 'package:datamites/model/class_code_v2.dart';
-import 'package:datamites/pages/candidate_portal/candidate_rest_request.dart';
-import 'package:datamites/pages/join_code/show_class_code.dart';
-import 'package:datamites/pages/main_page.dart';
-import 'package:datamites/pages/verify_otp.dart';
+import 'package:skillogic/helper/connection.dart';
+import 'package:skillogic/model/class_code_v2.dart';
+import 'package:skillogic/pages/candidate_portal/candidate_rest_request.dart';
+import 'package:skillogic/pages/join_code/show_class_code.dart';
+import 'package:skillogic/pages/main_page.dart';
+import 'package:skillogic/pages/verify_otp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +16,6 @@ import '../../helper/auth.dart';
 import '../../helper/color.dart';
 import '../../helper/user_details.dart';
 import '../../provider/rating_provider_all.dart';
-import '../contact_us.dart';
 import '../login_page.dart';
 import 'feedback_popup_all_classroom.dart';
 
@@ -66,15 +65,19 @@ class _JoinCodeState extends State<JoinCodeV2> {
     String candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     String token = prefs.getString("jwtToken") ?? "";
     var finalUrl =
-        "${candidate_portal_url}dm-api/lma/getLastRatedTrainingDetails/";
+        "${candidate_portal_url}dm-api/lma_skl/getLastRatedTrainingDetails/";
     if (kDebugMode) {
       print(finalUrl);
     }
 
-    print(token);
+    if (kDebugMode) {
+      print(token);
+    }
     http.Response res =
         await http.get(Uri.parse(finalUrl), headers: {"jwt": token});
-    print(res.body);
+    if (kDebugMode) {
+      print(res.body);
+    }
 
     if (res.statusCode == 200) {
       var response = json.decode(res.body);
@@ -121,21 +124,29 @@ class _JoinCodeState extends State<JoinCodeV2> {
       String token = prefs.getString("jwtToken") ?? "";
       String finalUrl = authUrl + apiPath;
 
-      print("Rating");
-      print(finalUrl);
+      if (kDebugMode) {
+        print("Rating");
+      }
+      if (kDebugMode) {
+        print(finalUrl);
+      }
 
       var map = <String, dynamic>{};
       map['rating'] = rating.toString();
       map['feedback'] = feedback;
       map['class_id'] = classId.toString();
-      print(map);
+      if (kDebugMode) {
+        print(map);
+      }
       if (kDebugMode) {
         print(map);
       }
 
       http.Response res = await http.post(Uri.parse(finalUrl),
           headers: {"jwt": token}, body: map);
-      print(res.body);
+      if (kDebugMode) {
+        print(res.body);
+      }
 
       if (kDebugMode) {
         print("Response is ");
@@ -227,7 +238,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Text('Refreshed successfully'),
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       action: SnackBarAction(
         label: 'Refresh Again',
         onPressed: () {
@@ -246,7 +257,9 @@ class _JoinCodeState extends State<JoinCodeV2> {
 
   @override
   void didUpdateWidget(covariant JoinCodeV2 oldWidget) {
-    print("Updated");
+    if (kDebugMode) {
+      print("Updated");
+    }
     _refresh();
     super.didUpdateWidget(oldWidget);
   }
@@ -419,7 +432,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
           height: double.infinity,
           color: Colors.white,
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
             children: [
               if (refreshing)
@@ -504,23 +517,23 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    MaterialButton(
-                                      minWidth: 120,
-                                      color: Colors.white,
-                                      onPressed: () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ContactUsScreen(
-                                                        title: "Contact us",
-                                                        message: "")))
-                                      },
-                                      child: const Text(
-                                        "Contact us",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    )
+                                    // MaterialButton(
+                                    //   minWidth: 120,
+                                    //   color: Colors.white,
+                                    //   onPressed: () => {
+                                    //     Navigator.push(
+                                    //         context,
+                                    //         MaterialPageRoute(
+                                    //             builder: (context) =>
+                                    //                 const ContactUsScreen(
+                                    //                     title: "Contact us",
+                                    //                     message: "")))
+                                    //   },
+                                    //   child: const Text(
+                                    //     "Contact us",
+                                    //     style: TextStyle(color: Colors.black),
+                                    //   ),
+                                    // )
                                   ],
                                 ))
                             : !classCodeLoaded
@@ -532,8 +545,8 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                         key: _ratingFormKey,
                                         child: Column(
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                            const Padding(
+                                              padding: EdgeInsets.all(8.0),
                                               child: Text("Rate your class", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
                                             ),
                                             FeedbackPopupAllClassroom(
@@ -598,7 +611,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                               ),
                                             if (overallRating < totalRating)
                                               Container(
-                                                padding: EdgeInsets.all(16.0),
+                                                padding: const EdgeInsets.all(16.0),
                                                 color: Colors.white,
                                                 child: TextFormField(
                                                   controller:
@@ -609,7 +622,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                                       const InputDecoration(
                                                     icon: Icon(Icons.feedback),
                                                     border:
-                                                        const OutlineInputBorder(),
+                                                        OutlineInputBorder(),
                                                     hintText:
                                                         'Please give your feedback here',
                                                     labelText: 'Feedback *',

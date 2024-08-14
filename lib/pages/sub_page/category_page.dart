@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:datamites/model/category_model.dart';
-import 'package:datamites/widgets/card_category.dart';
+import 'package:skillogic/model/category_model.dart';
+import 'package:skillogic/widgets/card_category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPage extends StatelessWidget {

@@ -19,6 +19,8 @@ class RemoteConfigModel {
   final String candidate_portal_url;
   final String freshdesk_key;
   final String add_firebase_token;
+  final String certificate_text;
+  final String certificate_subject;
 
   RemoteConfigModel(
       {required this.appstore_url,
@@ -37,12 +39,14 @@ class RemoteConfigModel {
         required this.update_reason,
         required this.candidate_portal_url,
         required this.add_firebase_token,
-        required this.freshdesk_key});
+        required this.freshdesk_key,
+        required this.certificate_text,
+        required this.certificate_subject});
 
 
   @override
   String toString() {
-    return 'RemoteConfigModel{appstore_url: $appstore_url, auth_url: $auth_url, auth_url_tm: $auth_url_tm, base_url: $base_url, cash_credit: $cash_credit, course_credit: $course_credit, force_update: $force_update, ios_version: $ios_version, new_version: $new_version, playstore_url: $playstore_url, privacy_policy: $privacy_policy, tel: $tel, tos: $tos, update_reason: $update_reason, candidate_portal_url: $candidate_portal_url, freshdesk_key: $freshdesk_key, add_firebase_token: $add_firebase_token}';
+    return 'RemoteConfigModel{appstore_url: $appstore_url, auth_url: $auth_url, auth_url_tm: $auth_url_tm, base_url: $base_url, cash_credit: $cash_credit, course_credit: $course_credit, force_update: $force_update, ios_version: $ios_version, new_version: $new_version, playstore_url: $playstore_url, privacy_policy: $privacy_policy, tel: $tel, tos: $tos, update_reason: $update_reason, candidate_portal_url: $candidate_portal_url, freshdesk_key: $freshdesk_key, add_firebase_token: $add_firebase_token, certificate_text: $certificate_text, certificate_subject: $certificate_subject}';
   }
 
   saveConfigToPrefs(BuildContext context) async {
@@ -65,5 +69,7 @@ class RemoteConfigModel {
     prefs.setString("freshdesk_key", freshdesk_key);
     print("Setting $add_firebase_token");
     prefs.setString("add_firebase_token", add_firebase_token);
+    prefs.setString("certificate_text", certificate_text);
+    prefs.setString("certificate_subject", certificate_subject);
   }
 }

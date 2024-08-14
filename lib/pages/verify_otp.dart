@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/pages/login_page.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
       loading = false;
     });
     if(verified){
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LoginPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const LoginPage()));
     }
   }
   _resendOtp() async {
@@ -57,7 +58,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
         backgroundColor: Colors.white,
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _pageKey,
           child: Stack(
@@ -65,10 +66,10 @@ class _VerifyOtpState extends State<VerifyOtp> {
               Column(
                 children: [
                   Padding(
-                      padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       child: Text(
-                        "Please enter the otp sent to\n" + widget.email,
-                        style: TextStyle(
+                        "Please enter the otp sent to\n${widget.email}",
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
@@ -76,10 +77,10 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextFormField(
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                             decimal: false, signed: true),
                         controller: _otpController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           icon: Icon(Icons.code),
                           labelText: 'OTP Code',
@@ -95,7 +96,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 32.0),
                     child: MaterialButton(
-                      color: Colors.blue,
+                      color: MainColor.skillogicBlue,
                       onPressed: () {
                         if (_pageKey.currentState!.validate()) {
                           setState(() {
@@ -104,7 +105,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                           _verifyOTP();
                         }
                       },
-                      child: SizedBox(
+                      child: const SizedBox(
                         height: 48,
                         child: Center(
                           child: Text(
@@ -120,7 +121,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     onPressed: () {
                       _resendOtp();
                     },
-                    child: SizedBox(
+                    child: const SizedBox(
                       height: 48,
                       child: Center(
                         child: Text(
@@ -130,13 +131,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16,),
+                  const SizedBox(height: 16,),
                   MaterialButton(
                     color: Colors.white,
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: SizedBox(
+                    child: const SizedBox(
                       height: 48,
                       child: Center(
                         child: Text(
@@ -153,7 +154,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   height: double.infinity,
                   width: double.infinity,
                   color: Colors.white24,
-                  child: Center(
+                  child: const Center(
                     child: CircularProgressIndicator(),
                   ),
                 )
@@ -173,7 +174,7 @@ class UserOTPService {
   late String OTPkey;
   late SharedPreferences prefs;
   late BuildContext context;
-  String apiPath = 'Verification/verifyOtp';
+  String apiPath = 'verification/verifyOtp';
 
   set setEmail(String email) {
     this.email = email;
@@ -191,6 +192,9 @@ class UserOTPService {
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
     finalUrl = authUrl + apiPath;
+    if (kDebugMode) {
+      print(finalUrl);
+    }
 
     var map = new Map<String, dynamic>();
     map['email'] = email;
@@ -206,7 +210,7 @@ class UserOTPService {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: new Duration(milliseconds: 800),
-          content: Text("Verification successful",
+          content: const Text("Verification successful",
               textAlign: TextAlign.center),
         ));
         return true;
@@ -218,7 +222,9 @@ class UserOTPService {
       ));
       return false;
     } catch (e) {
-      print("Exception " + e.toString());
+      if (kDebugMode) {
+        print("Exception $e");
+      }
     }
 
     return false;
@@ -243,10 +249,12 @@ class ResendOTPService {
   final String apiPath = "verification/resendOtp";
 
   Future<bool> resendOtp() async {
-    print("Sending otp: "+email );
+    if (kDebugMode) {
+      print("Sending otp: $email" );
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     baseUrl = prefs.getString("auth_url")??"";
-    finalUrl = baseUrl + apiPath + "?email=" + email;
+    finalUrl = "$baseUrl$apiPath?email=$email";
 
     http.Response res = await http.get(Uri.parse(finalUrl));
     if (res.statusCode == 201) {

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:datamites/model/course/course_list_model.dart';
-import 'package:datamites/pages/sub_page/course/course_list_page.dart';
-import 'package:datamites/widgets/card_course_preview_shimmer.dart';
+import 'package:skillogic/model/course/course_list_model.dart';
+import 'package:skillogic/pages/sub_page/course/course_list_page.dart';
+import 'package:skillogic/widgets/card_course_preview_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

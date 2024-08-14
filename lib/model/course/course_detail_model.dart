@@ -1,4 +1,4 @@
-import 'package:datamites/model/course/recommended_course_model.dart';
+import 'package:skillogic/model/course/recommended_course_model.dart';
 
 import 'country_model.dart';
 import 'course_about_detail_model.dart';

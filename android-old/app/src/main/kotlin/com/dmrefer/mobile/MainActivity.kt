@@ -1,4 +1,4 @@
-package com.dmrefer.mobile
+package com.slogicrefer.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

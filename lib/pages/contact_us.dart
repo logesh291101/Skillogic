@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:country_code_picker/country_code_picker.dart';
-// import 'package:country_picker/country_picker.dart';
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/model/freshdesk/message_model.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/model/freshdesk/message_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,12 +57,20 @@ class ContactUsService {
     http.Response res = await http.post(Uri.parse(freshDeskUrl), body: jsonBody, headers: {"Authorization": basicAuth, "Content-Type": "application/json"});
     if (kDebugMode) print("Freshdesk ${res.statusCode}");
     if (res.statusCode == 200) {
-      print("Freshdesk body success");
-      print(res.body);
+      if (kDebugMode) {
+        print("Freshdesk body success");
+      }
+      if (kDebugMode) {
+        print(res.body);
+      }
       return true;
     } else {
-      print("Freshdesk body");
-      print(res.body);
+      if (kDebugMode) {
+        print("Freshdesk body");
+      }
+      if (kDebugMode) {
+        print(res.body);
+      }
       return false;
     }
   }
@@ -565,7 +572,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             freshdeskMessageModel.description = message;
             freshdeskMessageModel.email = email;
 
-            print(freshdeskMessageModel);
+            if (kDebugMode) {
+              print(freshdeskMessageModel);
+            }
             await contactUsService.sendFreshDesk(freshdeskMessageModel);
 
             if (await contactUsService.sendForm()) {

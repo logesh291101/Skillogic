@@ -14,8 +14,8 @@ class NotificationHelperPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Notification"),),
-      body: Container(
+      appBar: AppBar(title: const Text("Notification"),),
+      body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Column(
@@ -23,12 +23,12 @@ class NotificationHelperPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.notifications_active_sharp, color: MainColor.darkGreen, size: 64,),
-            SizedBox(height: 32,),
-            Text("${remoteMessage.notification!.title}", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24), textAlign: TextAlign.center,),
-            SizedBox(height: 32,),
-            Text("${remoteMessage.notification!.body}", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.grey), textAlign: TextAlign.center,),
+            const SizedBox(height: 32,),
+            Text("${remoteMessage.notification!.title}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24), textAlign: TextAlign.center,),
+            const SizedBox(height: 32,),
+            Text("${remoteMessage.notification!.body}", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.grey), textAlign: TextAlign.center,),
 
-            SizedBox(height: 32,),
+            const SizedBox(height: 32,),
             MaterialButton(onPressed: (){
               NotificationNavigationHelper navigationHelper = NotificationNavigationHelper();
               navigationHelper.context = context;
@@ -38,7 +38,7 @@ class NotificationHelperPage extends StatelessWidget {
               navigationHelper.external_action = remoteMessage.data['external_action'];
 
               navigationHelper.processNotification(true);
-            } , color: MainColor.darkGreen, child: Text("Open Notification", style: TextStyle(color: Colors.white),),)
+            } , color: MainColor.darkGreen, child: const Text("Open Notification", style: TextStyle(color: Colors.white),),)
 
           ],
         ),

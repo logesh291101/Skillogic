@@ -1,8 +1,8 @@
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/model/user_model.dart';
-import 'package:datamites/pages/candidate_portal/candidate_rest_request.dart';
-import 'package:datamites/pages/candidate_portal/data_model/EnrollmentModel.dart';
-import 'package:datamites/pages/candidate_portal/enrolled_course_details.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/model/user_model.dart';
+import 'package:skillogic/pages/candidate_portal/candidate_rest_request.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/EnrollmentModel.dart';
+import 'package:skillogic/pages/candidate_portal/enrolled_course_details.dart';
 import 'package:flutter/material.dart';
 
 import '../../helper/connection.dart';
@@ -23,7 +23,7 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
   bool loaded = false;
   bool loading = true;
 
-  void loadData() async {
+  loadData() async {
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
       showDialog(
@@ -39,7 +39,7 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MainPage()),
-                        (route) => false);
+                            (route) => false);
                   },
                   child: const Text("Ok"),
                 )
@@ -63,6 +63,14 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
     setState(() {});
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      loaded = false;
+      loading = true;
+    });
+    await loadData();
+  }
+
   @override
   void initState() {
     loadData();
@@ -74,101 +82,102 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xfff6f6f6),
-      appBar: CustomWidget.getDatamitesAppBar(context, userModel, 1),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if(enrolledCourses.isNotEmpty) const Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 16.0, 0, 0),
-                  child: Text(
-                    "Enrolled Courses",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                if (loaded && enrolledCourses.isEmpty)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 64,
-                        ),
-                        const Text("No any enrollment found"),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        MaterialButton(
-                          onPressed: () {
-                            loadData();
-                          },
-                          color: MainColor.skillogicRed,
-                          child: const Text("Refresh", style: TextStyle(color: Colors.white),),
-                        )
-                      ],
+      appBar: CustomWidget.getSkillogicAppBar(context, userModel, 1),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (enrolledCourses.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 0, 0),
+                      child: Text(
+                        "Enrolled Courses",
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
-                if (loaded && enrolledCourses.isNotEmpty)
-                  for (EnrollmentModel enrolledCourse in enrolledCourses)
-                    MaterialButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => EnrolledCourseDetails(
-                                enrollmentModel: enrolledCourse)));
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                        padding: const EdgeInsets.all(8.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
+                  if (loaded && enrolledCourses.isNotEmpty)
+                    for (EnrollmentModel enrolledCourse in enrolledCourses)
+                      MaterialButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => EnrolledCourseDetails(enrollmentModel: enrolledCourse),
+                          ));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          padding: const EdgeInsets.all(8.0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              enrolledCourse.bundle_name,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                            ),
-                            Text(enrolledCourse.bundle_event_name),
-                            Text(
-                                "Duration: ${enrolledCourse.bundle_total_duration} weeks"),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                //@utsav enrollment_type condition 25-01-2024
-                                if (enrolledCourse.enroll_type != "1")
-                                  Text("INR ${enrolledCourse.agreed_price}",
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                enrolledCourse.bundle_name,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                              Text(enrolledCourse.bundle_event_name),
+                              Text("Duration: ${enrolledCourse.bundle_total_duration} weeks"),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "INR ${enrolledCourse.agreed_price}",
                                     style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.green))
-                              ],
-                            )
-                          ],
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    )
-              ],
-            ),
-          ),
-          if (loading)
-            const SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Center(
-                child: CircularProgressIndicator(),
+                ],
               ),
-            )
-        ],
+            ),
+            if (loaded && enrolledCourses.isEmpty)
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("No any enrollment found"),
+                    const SizedBox(height: 8),
+                    MaterialButton(
+                      onPressed: () {
+                        loadData();
+                      },
+                      color: MainColor.skillogicRed,
+                      child: const Text(
+                        "Refresh",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (loading)
+              const SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

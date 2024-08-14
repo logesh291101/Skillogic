@@ -1,4 +1,4 @@
-import 'package:datamites/model/feedback_model.dart';
+import 'package:skillogic/model/feedback_model.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackWidget extends StatefulWidget {

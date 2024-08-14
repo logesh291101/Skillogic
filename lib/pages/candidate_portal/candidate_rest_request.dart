@@ -1,8 +1,7 @@
 import 'dart:convert';
-
-import 'package:datamites/pages/candidate_portal/data_model/CertificateModel.dart';
-import 'package:datamites/pages/candidate_portal/data_model/CourseEventModel.dart';
-import 'package:datamites/pages/candidate_portal/data_model/RatingModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/CertificateModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/CourseEventModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/RatingModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +26,7 @@ class CandidateRestRequest {
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var user_email = prefs.getString("user_email") ?? "";
     var finalUrl =
-        "${candidate_portal_url}dm-api/lma/getCourse?user_email=$user_email";
+        "${candidate_portal_url}dm-api/lma_skl/getCourse?user_email=$user_email";
     http.Response response = await http.get(Uri.parse(finalUrl));
     if (kDebugMode) {
       print(finalUrl);
@@ -51,7 +50,9 @@ class CandidateRestRequest {
         ));
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
     return enrolledCourses;
   }
@@ -62,7 +63,7 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var finalUrl =
-        "${candidate_portal_url}dm-api/lma/getCourseEvents?bundle_event_id=$eventId";
+        "${candidate_portal_url}dm-api/lma_skl/getCourseEvents?bundle_event_id=$eventId";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -71,7 +72,9 @@ class CandidateRestRequest {
     try {
 
       var responseBody = json.decode(response.body);
-      print(responseBody);
+      if (kDebugMode) {
+        print(responseBody);
+      }
       if (response.statusCode == 200) {
         List<dynamic> body = responseBody as List;
         courseEvents = body
@@ -86,7 +89,9 @@ class CandidateRestRequest {
         ));
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
     return courseEvents;
   }
@@ -96,7 +101,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl = "${candidate_portal_url}dm-api/lma/getTrainerFeedbackDetails?email_id=$email";
+    var finalUrl =
+        "${candidate_portal_url}dm-api/lma_skl/getTrainerFeedbackDetails?email_id=$email";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -134,11 +140,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl = "${candidate_portal_url}dm-api/lma/getEnrolmentPaymentsDetails?candidate_email=$email";
-    // if (kDebugMode) {
-    //   print(finalUrl);
-    // }
-
+    var finalUrl =
+        "${candidate_portal_url}dm-api/lma_skl/getEnrolmentPaymentsDetails?candidate_email=$email";
     http.Response response = await http.get(Uri.parse(finalUrl));
 
     try{
@@ -171,7 +174,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl = "${candidate_portal_url}dm-api/lma/addTrainerFeedbackDetails?candidate_email=$email";
+    var finalUrl =
+        "${candidate_portal_url}dm-api/lma_skl/addTrainerFeedbackDetails?candidate_email=$email";
     if (kDebugMode) {
       print(jsonBody);
       print(finalUrl);
@@ -199,11 +203,10 @@ class CandidateRestRequest {
       BuildContext context) async {
     List<CertificateModel> earnedCertificate = [];
     var prefs = await SharedPreferences.getInstance();
-    // var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
+    var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var user_email = prefs.getString("user_email") ?? "";
     var finalUrl =
-        // "${candidate_portal_url}dm-api/lma/getCourse?user_email=$user_email";
-        "http://192.168.1.19/akshayacorp/tm-v1/mobile-api/CandidateCertifications?email=$user_email";
+        "${candidate_portal_url}dm-api/CandidateCertificationsSkl?email=$user_email";
     http.Response response = await http.get(Uri.parse(finalUrl));
     if (kDebugMode) {
       print(finalUrl);
@@ -227,7 +230,9 @@ class CandidateRestRequest {
         ));
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
     return earnedCertificate;
   }

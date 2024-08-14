@@ -1,4 +1,4 @@
-import 'package:datamites/helper/color.dart';
+import 'package:skillogic/helper/color.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -19,7 +19,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   checkQR(String? code) async {
     // TODO checking server the qr code
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     if (Random().nextInt(3) != 1) {
       setState(() {
         success = true;
@@ -45,7 +45,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
+      body: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: loading
@@ -57,7 +57,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (success)
-                      Icon(
+                      const Icon(
                         Icons.done,
                         color: Colors.green,
                         size: 64,
@@ -80,17 +80,17 @@ class _SuccessScreenState extends State<SuccessScreen> {
                         style:
                             TextStyle(color: MainColor.darkRed, fontSize: 32),
                       ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     Text(
-                      "${message}",
+                      message,
                       style: TextStyle(
                           color:
                               success ? MainColor.darkGreen : MainColor.darkRed,
                           fontSize: 24),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
                     MaterialButton(
@@ -100,7 +100,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                       },
                       color: MainColor.darkGreen,
                       textColor: Colors.white,
-                      child: Text("Scan Again"),
+                      child: const Text("Scan Again"),
                     ),
                     if (success)
                       MaterialButton(
@@ -111,7 +111,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                         },
                         color: MainColor.lightGreen,
                         textColor: MainColor.darkGreen,
-                        child: Text("Go Back"),
+                        child: const Text("Go Back"),
                       ),
                   ],
                 )),

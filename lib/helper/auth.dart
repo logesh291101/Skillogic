@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/user_details.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -16,10 +16,10 @@ class UserAuth {
   Future<int> tokenLogin(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String authUrl = preferences.getString("auth_url") ?? "";
-    String url = authUrl + "password/tokenLogin";
+    String url = "${authUrl}password/tokenLogin";
     int returnValue = 0;
-    final _prefs = await SharedPreferences.getInstance();
-    var token = _prefs.getString("jwtToken") ?? "";
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("jwtToken") ?? "";
     if (token != "") {
       http.Response response =
           await http.get(Uri.parse(url), headers: {"jwt": token});
@@ -37,6 +37,7 @@ class UserAuth {
           userModel.userDob = userResponse["user_data"]["dob"]??"";
           userModel.jwtKey = userResponse["jwtkey"];
           userModel.refreshKey = userResponse["refreshToken"];
+          userModel.userSession = userResponse["user_data"]["current_active_session_id"]?? "";
           await userDetails.setDetail(userModel);
           returnValue = 1;
         } else if (response.statusCode == 401) {
@@ -56,18 +57,20 @@ class UserAuth {
   Future<int> tokenRefresh(BuildContext context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String authUrl = preferences.getString("auth_url") ?? "";
-    String url = authUrl + "refresh";
+    String url = "${authUrl}refresh";
     int returnValue = 0;
-    final _prefs = await SharedPreferences.getInstance();
-    var refreshToken = _prefs.getString("refreshToken") ?? "";
+    final prefs = await SharedPreferences.getInstance();
+    var refreshToken = prefs.getString("refreshToken") ?? "";
     if (refreshToken != "") {
       http.Response response = await http
           .get(Uri.parse(url), headers: {"refresh_token": refreshToken});
       if (response.statusCode != 403) {
         if (response.statusCode == 200) {
-          _prefs.setString("jwtToken", json.decode(response.body)["jwtkey"]);
-          _prefs.setString(
+          prefs.setString("jwtToken", json.decode(response.body)["jwtkey"]);
+          prefs.setString(
               "refreshToken", json.decode(response.body)["refreshToken"]);
+          prefs.setString(
+              "session", json.decode(response.body)["current_active_session_id"]);
           returnValue = 1;
         } else if (response.statusCode == 401) {
           returnValue = 3;

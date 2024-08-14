@@ -1,4 +1,4 @@
-import 'package:datamites/provider/rating_provider_all.dart';
+import 'package:skillogic/provider/rating_provider_all.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,4 +1,4 @@
-import 'package:datamites/provider/rating_provider_all.dart';
+import 'package:skillogic/provider/rating_provider_all.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,35 +29,35 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
     return Material(
       child: Container(
         width: double.infinity,
-          margin: EdgeInsets.all(16),
-          color: Color(0xffffffff),
+          margin: const EdgeInsets.all(16),
+          color: const Color(0xffffffff),
           child: SingleChildScrollView(
             child: SizedBox(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  SizedBox(
+                  const SizedBox(
                     height: 16.0,
                   ),
-                  Text("Please give feedback for the following"),
-                  SizedBox(
+                  const Text("Please give feedback for the following"),
+                  const SizedBox(
                     height: 8.0,
                   ),
                   Text('Class: $className\nTrainer: $trainerName'),
                   // RatingWidget(rating: widget.ratingList, height: 100,),
                   (widget.rating == 5)
-                      ? Text("Please click submit")
+                      ? const Text("Please click submit")
                       : Column(
                           children: [
                             // FeedbackScreen(feedbackList: widget.feedbackList),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
                               child: TextField(
                                 maxLines: 4,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   hintText: 'add more feedback',
                                 ),
@@ -76,11 +76,11 @@ class _FeedbackPopupState extends State<FeedbackPopup> {
                       onPressed: () {
                         context.read<RatingProviderAll>().submit = true;
                       },
-                      child: Text("Submit", style: TextStyle(color: Colors.white),),
+                      child: const Text("Submit", style: TextStyle(color: Colors.white),),
                       color: Colors.green,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   )
                 ],

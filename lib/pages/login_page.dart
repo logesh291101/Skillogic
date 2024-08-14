@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:datamites/pages/forget_password.dart';
-import 'package:datamites/pages/main_page.dart';
-import 'package:datamites/pages/register_page.dart';
-import 'package:datamites/pages/verify_otp.dart';
+import 'package:skillogic/pages/forget_password.dart';
+import 'package:skillogic/pages/main_page.dart';
+import 'package:skillogic/pages/register_page.dart';
+import 'package:skillogic/pages/verify_otp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         await prefs.setString("user_dob", resp["user_data"]['dob']??"");
         await prefs.setString("refreshToken", resp['refreshToken']);
         await prefs.setString("jwtToken", resp['jwtkey']);
+        await prefs.setString("session", resp["user_data"]['current_active_session_id']??"");
         Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context)=> const MainPage()), (route) => false);
       } else if (response.statusCode == 401) {
         // ignore: use_build_context_synchronously
@@ -254,7 +255,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )),
 
-          if(loading)Container(
+          if(loading)
+            Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             color: Colors.white24,

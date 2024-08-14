@@ -1,5 +1,5 @@
 
-import 'package:datamites/pages/referral/referral_widgets/neomorphism.dart';
+import 'package:skillogic/pages/referral/referral_widgets/neomorphism.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/Credit/credit_model.dart';

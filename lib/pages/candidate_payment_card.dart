@@ -1,4 +1,4 @@
-import 'package:datamites/model/candidate_payment_model.dart';
+import 'package:skillogic/model/candidate_payment_model.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 

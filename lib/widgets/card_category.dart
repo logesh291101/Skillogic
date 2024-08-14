@@ -1,6 +1,6 @@
-import 'package:datamites/model/category_model.dart';
-import 'package:datamites/pages/sub_page/course/category_course_list_page.dart';
-import 'package:datamites/pages/sub_page/course/top_course_list_page.dart';
+import 'package:skillogic/model/category_model.dart';
+import 'package:skillogic/pages/sub_page/course/category_course_list_page.dart';
+import 'package:skillogic/pages/sub_page/course/top_course_list_page.dart';
 import 'package:flutter/material.dart';
 
 class CardCategory extends StatelessWidget {

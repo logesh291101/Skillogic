@@ -1,5 +1,4 @@
-import 'package:datamites/model/candidate_payment_model.dart';
-import 'package:datamites/pages/candidate_portal/data_model/PaymentDetailModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/PaymentDetailModel.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +106,7 @@ class EnrollmentPaymentCard extends StatelessWidget {
                         color: MainColor.darkGreen),
                   ),
                   Text(
-                    "Rs. ${paidAmount}",
+                    "Rs. $paidAmount",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -117,7 +116,7 @@ class EnrollmentPaymentCard extends StatelessWidget {
               ),
             ),
             collapsed: Container(
-              child: Text( paymentDetailModel.paymentModelList.isEmpty ? "" : "Click to view history" , style: TextStyle(fontSize: 10, color: Colors.black54),)
+              child: Text( paymentDetailModel.paymentModelList.isEmpty ? "" : "Click to view history" , style: const TextStyle(fontSize: 10, color: Colors.black54),)
             ),
             expanded: Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),

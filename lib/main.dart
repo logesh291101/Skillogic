@@ -1,8 +1,8 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'pages/main_page.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -14,35 +14,23 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Platform.isAndroid
-  //     ? await Firebase.initializeApp(
-  //       options: const FirebaseOptions(
-  //         apiKey: AIzaSyAeA10m8WBRqTru7yuA7333o3oz0hdPGds,
-  //         appId: 1:587203888035:android:71da06dd5ce7f02879d016,
-  //         messagingSenderId: 587203888035,
-  //         projectId: datamties-v3-a59d3
-  //       ),
-  //   )
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyAeA10m8WBRqTru7yuA7333o3oz0hdPGds",
-      appId: "1:587203888035:android:71da06dd5ce7f02879d016",
-      messagingSenderId: "587203888035",
-      projectId: "datamties-v3-a59d3",
+      apiKey: "AIzaSyDquuyNNSCkcEo2tfm0ZiBR0Ki6HecQKfg",
+      appId: "1:1048427097869:android:f31d5d4d08eb41589f0a44",
+      messagingSenderId: "1048427097869",
+      projectId: "skillogic-a5248",
     ),
   );
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
   var topic = "datamites-v3-app-ios";
-  if (kDebugMode) {
-    print("Subscribing to topic $topic");
-  }
   await FirebaseMessaging.instance.subscribeToTopic(topic);
   if (kDebugMode) {
     print("Subscribed to topic $topic");
   }
-
   runApp(const MyApp());
 }
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:datamites/helper/notification_navigation_helper.dart';
-import 'package:datamites/model/carousel_model.dart';
-import 'package:datamites/model/carousel_response_model.dart';
+import 'package:skillogic/helper/notification_navigation_helper.dart';
+import 'package:skillogic/model/carousel_model.dart';
+import 'package:skillogic/model/carousel_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,6 +52,7 @@ class Carousel extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
+                      // borderRadius: BorderRadius.circular(10.0),
                       image: DecorationImage(
                           image: NetworkImage(carousel.image),
                           fit: BoxFit.fill)),

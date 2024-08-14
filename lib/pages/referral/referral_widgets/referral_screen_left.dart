@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:expandable/expandable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,10 +37,10 @@ class ReferralScreenLeftMain extends StatefulWidget {
 class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
-  Color lightBlue = Color(0xffe1f5fe);
-  Color lightGreen = Color(0xffe8f5e9);
-  Color lightRed = Color(0xffffebee);
-  Color lightYellow = Color(0xfffffde7);
+  Color lightBlue = const Color(0xffe1f5fe);
+  Color lightGreen = const Color(0xffe8f5e9);
+  Color lightRed = const Color(0xffffebee);
+  Color lightYellow = const Color(0xfffffde7);
   int selected = 1;
   String totalAmount = "Loading";
   String courseCredit = "", cashCredit = "";
@@ -90,7 +90,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   bool rejectedLoadingCourse = true;
 
   Future<bool> _getPendingCash(BuildContext) async {
-    print("Pending cash");
+    if (kDebugMode) {
+      print("Pending cash");
+    }
     // pendingLoading = true;
     pendingModel = await segmentedReferralPending!.getSegmented;
     pendingLoadingCash = false;
@@ -99,7 +101,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getApprovedCash(BuildContext) async {
-    print("approved cash");
+    if (kDebugMode) {
+      print("approved cash");
+    }
     // approvedLoading = true;
     approvedModel = await segmentedReferralApproved!.getSegmented;
     approvedLoadingCash = false;
@@ -108,7 +112,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getSettledCash(BuildContext) async {
-    print("settled cash");
+    if (kDebugMode) {
+      print("settled cash");
+    }
     // settledLoading = true;
     settledModel = await segmentedReferralSettled!.getSegmented;
     settledLoadingCash = false;
@@ -117,7 +123,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getRejectedCash(BuildContext) async {
-    print("rejectred cash");
+    if (kDebugMode) {
+      print("rejectred cash");
+    }
     // rejectedLoading = true;
     rejectedModel = await segmentedReferralRejected!.getSegmented;
 
@@ -127,7 +135,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getPendingCredit(BuildContext) async {
-    print("Pending course");
+    if (kDebugMode) {
+      print("Pending course");
+    }
     // pendingLoading = true;
     pendingCreditModel = await segmentedCreditPending!.getSegmented;
     pendingLoadingCourse = false;
@@ -136,7 +146,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getApprovedCredit(BuildContext) async {
-    print("approved course");
+    if (kDebugMode) {
+      print("approved course");
+    }
     // approvedLoading = true;
     approveCreditdModel = await segmentedCreditApproved!.getSegmented;
 
@@ -146,7 +158,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getSettledCredit(BuildContext) async {
-    print("settled course");
+    if (kDebugMode) {
+      print("settled course");
+    }
     // settledLoading = true;
     settledCreditModel = await segmentedCreditSettled!.getSegmented;
     settledLoadingCourse = false;
@@ -155,7 +169,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   Future<bool> _getRejectedCredit(BuildContext) async {
-    print("rejectred course");
+    if (kDebugMode) {
+      print("rejectred course");
+    }
     // rejectedLoading = true;
     rejectedCreditModel = await segmentedCreditRejected!.getSegmented;
     rejectedLoadingCourse = false;
@@ -211,7 +227,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   _fetchSegmentedCredit(BuildContext) async {
-    print("Fetching segmented");
+    if (kDebugMode) {
+      print("Fetching segmented");
+    }
     await _getPendingCredit(context);
     await _getApprovedCredit(context);
     await _getSettledCredit(context);
@@ -228,13 +246,21 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   double minWidth = 0, maxWidth = 0, cashWidth = 100, courseWidth = 0;
 
   _setWidth() {
-    print("width");
+    if (kDebugMode) {
+      print("width");
+    }
     minWidth = widget.width / 4 - 12;
     maxWidth = widget.width / 2 - 20;
     creditHeight = minWidth;
-    print("\n\n\n\n\n\n\n\n\n\n");
-    print(minWidth);
-    print(maxWidth);
+    if (kDebugMode) {
+      print("\n\n\n\n\n\n\n\n\n\n");
+    }
+    if (kDebugMode) {
+      print(minWidth);
+    }
+    if (kDebugMode) {
+      print(maxWidth);
+    }
     // cashWidth = minWidth + 8;
     // courseWidth = minWidth - 8;
     cashWidth = minWidth;
@@ -255,7 +281,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   }
 
   void checkForNewSharedLists() async {
-    print("Fetching details");
+    if (kDebugMode) {
+      print("Fetching details");
+    }
     _setDataCash(context);
     _setDataCredit(context);
     await _fetchSegmentedCash(context);
@@ -265,13 +293,15 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   _getDb(String dbPath) async {
     final appDocDir = await getApplicationDocumentsDirectory();
     Database db = await databaseFactoryIo
-        .openDatabase(appDocDir.path + "/" + dbPath, version: 1);
+        .openDatabase("${appDocDir.path}/$dbPath", version: 1);
     return db;
   }
 
   _fetchOfflineData() async {
-    print("Fetching offline data");
-    Database db = await _getDb('datamite.db');
+    if (kDebugMode) {
+      print("Fetching offline data");
+    }
+    Database db = await _getDb('skillogic.db');
     var store = StoreRef.main();
     try {
       var data = await store.record('referral_cash_0').get(db) as Map<String, dynamic>;
@@ -318,15 +348,21 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
         rejectedLoadingCourse = false;
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
     setState(() {});
   }
 
   _getData() async {
-    print("Getting data");
+    if (kDebugMode) {
+      print("Getting data");
+    }
     await _fetchOfflineData();
-    print("Got data");
+    if (kDebugMode) {
+      print("Got data");
+    }
     _setDataCash(context);
     _setDataCredit(context);
     _fetchSegmentedCash(context);
@@ -344,7 +380,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
 
     referralScreen = new ReferralScreenRight(widget.width, 1);
     timer = Timer.periodic(
-        Duration(seconds: 60), (Timer t) => checkForNewSharedLists());
+        const Duration(seconds: 60), (Timer t) => checkForNewSharedLists());
 
     _setWidth();
 
@@ -405,12 +441,20 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   bool courseShow = true;
 
   Future refresh(dynamic value) async {
-    print("Refreshing");
+    if (kDebugMode) {
+      print("Refreshing");
+    }
     await _fetchSegmentedCash(context);
     await _fetchSegmentedCredit(context);
-    print("#####################################");
-    print(pendingModel!.referral_amount);
-    print(approvedModel!.referral_amount);
+    if (kDebugMode) {
+      print("#####################################");
+    }
+    if (kDebugMode) {
+      print(pendingModel!.referral_amount);
+    }
+    if (kDebugMode) {
+      print(approvedModel!.referral_amount);
+    }
 
     referralScreen = new ReferralScreenRight(widget.width, 1);
     setState(() {});
@@ -423,13 +467,13 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       width: maxWidth - 16,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0), color: lightColor),
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: MaterialButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         onPressed: () {
           if (modelName == null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("No credits here", textAlign: TextAlign.center),
             ));
           } else {
@@ -466,8 +510,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                           child: CircularProgressIndicator())
                           : Text(
                         (modelName != null)
-                            ? "INR " +
-                            modelName.referral_amount.toString()
+                            ? "INR ${modelName.referral_amount}"
                             : "INR 0",
                         style: TextStyle(
                             color: MainColor.textBlue,
@@ -482,7 +525,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
@@ -522,13 +565,13 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       width: maxWidth - 16,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0), color: lightColor),
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: MaterialButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         onPressed: () {
           if (modelName == null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("No credits here", textAlign: TextAlign.center),
             ));
           } else {
@@ -563,7 +606,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                       child: CircularProgressIndicator())
                       : Text(
                     (modelName != null)
-                        ? "INR " + modelName.credit_amount.toString()
+                        ? "INR ${modelName.credit_amount}"
                         : "INR 0",
                     style: TextStyle(
                         color: MainColor.textBlue,
@@ -576,7 +619,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
@@ -618,11 +661,11 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
         ],
         child: SmartRefresher(
           enablePullDown: true,
-          header: WaterDropHeader(),
+          header: const WaterDropHeader(),
           controller: _refreshController,
           onRefresh: checkForNewSharedLists,
           child: Container(
-            padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0),
+            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0),
             width: widget.width,
             height: height,
             color: Colors.white,
@@ -630,7 +673,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
+                  margin: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0),
                   width: widget.width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -639,7 +682,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                       Expanded(
                           flex: 1,
                           child: Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                            margin: const EdgeInsets.fromLTRB(0, 0, 4, 0),
                             height: widget.width * 0.30,
                             decoration: BoxDecoration(
                                 color: MainColor.skillogicRed,
@@ -661,7 +704,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                       color: Colors.white,
                                       size: 32,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 8,
                                     ),
                                     Expanded(
@@ -670,7 +713,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                         CrossAxisAlignment.start,
                                         mainAxisAlignment:
                                         MainAxisAlignment.center,
-                                        children: [
+                                        children: const [
                                           Text(
                                             "Add Referral",
                                             style: TextStyle(
@@ -698,9 +741,9 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AnimatedContainer(
-                                margin: EdgeInsets.fromLTRB(4, 0, 0, 0),
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                duration: Duration(milliseconds: 100),
+                                margin: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                duration: const Duration(milliseconds: 100),
                                 height: widget.width * 0.27,
                                 width: cashWidth,
                                 decoration: BoxDecoration(
@@ -708,7 +751,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                   color: darkCashColor,
                                 ),
                                 child: MaterialButton(
-                                    padding: EdgeInsets.all(0),
+                                    padding: const EdgeInsets.all(0),
                                     onPressed: () {
                                       courseBannerText = historyText;
                                       cashBannerText = "";
@@ -736,7 +779,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                           fontWeight:
                                                           FontWeight.w600),
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       "INR",
                                                       style: TextStyle(
                                                           color: Colors.white,
@@ -745,7 +788,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                           FontWeight.w600),
                                                     ),
                                                     (approvedLoadingCash)
-                                                        ? SizedBox(
+                                                        ? const SizedBox(
                                                         width: 24,
                                                         height: 24,
                                                         child:
@@ -756,7 +799,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                           .referral_amount
                                                           .toString()
                                                           : "0",
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 18,
                                                           fontWeight:
@@ -770,7 +813,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                               right: 0,
                                               left: 0,
                                               child: Container(
-                                                  padding: EdgeInsets.fromLTRB(
+                                                  padding: const EdgeInsets.fromLTRB(
                                                       4, 0, 4, 0),
                                                   width: double.infinity,
                                                   height: 16,
@@ -800,14 +843,14 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                         ))),
                               ),
                               AnimatedContainer(
-                                duration: Duration(milliseconds: 100),
+                                duration: const Duration(milliseconds: 100),
                                 height: widget.width * 0.27,
                                 width: courseWidth,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.0),
                                     color: darkCourseColor),
                                 child: MaterialButton(
-                                    padding: EdgeInsets.all(0),
+                                    padding: const EdgeInsets.all(0),
                                     onPressed: () {
                                       _toggleWidthCash(false);
                                       cashBannerText = historyText;
@@ -916,7 +959,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                       children: [
                         if (cashSelected)
                           Container(
-                            padding: EdgeInsets.fromLTRB(16, 32, 16, 32),
+                            padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
                             child: Column(
                               children: [
                                 ExpandablePanel(
@@ -927,21 +970,21 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                   header: Container(
                                     width: double.infinity,
                                     // color: Color(0x45eeeeee),
-                                    padding: EdgeInsets.fromLTRB(
+                                    padding: const EdgeInsets.fromLTRB(
                                         8.0, 12.0, 8.0, 0.0),
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       children: [
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 8,
                                         ),
-                                        Text(
+                                        const Text(
                                           "What is cash credit?",
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 8,
                                         ),
                                         Icon(Icons.info,
@@ -950,7 +993,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                     ),
                                   ),
                                   expanded: Container(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                                       alignment: Alignment.centerLeft,
                                       child: Html(
                                         data: cashCredit,
@@ -958,11 +1001,11 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                           "p": Style(color: MainColor.textBlue)
                                         },
                                       )),
-                                  collapsed: Text(""),
+                                  collapsed: const Text(""),
                                 ),
                                 if (cashSelected)
                                   Container(
-                                    padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                                     width: double.infinity,
                                     child: Column(
                                       children: [
@@ -977,7 +1020,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                   pendingLoadingCash,
                                                   MainColor.lightBlue,
                                                   MainColor.darkBlue),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 8,
                                             ),
                                             if (!approvedLoadingCash)
@@ -989,7 +1032,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                   MainColor.darkGreen),
                                           ],
                                         ),
-                                        SizedBox(height: 8),
+                                        const SizedBox(height: 8),
                                         Row(
                                           mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -1001,7 +1044,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                   settledLoadingCash,
                                                   MainColor.lightOrange,
                                                   MainColor.darkOrange),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 8,
                                             ),
                                             if (!rejectedLoadingCash)
@@ -1021,7 +1064,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                           ),
                         if (courseSelected)
                           Container(
-                            padding: EdgeInsets.fromLTRB(16, 32, 16, 32),
+                            padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
                             child: Column(
                               children: [
                                   ExpandablePanel(
@@ -1032,21 +1075,21 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                     header: Container(
                                       width: double.infinity,
                                       // color: Color(0x45eeeeee),
-                                      padding: EdgeInsets.fromLTRB(
+                                      padding: const EdgeInsets.fromLTRB(
                                           8.0, 12.0, 8.0, 0.0),
                                       alignment: Alignment.centerLeft,
                                       child: Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 8,
                                           ),
-                                          Text(
+                                          const Text(
                                             "What is course credit?",
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 8,
                                           ),
                                           Icon(Icons.info,
@@ -1057,7 +1100,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                     ),
                                     expanded: Container(
                                         padding:
-                                        EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                        const EdgeInsets.fromLTRB(8, 0, 8, 8),
                                         alignment: Alignment.centerLeft,
                                         child: Html(
                                           data: courseCredit,
@@ -1066,15 +1109,15 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                             Style(color: MainColor.textBlue)
                                           },
                                         )),
-                                    collapsed: Text(""),
+                                    collapsed: const Text(""),
                                   ),
                                 if (courseSelected)
                                   AnimatedContainer(
-                                    duration: Duration(seconds: 5),
+                                    duration: const Duration(seconds: 5),
                                     width: courseInfWidth,
                                     child: Container(
                                       padding:
-                                      EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                      const EdgeInsets.fromLTRB(16, 0, 16, 0),
                                       width: double.infinity,
                                       child: Column(
                                         children: [
@@ -1089,7 +1132,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                     pendingLoadingCourse,
                                                     MainColor.lightBlue,
                                                     MainColor.darkBlue),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 8,
                                               ),
                                               if (!approvedLoadingCourse)
@@ -1101,7 +1144,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                     MainColor.darkGreen),
                                             ],
                                           ),
-                                          SizedBox(height: 8),
+                                          const SizedBox(height: 8),
                                           Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -1113,7 +1156,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                                     settledLoadingCourse,
                                                     MainColor.lightOrange,
                                                     MainColor.darkOrange),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 8,
                                               ),
                                               if (!rejectedLoadingCourse)
@@ -1134,7 +1177,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                           ),
                         // CarouselSliderMain(width: widget.width, class_id: 3),
                         Container(
-                          margin: EdgeInsets.fromLTRB(16.0, 16, 16, 64),
+                          margin: const EdgeInsets.fromLTRB(16.0, 16, 16, 64),
                           width: double.infinity,
                           height: 50,
                           child: MaterialButton(
@@ -1143,16 +1186,16 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ReferralFullScreen()));
+                                          const ReferralFullScreen()));
                             },
                             color: MainColor.skillogicBlue,
-                            child: Text(
+                            child: const Text(
                               "See all referrals",
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 120,
                         ),
                       ],

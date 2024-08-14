@@ -1,4 +1,4 @@
-import 'package:datamites/pages/candidate_portal/data_model/ScheduleModel.dart';
+import 'package:skillogic/pages/candidate_portal/data_model/ScheduleModel.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,7 +45,7 @@ class _CourseSchedulesState extends State<CourseSchedules> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomWidget.getDatamitesAppBar(context, userModel, 1),
+      appBar: CustomWidget.getSkillogicAppBar(context, userModel, 1),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -87,7 +87,7 @@ class _CourseSchedulesState extends State<CourseSchedules> {
                                         "\tCentre: ${schedule.centre_name}\n\tClassroom: ${schedule.classroom_name}")
                                   ],
                                 )
-                              : Text(""),
+                              : const Text(""),
                         ),
                       ],
                     ),
@@ -181,7 +181,7 @@ class _CourseSchedulesState extends State<CourseSchedules> {
                                   )),
                             if (schedule.trainer_id.isNotEmpty)
                               Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:

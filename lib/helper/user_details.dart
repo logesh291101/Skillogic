@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +17,8 @@ class UserDetails {
     await prefs.setString("userImage", "");
     await prefs.setString("userName", "");
     await prefs.setString("userEmail", "");
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> MainPage()), (route) => false);
+    await prefs.setString("userSession", "");
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> const MainPage()), (route) => false);
   }
   Future<void> manualLogout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -29,8 +29,9 @@ class UserDetails {
     await prefs.setString("userImage", "");
     await prefs.setString("userName", "");
     await prefs.setString("userEmail", "");
+    await prefs.setString("userSession", "");
     await prefs.clear();
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> MainPage()), (route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> const MainPage()), (route) => false);
   }
 
 
@@ -44,6 +45,7 @@ class UserDetails {
     await prefs.setString("userImage", "");
     await prefs.setString("userName", "");
     await prefs.setString("userEmail", "");
+    await prefs.setString("userSession", "");
   }
 
   Future<UserModel> getDetail() async {
@@ -56,6 +58,7 @@ class UserDetails {
     userModel.userPhone = _prefs.getString("userPhone") ?? "";
     userModel.userImage = _prefs.getString("userImage") ?? "";
     userModel.userEmail = _prefs.getString("userEmail") ?? "";
+    userModel.userSession = _prefs.getString("userSession") ?? "";
 
     return userModel;
   }
@@ -67,6 +70,7 @@ class UserDetails {
     await prefs.setString("userPhone", userModel.userPhone);
     await prefs.setString("userImage", userModel.userImage);
     await prefs.setString("userDob", userModel.userDob);
+    await prefs.setString("userSession", userModel.userSession);
   }
 
   Future<void> logoutUser() async {
@@ -78,5 +82,6 @@ class UserDetails {
     await prefs.setString("userImage", "");
     await prefs.setString("userName", "");
     await prefs.setString("userEmail", "");
+    await prefs.setString("userSession", "");
   }
 }

@@ -1,5 +1,5 @@
 
-import 'package:datamites/pages/referral/referral_history.dart';
+import 'package:skillogic/pages/referral/referral_history.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

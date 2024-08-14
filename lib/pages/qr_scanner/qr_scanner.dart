@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:datamites/pages/qr_scanner/success_screen.dart';
+import 'package:skillogic/pages/qr_scanner/success_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -49,7 +49,8 @@ class _QRScannerState extends State<QRScanner> {
               child: Stack(
                 children: [
                   _buildQrView(context),
-                  if(showPlay) Container(
+                  if(showPlay)
+                    SizedBox(
                     height: double.infinity,
                     width: double.infinity,
                     child: Center(
@@ -176,7 +177,9 @@ class _QRScannerState extends State<QRScanner> {
   }
 
   void startCamera(){
-    print("Screen started");
+    if (kDebugMode) {
+      print("Screen started");
+    }
     controller?.resumeCamera();
     setState(() {
       showPlay = false;
@@ -187,7 +190,9 @@ class _QRScannerState extends State<QRScanner> {
     String? code = scanData.code;
 
     if (code != null) {
-      print('Scanned result ${result!.code}');
+      if (kDebugMode) {
+        print('Scanned result ${result!.code}');
+      }
       if (code.contains("https://www.datamites.com") || true) {
         controller?.pauseCamera();
         setState(() {

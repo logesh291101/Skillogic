@@ -1,26 +1,18 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/model/category_model.dart';
-import 'package:datamites/model/course/course_list_model.dart';
-import 'package:datamites/model/user_model.dart';
-import 'package:datamites/pages/candidate_portal/enrolled_course.dart';
-import 'package:datamites/pages/qr_scanner/qr_scanner.dart';
-import 'package:datamites/pages/referral/new_referral.dart';
-import 'package:datamites/pages/referral/referral_page_scaffold.dart';
-import 'package:datamites/pages/sub_page/category_page.dart';
-import 'package:datamites/pages/sub_page/course/course_list_page.dart';
-import 'package:datamites/pages/sub_page/course/search_course_list_page.dart';
-import 'package:datamites/provider/rating_provider_all.dart';
-import 'package:datamites/widgets/car_category_shimmer.dart';
-import 'package:datamites/widgets/card_course_preview_shimmer.dart';
-import 'package:datamites/widgets/carousel.dart';
-import 'package:datamites/widgets/carousel_shimmer.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/model/category_model.dart';
+import 'package:skillogic/model/course/course_list_model.dart';
+import 'package:skillogic/model/user_model.dart';
+import 'package:skillogic/pages/candidate_portal/enrolled_course.dart';
+import 'package:skillogic/pages/sub_page/course/course_list_page.dart';
+import 'package:skillogic/provider/rating_provider_all.dart';
+import 'package:skillogic/widgets/card_course_preview_shimmer.dart';
+import 'package:skillogic/widgets/carousel.dart';
+import 'package:skillogic/widgets/carousel_shimmer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,7 +23,6 @@ import '../model/carousel_response_model.dart';
 import 'candidate_portal/enrolled_certificate.dart';
 import 'candidate_portal/payment_page.dart';
 import 'candidate_portal/rating_page.dart';
-import 'contact_us.dart';
 import 'main_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -81,7 +72,6 @@ class _HomePageState extends State<HomePage> {
     var prefs = await SharedPreferences.getInstance();
     var authUrl = prefs.getString("auth_url") ?? "";
     String url = "${authUrl}carousels?class_id=1";
-
     http.Response response = await http.get(Uri.parse(url),
         headers: {"jwt": prefs.getString("jwtToken") ?? ""});
     if (kDebugMode) {
@@ -174,7 +164,9 @@ class _HomePageState extends State<HomePage> {
   _getBanner() async {
     var prefs = await SharedPreferences.getInstance();
     var authUrl = prefs.getString("auth_url") ?? "";
-    print("Auth url is ${authUrl}banner");
+    if (kDebugMode) {
+      print("Auth url is ${authUrl}banner");
+    }
     var response = await http.get(Uri.parse("${authUrl}banner"));
     if (kDebugMode) {
       print("Got banner code ${response.statusCode}");
@@ -221,6 +213,61 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Widget _futureBanner1() {
+      return MaterialButton(
+        splashColor: Colors.green,
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          // _gotoUrl("https://skillogic.com");
+        },
+        child: Container(
+          height: 280,
+          decoration: const BoxDecoration(
+              image:
+              DecorationImage(
+                image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/skillogic-a5248.appspot.com/o/footer.png?alt=media&token=5fb20922-0519-48f0-9a7d-3d9f662ab3ae'),
+                fit: BoxFit.fill,
+              )),
+        ),
+      );
+    }
+
+
+  Widget topbanner() {
+    final DateTime now = DateTime.now();
+    final int hour = now.hour;
+    String bannerAsset;
+
+    if (hour >= 5 && hour < 12) {
+      // Good Morning
+      bannerAsset = 'assets/morning_banner.png';
+    } else if (hour >= 12 && hour < 17) {
+      // Good Afternoon
+      bannerAsset = 'assets/morning_banner.png';
+    } else if (hour >= 17 && hour < 21) {
+      // Good Evening
+      bannerAsset = 'assets/morning_banner.png';
+    } else {
+      // Night
+      bannerAsset = 'assets/night_banner.png';
+    }
+    return MaterialButton(
+      splashColor: Colors.green,
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        _gotoUrl(bannerLink);
+        },
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(bannerAsset),
+              fit: BoxFit.fill,
+            )),
+      ),
+    );
+  }
+
   Widget _futureCarouselBuilder() {
     if (showSignIn) {
       return Container();
@@ -231,33 +278,31 @@ class _HomePageState extends State<HomePage> {
             return Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Carousel(carouselList: carouselList));
-          }, future: null,);
+          });
         } else {
           return const CarouselShimmer();
         }
         return const Text("no data yet");
-      }, future: null,);
+      });
     }
   }
 
   Widget _futureSuccessStories() {
     CarouselModel succesStory1 = CarouselModel(
         id: "1",
-        // image: "https://datamites.com/resource/images/mob/DM-mob-sc-2.png",
-        image: "https://i9.ytimg.com/vi_webp/Ecjj7SclWog/maxresdefault.webp?v=5d0ccaf9&sqp=CJyK460G&rs=AOn4CLC8sqCAfQjAHB8ez6kzmVY-ai9Vqg",
+        image: "https://img.youtube.com/vi/gOLTcIsiwv4/maxresdefault.jpg",
         action: "3",
         sub_action: "",
         external_url:
-        "https://www.youtube.com/watch?v=rJd_aojJteA&list=PLeRUz657THGhmCfoGRMYCwXkwYLWijFwm&index=4&pp=iAQB",
+        "https://www.youtube.com/watch?v=gOLTcIsiwv4&list=PLg9Hha4rflelJ7Ts7ra0GhN_B0x5kT_zB&index=1",
         external_action: "1");
     CarouselModel succesStory2 = CarouselModel(
         id: "2",
-        // image: "https://datamites.com/resource/images/mob/DM-mob-sc-1.png",
-        image: "https://i9.ytimg.com/vi_webp/yDf_VN8aNwo/maxresdefault.webp?v=5cee7b70&sqp=CJyK460G&rs=AOn4CLB_idUJCBdAIveEz_vaMw8qq0b-GQ",
+        image: "https://img.youtube.com/vi/vOqDyOZL71E/maxresdefault.jpg",
         action: "3",
         sub_action: "",
         external_url:
-        "https://www.youtube.com/watch?v=3ckToMAyFGY&list=PLeRUz657THGhmCfoGRMYCwXkwYLWijFwm&index=7&pp=iAQB",
+        "https://www.youtube.com/watch?v=vOqDyOZL71E&list=PLg9Hha4rflekclpfab8ewDN-1HRAiAqyP&index=1",
         external_action: "1");
     var carouselsList = [succesStory1, succesStory2];
     return FutureBuilder<String>(builder: (context, snapshot) {
@@ -266,11 +311,11 @@ class _HomePageState extends State<HomePage> {
           return Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Carousel(carouselList: carouselsList));
-        }, future: null,);
+        });
       } else {
         return Container();
       }
-    }, future: null,);
+    });
     return Container();
   }
 
@@ -282,15 +327,399 @@ class _HomePageState extends State<HomePage> {
             coursesList: coursesList,
             title: "Our Courses",
           );
-        }, future: null,);
+        });
       } else {
         return const CardCoursePreviewShimmer();
       }
       return const Text("no data yet");
-    }, future: null,);
+    });
   }
 
   Widget _userActivityBuilder() {
+    double itemWidth = (MediaQuery.of(context).size.width - 48) / 2 - 8;
+    double itemHeight = itemWidth; // Making height proportional to width
+
+    //commented this code of column boxes
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   mainAxisAlignment: MainAxisAlignment.start,
+    //   children: [
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //       children: [
+    //         MaterialButton(
+    //           padding: EdgeInsets.zero,
+    //           onPressed: () {
+    //             // Navigator.push(
+    //             //     context,
+    //             //     MaterialPageRoute(
+    //             //         builder: (context) => const EnrollmentPage(pageTitle: "My Enrollment")));
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (context) => const EnrolledCourse()));
+    //           },
+    //           child: Container(
+    //             margin: const EdgeInsets.fromLTRB(0, 16, 8, 8),
+    //             width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //             padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //             decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(10.0),
+    //                 color: const Color(0xffd9ebf2)),
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: const [
+    //                 Icon(
+    //                   Icons.history_edu,
+    //                   color: Color(0xff286078),
+    //                   size: 40,
+    //                 ),
+    //                 SizedBox(
+    //                   height: 8.0,
+    //                 ),
+    //                 Text(
+    //                   "My\nEnrollment",
+    //                   style: TextStyle(
+    //                       fontSize: 14,
+    //                       fontWeight: FontWeight.w500,
+    //                       color: Color(0xff286078)),
+    //                   textAlign: TextAlign.center,
+    //                 )
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //         // MaterialButton(
+    //         //   padding: const EdgeInsets.all(0),
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const PaymentPage(pageTitle: "My Payment")));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
+    //         //     width: (MediaQuery.of(context).size.width-48)/2,
+    //         //     padding: EdgeInsets.all(16.0),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xffe8eaf6)
+    //         //     ),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(Icons.payment_sharp, color: Color(0xff001970), size: 40,),
+    //         //         SizedBox(height: 8.0,),
+    //         //         Text("My Payment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xff001970) ),)
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // ),
+    //         MaterialButton(
+    //           padding: EdgeInsets.zero,
+    //           onPressed: () {
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (context) => MultiProvider(
+    //                         providers: [
+    //                           ChangeNotifierProvider(
+    //                               create: (_) => RatingProviderAll()),
+    //                         ],
+    //                         child: const RatingPage(
+    //                             pageTitle: "My Ratings"))));
+    //           },
+    //           child: Container(
+    //             margin: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+    //             width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //             padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //             decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(10.0),
+    //                 color: const Color(0xffd9ebf2)),
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: const [
+    //                 Icon(
+    //                   Icons.star,
+    //                   color: Color(0xff286078),
+    //                   size: 40,
+    //                 ),
+    //                 SizedBox(
+    //                   height: 8.0,
+    //                 ),
+    //                 Text(
+    //                   "My\nRatings",
+    //                   style: TextStyle(
+    //                       fontSize: 14,
+    //                       fontWeight: FontWeight.w500,
+    //                       color: Color(0xff286078)),
+    //                   textAlign: TextAlign.center,
+    //                 )
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //         //mypayment in first row is commneted
+    //         // MaterialButton(
+    //         //   padding: const EdgeInsets.all(0),
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const CandidatePaymentPage(
+    //         //                 pageTitle: "My\nPayment")));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+    //         //     width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //         //     padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xfffbeaef)),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(
+    //         //           Icons.payment_sharp,
+    //         //           color: Color(0xffb62451),
+    //         //           size: 40,
+    //         //         ),
+    //         //         SizedBox(
+    //         //           height: 8.0,
+    //         //         ),
+    //         //         Text(
+    //         //           "My\nPayment",
+    //         //           style: TextStyle(
+    //         //               fontSize: 14,
+    //         //               fontWeight: FontWeight.w500,
+    //         //               color: Color(0xffb62451)),
+    //         //           textAlign: TextAlign.center,
+    //         //         )
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // ),
+    //         // MaterialButton(
+    //         //   padding: EdgeInsets.zero,
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const EnrollmentPage(pageTitle: "My Assessment")));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: EdgeInsets.fromLTRB(8, 8, 0, 4),
+    //         //     width: (MediaQuery.of(context).size.width-48)/2,
+    //         //     padding: EdgeInsets.all(16.0),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xfffff8e1)
+    //         //     ),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(Icons.task_outlined, color: Color(0xffbb4d00), size: 40,),
+    //         //         SizedBox(height: 8.0,),
+    //         //         Text("My Assessment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xffbb4d00) ),)
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // )
+    //       ],
+    //     ),
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //       children: [
+    //         // MaterialButton(
+    //         //   padding: const EdgeInsets.all(0),
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const CandidatePaymentPage(pageTitle: "My Payment")));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
+    //         //     width: (MediaQuery.of(context).size.width-48)/2,
+    //         //     padding: EdgeInsets.all(16.0),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xffe8eaf6)
+    //         //     ),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(Icons.payment_sharp, color: Color(0xff001970), size: 40,),
+    //         //         SizedBox(height: 8.0,),
+    //         //         Text("My Payment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xff001970) ),)
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // ),
+    //         MaterialButton(
+    //           padding: const EdgeInsets.all(0),
+    //           onPressed: () {
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (context) => const CandidatePaymentPage(
+    //                         pageTitle: "My\nPayment")));
+    //           },
+    //           child: Container(
+    //             margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+    //             width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //             padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //             decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(10.0),
+    //                 color: const Color(0xffd9ebf2)),
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: const [
+    //                 Icon(
+    //                   Icons.payment_sharp,
+    //                   color: Color(0xff286078),
+    //                   size: 40,
+    //                 ),
+    //                 SizedBox(
+    //                   height: 8.0,
+    //                 ),
+    //                 Text(
+    //                   "My\nPayment",
+    //                   style: TextStyle(
+    //                       fontSize: 14,
+    //                       fontWeight: FontWeight.w500,
+    //                       color: Color(0xff286078)),
+    //                   textAlign: TextAlign.center,
+    //                 )
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //         //raise a ticket and my referral are commneted in second row
+    //
+    //         // MaterialButton(
+    //         //   padding: const EdgeInsets.all(0),
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const ReferralScreenScaffold()));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: const EdgeInsets.fromLTRB(0, 8, 8, 0),
+    //         //     width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //         //     padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xffd9ebf2)),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(
+    //         //           Icons.person_add_alt_rounded,
+    //         //           color: Color(0xff286078),
+    //         //           size: 40,
+    //         //         ),
+    //         //         SizedBox(
+    //         //           height: 8.0,
+    //         //         ),
+    //         //         Text(
+    //         //           "My\nReferral",
+    //         //           style: TextStyle(
+    //         //               fontSize: 14,
+    //         //               fontWeight: FontWeight.w500,
+    //         //               color: Color(0xff286078)),
+    //         //           textAlign: TextAlign.center,
+    //         //         )
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // ),
+    //         // MaterialButton(
+    //         //   padding: const EdgeInsets.all(0),
+    //         //   onPressed: () {
+    //         //     Navigator.push(
+    //         //         context,
+    //         //         MaterialPageRoute(
+    //         //             builder: (context) => const ContactUsScreen(
+    //         //               title: "Raise a ticket",
+    //         //               message: "",
+    //         //             )));
+    //         //   },
+    //         //   child: Container(
+    //         //     margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+    //         //     width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //         //     padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //         //     decoration: BoxDecoration(
+    //         //         borderRadius: BorderRadius.circular(10.0),
+    //         //         color: const Color(0xfffbeaef)),
+    //         //     child: Column(
+    //         //       crossAxisAlignment: CrossAxisAlignment.center,
+    //         //       children: const [
+    //         //         Icon(
+    //         //           Icons.question_answer_outlined,
+    //         //           color: Color(0xffb62451),
+    //         //           size: 40,
+    //         //         ),
+    //         //         SizedBox(
+    //         //           height: 8.0,
+    //         //         ),
+    //         //         Text(
+    //         //           "Raise a\nticket",
+    //         //           style: TextStyle(
+    //         //               fontSize: 14,
+    //         //               fontWeight: FontWeight.w500,
+    //         //               color: Color(0xffb62451)),
+    //         //           textAlign: TextAlign.center,
+    //         //         )
+    //         //       ],
+    //         //     ),
+    //         //   ),
+    //         // ),
+    //         MaterialButton(
+    //           padding: const EdgeInsets.all(0),
+    //           onPressed: () {
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (context) => const EnrolledCertificate()));
+    //           },
+    //           child: Container(
+    //             margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+    //             width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+    //             padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+    //             decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(10.0),
+    //                 color: const Color(0xfffbeaef)),
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: const [
+    //                 Icon(
+    //                   Icons.menu_book,
+    //                   color: Color(0xffb62451),
+    //                   size: 40,
+    //                 ),
+    //                 SizedBox(
+    //                   height: 8.0,
+    //                 ),
+    //                 Text(
+    //                   "My\nCertificates",
+    //                   style: TextStyle(
+    //                       fontSize: 14,
+    //                       fontWeight: FontWeight.w500,
+    //                       color: Color(0xffb62451)),
+    //                   textAlign: TextAlign.center,
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     )
+    //   ],
+    // );
+
+    //till here it is commented @utsav 20-05-2024
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -298,74 +727,116 @@ class _HomePageState extends State<HomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            MaterialButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const EnrollmentPage(pageTitle: "My Enrollment")));
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EnrolledCourse()));
-              },
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(0, 16, 8, 4),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
-                padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xffe8f5e9)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.history_edu,
-                      color: Color(0xff00701a),
-                      size: 40,
+          //   MaterialButton(
+          //   padding: EdgeInsets.zero,
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const EnrolledCourse(),
+          //       ),
+          //     );
+          //   },
+          //   child: Container(
+          //     margin: const EdgeInsets.fromLTRB(0, 16, 8, 8),
+          //     height: itemHeight,
+          //     width: itemWidth,
+          //     padding: const EdgeInsets.all(8.0),
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(10.0),
+          //       color: const Color(0xffffffff),
+          //       boxShadow: [
+          //         BoxShadow(
+          //           color: Colors.grey.withOpacity(0.5),
+          //           spreadRadius: 2,
+          //           blurRadius: 5,
+          //           offset: const Offset(0, 3), // changes position of shadow
+          //         ),
+          //       ],
+          //     ),
+          //     child: Stack(
+          //       children: [
+          //         Positioned(
+          //           top: 8.0,
+          //           left: 8.0,
+          //           child: Text(
+          //             "MY\nENROLLMENT",
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.w500,
+          //               color: Color(0xff8c2b4a),
+          //               height: 1.0, // Reduce space between lines
+          //             ),
+          //             textAlign: TextAlign.left,
+          //           ),
+          //         ),
+          //         Positioned(
+          //           bottom: 0.0,
+          //           right: 0.0,
+          //           child: Image.network(
+          //             'https://firebasestorage.googleapis.com/v0/b/skillogic-a5248.appspot.com/o/enroll_icon_1.png?alt=media&token=22af3fa8-ad0a-4e7b-88ad-2f6c7236500d',
+          //             height: 90,
+          //             width: 180,
+          //             alignment: Alignment.bottomRight,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          MaterialButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EnrolledCourse()));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(0, 16, 8, 8),
+                      height: itemHeight,
+                      width: itemWidth,
+                      // width: (MediaQuery.of(context).size.width - 48) / 2 - 8,
+                      padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: const Color(0xffd9ebf2),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/enroll_icon.png'),
+                          fit: BoxFit.cover,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      // child: Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: const [
+                      //     Icon(
+                      //       Icons.history_edu,
+                      //       color: Color(0xff286078),
+                      //       size: 40,
+                      //     ),
+                      //     SizedBox(
+                      //       height: 8.0,
+                      //     ),
+                      //     Text(
+                      //       "My\nEnrollment",
+                      //       style: TextStyle(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: Color(0xff286078)),
+                      //       textAlign: TextAlign.center,
+                      //     )
+                      //   ],
+                      // ),
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "My\nEnrollment",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff00701a)),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // MaterialButton(
-            //   padding: const EdgeInsets.all(0),
-            //   onPressed: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const PaymentPage(pageTitle: "My Payment")));
-            //   },
-            //   child: Container(
-            //     margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
-            //     width: (MediaQuery.of(context).size.width-48)/2,
-            //     padding: EdgeInsets.all(16.0),
-            //     decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(10.0),
-            //         color: const Color(0xffe8eaf6)
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: const [
-            //         Icon(Icons.payment_sharp, color: Color(0xff001970), size: 40,),
-            //         SizedBox(height: 8.0,),
-            //         Text("My Payment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xff001970) ),)
-            //       ],
-            //     ),
-            //   ),
-            // ),
+                  ),
             MaterialButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -373,224 +844,121 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => MultiProvider(
-                            providers: [
-                              ChangeNotifierProvider(
-                                  create: (_) => RatingProviderAll()),
-                            ],
-                            child: const RatingPage(
-                                pageTitle: "My Ratings"))));
+                          providers: [
+                            ChangeNotifierProvider(
+                                create: (_) => RatingProviderAll()),
+                          ],
+                          child: const RatingPage(pageTitle: "My Ratings"),
+                        )));
               },
               child: Container(
-                margin: const EdgeInsets.fromLTRB(8, 8, 8, 4),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+                margin: const EdgeInsets.fromLTRB(8, 16, 0, 8),
+                height: itemHeight,
+                width: itemWidth,
+                // width: (MediaQuery.of(context).size.width - 48) / 2 - 8,
                 padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xfffff8e1)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.star,
-                      color: Color(0xffbb4d00),
-                      size: 40,
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color(0xffd9ebf2),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/rating_icon.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "My\nRatings",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffbb4d00)),
-                      textAlign: TextAlign.center,
-                    )
                   ],
                 ),
+                // child: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: const [
+                //     Icon(
+                //       Icons.rate_review_sharp,
+                //       color: Color(0xff286078),
+                //       size: 40,
+                //     ),
+                //     SizedBox(
+                //       height: 8.0,
+                //     ),
+                //     Text(
+                //       "My\nRatings",
+                //       style: TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xff286078)),
+                //       textAlign: TextAlign.center,
+                //     )
+                //   ],
+                // ),
               ),
             ),
-            MaterialButton(
-              padding: const EdgeInsets.all(0),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CandidatePaymentPage(
-                            pageTitle: "My\nPayment")));
-              },
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
-                padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xffe8eaf6)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.payment_sharp,
-                      color: Color(0xff001970),
-                      size: 40,
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "My\nPayment",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff001970)),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // MaterialButton(
-            //   padding: EdgeInsets.zero,
-            //   onPressed: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const EnrollmentPage(pageTitle: "My Assessment")));
-            //   },
-            //   child: Container(
-            //     margin: EdgeInsets.fromLTRB(8, 8, 0, 4),
-            //     width: (MediaQuery.of(context).size.width-48)/2,
-            //     padding: EdgeInsets.all(16.0),
-            //     decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(10.0),
-            //         color: const Color(0xfffff8e1)
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: const [
-            //         Icon(Icons.task_outlined, color: Color(0xffbb4d00), size: 40,),
-            //         SizedBox(height: 8.0,),
-            //         Text("My Assessment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xffbb4d00) ),)
-            //       ],
-            //     ),
-            //   ),
-            // )
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // MaterialButton(
-            //   padding: const EdgeInsets.all(0),
-            //   onPressed: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const CandidatePaymentPage(pageTitle: "My Payment")));
-            //   },
-            //   child: Container(
-            //     margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
-            //     width: (MediaQuery.of(context).size.width-48)/2,
-            //     padding: EdgeInsets.all(16.0),
-            //     decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(10.0),
-            //         color: const Color(0xffe8eaf6)
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: const [
-            //         Icon(Icons.payment_sharp, color: Color(0xff001970), size: 40,),
-            //         SizedBox(height: 8.0,),
-            //         Text("My Payment", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color:Color(0xff001970) ),)
-            //       ],
-            //     ),
-            //   ),
-            // ),
             MaterialButton(
-              padding: const EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReferralScreenScaffold()));
-              },
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(0, 8, 8, 0),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
-                padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xfffbe9e7)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.person_add_alt_rounded,
-                      color: Color(0xffe64a19),
-                      size: 40,
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "My\nReferral",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffe64a19)),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            MaterialButton(
-              padding: const EdgeInsets.all(0),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ContactUsScreen(
-                          title: "Raise a ticket",
-                          message: "",
+                        builder: (context) => const CandidatePaymentPage(
+                          pageTitle: "My Payment",
                         )));
               },
               child: Container(
-                margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+                margin: const EdgeInsets.fromLTRB(0, 8, 8, 0),
+                height: itemHeight,
+                width: itemWidth,
+                // width: (MediaQuery.of(context).size.width - 48) / 2 - 8,
                 padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xfffbf1e7)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.question_answer_outlined,
-                      color: Color(0xffcf6a04),
-                      size: 40,
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color(0xffd9ebf2),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/payment_icon.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "Raise a\nticket",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffcf6a04)),
-                      textAlign: TextAlign.center,
-                    )
                   ],
                 ),
+                // child: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: const [
+                //     Icon(
+                //       Icons.payment_sharp,
+                //       color: Color(0xff286078),
+                //       size: 40,
+                //     ),
+                //     SizedBox(
+                //       height: 8.0,
+                //     ),
+                //     Text(
+                //       "My\nPayment",
+                //       style: TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xff286078)),
+                //       textAlign: TextAlign.center,
+                //     )
+                //   ],
+                // ),
               ),
             ),
             MaterialButton(
               padding: const EdgeInsets.all(0),
               onPressed: () {
-                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                //   content: Text("Coming soon", textAlign: TextAlign.center),
-                // ));
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -598,92 +966,55 @@ class _HomePageState extends State<HomePage> {
               },
               child: Container(
                 margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
-                width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
+                height: itemHeight,
+                width: itemWidth,
+                // width: (MediaQuery.of(context).size.height - 48) / 2 - 192,
                 padding: const EdgeInsets.fromLTRB(4, 16, 4, 16),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xffe7e8fb)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.book_outlined,
-                      color: Color(0xff3038c2),
-                      size: 40,
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color(0xfffbeaef),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/certificate_icon.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      "\nCertificates",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff3038c2)),
-                      textAlign: TextAlign.center,
-                    ),
-                    // Text(
-                    //   "(coming soon)",
-                    //   style: TextStyle(
-                    //       fontSize: 10,
-                    //       fontWeight: FontWeight.w500,
-                    //       color: Color(0xff3038c2)),
-                    //   textAlign: TextAlign.center,
-                    // )
                   ],
+                  // border: Border.all(
+                  //   color: Colors.grey, // Set the border color
+                  //   width: 1.0, // Set the border width
+                  // ),
                 ),
+                // child: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: const [
+                //     Icon(
+                //       Icons.menu_book,
+                //       color: Color(0xffb62451),
+                //       size: 40,
+                //     ),
+                //     SizedBox(
+                //       height: 8.0,
+                //     ),
+                //     Text(
+                //       "My\nCertificates",
+                //       style: TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xffb62451)),
+                //       textAlign: TextAlign.center,
+                //     ),
+                //   ],
+                // ),
               ),
             ),
           ],
-        ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     MaterialButton(
-        //       padding: const EdgeInsets.all(0),
-        //       onPressed: () {
-        //         goToQR();
-        //       },
-        //       child: Container(
-        //         margin: EdgeInsets.fromLTRB(8, 8, 0, 0),
-        //         width: (MediaQuery.of(context).size.width - 48 - 16) / 3,
-        //         padding: EdgeInsets.fromLTRB(4, 16, 4, 16),
-        //         decoration: BoxDecoration(
-        //             borderRadius: BorderRadius.circular(10.0),
-        //             color: const Color(0xffa2c0c6)),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.center,
-        //           children: const [
-        //             Icon(
-        //               Icons.co_present_outlined,
-        //               color: Color(0xff305a63),
-        //               size: 40,
-        //             ),
-        //             SizedBox(
-        //               height: 8.0,
-        //             ),
-        //             Text(
-        //               "Attendance",
-        //               style: TextStyle(
-        //                   fontSize: 14,
-        //                   fontWeight: FontWeight.w500,
-        //                   color: Color(0xff305a63)),
-        //               textAlign: TextAlign.center,
-        //             ),
-        //             Text(
-        //               "(QR scan)",
-        //               style: TextStyle(
-        //                   fontSize: 10,
-        //                   fontWeight: FontWeight.w500,
-        //                   color: Color(0xff305a63)),
-        //               textAlign: TextAlign.center,
-        //             )
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ]
-        // )
+        )
       ],
     );
   }
@@ -693,7 +1024,7 @@ class _HomePageState extends State<HomePage> {
   //     if (categoryList.isNotEmpty) {
   //       return FutureBuilder(builder: (BuildContext context, snapshot) {
   //         return CategoryPage(categoryList: categoryList);
-  //       }, future: null,);
+  //       });
   //     } else {
   //       return Column(
   //         crossAxisAlignment: CrossAxisAlignment.start,
@@ -718,7 +1049,7 @@ class _HomePageState extends State<HomePage> {
   //         ],
   //       );
   //     }
-  //   }, future: null,);
+  //   });
   // }
 
   _refreshMain() async {
@@ -753,65 +1084,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //QR code
-  getCameraPermissionStatus() async {
-    return Permission.camera.status.isGranted;
-  }
-
-  goTOQRCheck() async {
-    print(await Permission.camera.status);
-
-    bool status = await getCameraPermissionStatus();
-    print("Status is $status");
-    if (await getCameraPermissionStatus()) {
-      return true;
-    } else {
-      await Permission.camera.request();
-      if (await Permission.camera.isDenied ||
-          await Permission.camera.isPermanentlyDenied) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Message"),
-              content: const Text(
-                  "You need to give permission from system setting."),
-              actions: [
-                MaterialButton(
-                  child: const Text("Cancel"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                MaterialButton(
-                  child: const Text("Ok"),
-                  color: Colors.green,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    openAppSettings();
-                  },
-                ),
-              ],
-              elevation: 5,
-            );
-          },
-        );
-      } else {
-        await Permission.camera.request();
-      }
-    }
-    return await getCameraPermissionStatus();
-  }
-
-  goToQR() async {
-    // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QRScanner()));
-    bool status = await goTOQRCheck();
-    print("Final Status is ${status}");
-    if (status) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QRScanner()));
-    }
-  }
-
   @override
   void initState() {
     _refreshMain();
@@ -822,7 +1094,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didUpdateWidget(covariant HomePage oldWidget) {
-    print("Updated");
+    if (kDebugMode) {
+      print("Updated");
+    }
     searchText = "";
     searchController.text = "";
     setState(() {});
@@ -838,57 +1112,57 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black12),
-                  borderRadius: BorderRadius.circular(10.0),
-                  // color: const Color(0xffffffff)
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (value) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchCourseListPage(
-                                  title: searchText,
-                                )),
-                          );
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Search Course",
-                          border: InputBorder.none,
-                        ),
-                        onChanged: (text) {
-                          searchText = text;
-                        },
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchCourseListPage(
-                                  title: searchText,
-                                )),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ))
-                  ],
-                ),
-              ),
+              // Container(
+              //   margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              //   padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+              //   width: double.infinity,
+              //   height: 50,
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color: Colors.black12),
+              //     borderRadius: BorderRadius.circular(10.0),
+              //     // color: const Color(0xffffffff)
+              //   ),
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: TextField(
+              //           controller: searchController,
+              //           textInputAction: TextInputAction.search,
+              //           onSubmitted: (value) {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => SearchCourseListPage(
+              //                     title: searchText,
+              //                   )),
+              //             );
+              //           },
+              //           decoration: const InputDecoration(
+              //             hintText: "Search for Course",
+              //             border: InputBorder.none,
+              //           ),
+              //           onChanged: (text) {
+              //             searchText = text;
+              //           },
+              //         ),
+              //       ),
+              //       IconButton(
+              //           onPressed: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => SearchCourseListPage(
+              //                     title: searchText,
+              //                   )),
+              //             );
+              //           },
+              //           icon: const Icon(
+              //             Icons.search,
+              //             color: Colors.grey,
+              //           ))
+              //     ],
+              //   ),
+              // ),
               if (!loggedIn)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -896,7 +1170,7 @@ class _HomePageState extends State<HomePage> {
                     const Padding(
                       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                       child: Text(
-                        "Success Stories",
+                        "Review Stories",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w700),
                       ),
@@ -905,12 +1179,13 @@ class _HomePageState extends State<HomePage> {
                       height: 4,
                     ),
                     _futureSuccessStories(),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    // const SizedBox(
+                    //   height: 16,
+                    // ),
                   ],
                 ),
               if (loggedIn)
+                // topbanner(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -922,9 +1197,9 @@ class _HomePageState extends State<HomePage> {
                       height: 16.0,
                     ),
                     _futureCarouselBuilder(),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
+                    // const SizedBox(
+                    //   height: 16.0,
+                    // ),
                   ],
                 ),
 
@@ -937,65 +1212,65 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 16.0,
               ),
-
-              if (loggedIn)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 0),
-                  child: MaterialButton(
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {
-                      Route route = MaterialPageRoute(
-                          builder: (context) => AddReferral());
-                      Navigator.push(context, route);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 88,
-                            height: 88,
-                            decoration: BoxDecoration(
-                                color: MainColor.skillogicRed,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: const Center(
-                              child: Icon(
-                                Icons.person_add,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Text(
-                                      "Refer your friends and family. Win exciting prices and cashbacks.",
-                                      textAlign: TextAlign.start,
-                                    ),
-                                    Text(
-                                      "Click here to know more",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              const SizedBox(
-                height: 16,
-              ),
+              _futureBanner1(),
+              // if (loggedIn)
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 0),
+              //     child: MaterialButton(
+              //       padding: const EdgeInsets.all(0),
+              //       onPressed: () {
+              //         Route route = MaterialPageRoute(
+              //             builder: (context) => AddReferral());
+              //         Navigator.push(context, route);
+              //       },
+              //       child: Container(
+              //         padding: const EdgeInsets.all(16),
+              //         height: 120,
+              //         width: double.infinity,
+              //         decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(10),
+              //             border: Border.all()),
+              //         child: Row(
+              //           children: [
+              //             Container(
+              //               width: 88,
+              //               height: 88,
+              //               decoration: BoxDecoration(
+              //                   color: MainColor.skillogicRed,
+              //                   borderRadius: BorderRadius.circular(8)),
+              //               child: const Center(
+              //                 child: Icon(
+              //                   Icons.person_add,
+              //                   color: Colors.white,
+              //                 ),
+              //               ),
+              //             ),
+              //             Expanded(
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              //                   child: Column(
+              //                     crossAxisAlignment: CrossAxisAlignment.start,
+              //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                     children: const [
+              //                       Text(
+              //                         "Refer your friends and family. Win exciting prices and cashbacks.",
+              //                         textAlign: TextAlign.start,
+              //                       ),
+              //                       Text(
+              //                         "Click here to know more",
+              //                         style: TextStyle(fontWeight: FontWeight.w600),
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ))
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // const SizedBox(
+              //   height: 16,
+              // ),
               // _futureCarouselBuilder(),
               // _futureCourseBuilder()
             ],

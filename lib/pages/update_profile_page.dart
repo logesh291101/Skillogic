@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:datamites/helper/auth.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/model/user_model.dart';
-import 'package:datamites/pages/main_page.dart';
-import 'package:datamites/pages/password_change_page.dart';
-import 'package:datamites/pages/referral/referral_widgets/neomorphism.dart';
+import 'package:flutter/foundation.dart';
+import 'package:skillogic/helper/auth.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/model/user_model.dart';
+import 'package:skillogic/pages/main_page.dart';
+import 'package:skillogic/pages/password_change_page.dart';
+import 'package:skillogic/pages/referral/referral_widgets/neomorphism.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,7 +72,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     changedEmail = email = user.userEmail;
     emailController.text = user.userEmail;
     changedImage = image = user.userImage;
-    print("Image url is $image");
+    if (kDebugMode) {
+      print("Image url is $image");
+    }
     changedPhone = phone = user.userPhone;
     phoneController.text = user.userPhone;
     changedDob = dob = user.userDob;
@@ -98,7 +101,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             currentDate.month.toString() +
             "-" +
             currentDate.day.toString();
-        print(dob);
+        if (kDebugMode) {
+          print(dob);
+        }
       });
     }
   }
@@ -134,7 +139,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   Future getImage(BuildContext context, var action) async {
-    print("Getting image");
+    if (kDebugMode) {
+      print("Getting image");
+    }
     if (action == ConfirmAction.GALLERY) {
       intentImage = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 200);
       setState(() {
@@ -174,31 +181,49 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     var prefs = await SharedPreferences.getInstance();
     var authUrl = prefs.getString("auth_url_tm")??"";
     String url = "${authUrl}ImageUpload/uploadImage";
-    print(url);
-    print(imageFile.path);
+    if (kDebugMode) {
+      print(url);
+    }
+    if (kDebugMode) {
+      print(imageFile.path);
+    }
     var request = http.MultipartRequest("POST", Uri.parse(url))
       ..files.add(await http.MultipartFile.fromPath('image', imageFile.path,
           contentType: MediaType('image', 'jpg')));
     request.fields['width'] = '200';
     request.send().then((response) async {
       if (response.statusCode == 200) {
-        print("Success uploading image");
+        if (kDebugMode) {
+          print("Success uploading image");
+        }
         var str = await response.stream.bytesToString();
-        print(str);
+        if (kDebugMode) {
+          print(str);
+        }
         var resp = json.decode(str);
         _changeImage(resp["data"]);
       } else {
-        print("Failure");
-        print(response.statusCode);
+        if (kDebugMode) {
+          print("Failure");
+        }
+        if (kDebugMode) {
+          print(response.statusCode);
+        }
         var str = await response.stream.bytesToString();
-        print(str);
+        if (kDebugMode) {
+          print(str);
+        }
       }
     });
   }
 
   _changeImage(String changedImage) async {
-    print("Changing image");
-    print(changedImage);
+    if (kDebugMode) {
+      print("Changing image");
+    }
+    if (kDebugMode) {
+      print(changedImage);
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("userImage", changedImage);
     UserProfileUpdateService updateService = UserProfileUpdateService();
@@ -210,7 +235,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     updateService.setName = userModel.userName;
     updateService.setPhone = userModel.getUserPhone;
     var updated = await updateService.updateuser;
-    if (updated)
+    if (updated) {
       showDialog<String>(
         context: context,
         barrierDismissible: false,
@@ -221,14 +246,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => MainPage()),
+                  MaterialPageRoute(builder: (context) => const MainPage()),
                   (route) => false),
               child: const Text('OK'),
             ),
           ],
         ),
       );
-    else
+    } else {
       showDialog<String>(
         context: context,
         barrierDismissible: false,
@@ -238,13 +263,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => MainPage()),
+                  MaterialPageRoute(builder: (context) => const MainPage()),
                   (route) => false),
               child: const Text('OK'),
             ),
           ],
         ),
       );
+    }
     setState(() {
       imageProgress = false;
     });
@@ -285,7 +311,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                     (route) => false),
                 child: const Text('OK'),
               ),
@@ -299,13 +325,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text("Update Profile"),
+            title: const Text("Update Profile"),
           ),
           body: SafeArea(
             child: AbsorbPointer(
               absorbing: showProgress,
               child: Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   color: Colors.white,
                   height: double.infinity,
                   child: SingleChildScrollView(
@@ -320,7 +346,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // ignore: sized_box_for_whitespace
-                                SizedBox(height: 8,),
+                                const SizedBox(height: 8,),
                                 Container(
                                   width: double.infinity,
                                   child: Center(
@@ -361,7 +387,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                       ),
                                     ),
                                     Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           color: Color(0xb3424242)),
                                     ),
                                     Container(
@@ -371,7 +397,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: <Widget>[
+                                            children: const <Widget>[
                                               SizedBox(
                                                 child:
                                                     CircularProgressIndicator(
@@ -391,7 +417,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           _asyncConfirmDialog(context);
-                                          print("Tapped");
+                                          if (kDebugMode) {
+                                            print("Tapped");
+                                          }
                                         },
                                         child: _image == null
                                             ? Container(
@@ -401,7 +429,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             60.0),
-                                                    child: FadeInImage(
+                                                    child: const FadeInImage(
                                                       // placeholder: NetworkImage(
                                                       //     "https://cdn5.vectorstock.com/i/1000x1000/04/09/user-icon-vector-5770409.jpg"),
                                                       // image:
@@ -438,7 +466,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                           onTap: (){
                                             _asyncConfirmDialog(context);
                                           },
-                                          child: Text(
+                                          child: const Text(
                                             "Click \nto \nupload",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -599,8 +627,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                       },
                                     )),
                                 Container(
-                                    margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                                    padding: EdgeInsets.fromLTRB(8, 4, 4, 4),
+                                    margin: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(8, 4, 4, 4),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                         borderRadius:
@@ -611,18 +639,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         MaterialButton(
-                                          padding: EdgeInsets.all(0.0),
+                                          padding: const EdgeInsets.all(0.0),
                                           height: 55,
                                           elevation: 0.0,
                                           onPressed: () => _selectDate(context),
                                           child: Row(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 12,
                                               ),
                                               Icon(Icons.date_range_outlined,
                                                   color: Colors.grey[600]),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 12,
                                               ),
                                               Text(dob,
@@ -634,10 +662,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                         ),
                                       ],
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 16.0,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 32,
                                 ),
                                 MaterialButton(
@@ -646,8 +674,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                     FocusScope.of(context).unfocus();
                                     // showError = true;
                                     setState(() {});
-                                    print(
+                                    if (kDebugMode) {
+                                      print(
                                         _registerKey.currentState!.validate());
+                                    }
                                     if (imageProgress) {
                                       ScaffoldMessenger.of(context)
                                           // ignore: prefer_const_constructors
@@ -714,9 +744,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ).addNeumorphism(
                                   blurRadius: 8,
                                   borderRadius: 8,
-                                  offset: Offset(2, 2),
+                                  offset: const Offset(2, 2),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 8,
                                 ),
                                 MaterialButton(
@@ -726,7 +756,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                PasswordChangeScreen()));
+                                                const PasswordChangeScreen()));
                                   },
                                   child: const Text(
                                     "Change password",
@@ -738,9 +768,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ).addNeumorphism(
                                   blurRadius: 8,
                                   borderRadius: 8,
-                                  offset: Offset(2, 2),
+                                  offset: const Offset(2, 2),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 16,
                                 ),
                                 MaterialButton(
@@ -761,7 +791,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ).addNeumorphism(
                                   blurRadius: 8,
                                   borderRadius: 8,
-                                  offset: Offset(2, 2),
+                                  offset: const Offset(2, 2),
                                 ),
                                 const SizedBox(
                                   height: 32,
@@ -776,7 +806,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             ),
           ));
     } else {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Text("Loading"),
         ),
@@ -841,14 +871,20 @@ class UserProfileUpdateService {
     map['profile_pic'] = profileImageUrl;
     map['dob'] = dob;
     map['email'] = email;
-    print(map);
+    if (kDebugMode) {
+      print(map);
+    }
 
     try {
       http.Response response = await http
           .post(Uri.parse(finalUrl), body: map, headers: {"jwt": jwtToken});
       prefs.setString("user_email", email);
-      print("Profile upload status");
-      print(response.statusCode);
+      if (kDebugMode) {
+        print("Profile upload status");
+      }
+      if (kDebugMode) {
+        print(response.statusCode);
+      }
       if (response.statusCode == 201) {
         return true;
       }
@@ -857,7 +893,9 @@ class UserProfileUpdateService {
             textAlign: TextAlign.center),
       ));
     } catch (e) {
-      print("Exception " + e.toString());
+      if (kDebugMode) {
+        print("Exception $e");
+      }
     }
 
     return false;

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:datamites/helper/HexColor.dart';
-import 'package:datamites/helper/auth.dart';
-import 'package:datamites/helper/color.dart';
-import 'package:datamites/helper/user_details.dart';
-import 'package:datamites/pages/login_page.dart';
-import 'package:datamites/pages/verify_otp.dart';
-import 'package:datamites/widgets/feedback_widget.dart';
-import 'package:datamites/widgets/rating_widget.dart';
+import 'package:skillogic/helper/HexColor.dart';
+import 'package:skillogic/helper/auth.dart';
+import 'package:skillogic/helper/color.dart';
+import 'package:skillogic/helper/user_details.dart';
+import 'package:skillogic/pages/login_page.dart';
+import 'package:skillogic/pages/verify_otp.dart';
+import 'package:skillogic/widgets/feedback_widget.dart';
+import 'package:skillogic/widgets/rating_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

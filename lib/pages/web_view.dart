@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:datamites/helper/color.dart';
+import 'package:skillogic/helper/color.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:webview_flutter/webview_flutter.dart';

@@ -27,7 +27,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 35
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -46,9 +46,9 @@ android {
     signingConfigs {
         release {
             keyAlias 'skillogic-refer-app'
-            keyPassword 'Skillogic3#'
-            storeFile file('skillogic-refer-app.jks')
-            storePassword 'Skillogic3#'
+            keyPassword 'skillogic#'
+            storeFile file('key.jks')
+            storePassword 'skillogic#'
         }
     }
 
@@ -58,7 +58,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

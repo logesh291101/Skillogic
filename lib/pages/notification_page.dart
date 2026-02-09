@@ -277,6 +277,7 @@ class NotificationService {
     prefs = await SharedPreferences.getInstance();
     String authUrl = prefs.getString("auth_url") ?? "";
     finalUrl = '${authUrl}notification/getNotifications?page=0&limit=1000';
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getNotifications?page=0&limit=1000";
 
     http.Response response = await http.get(Uri.parse(finalUrl),
         headers: {"jwt": prefs.getString("jwtToken")!});

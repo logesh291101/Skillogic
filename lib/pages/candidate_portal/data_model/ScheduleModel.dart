@@ -1,6 +1,7 @@
 class ScheduleModel {
   final String trainer_id;
   final String trainer_name;
+  final String meeting_link;
   final String classroom_facility_id;
   final String classroom_name;
   final String centre_name;
@@ -14,6 +15,7 @@ class ScheduleModel {
   ScheduleModel({
     required this.trainer_id,
     required this.trainer_name,
+    required this.meeting_link,
     required this.classroom_facility_id,
     required this.classroom_name,
     required this.centre_name,
@@ -23,22 +25,23 @@ class ScheduleModel {
     required this.event_start_date,
     required this.event_start_time,
     required this.event_end_time,
-    });
+  });
 
 
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
-        trainer_id: json["trainer_id"]??"",
-        trainer_name: json["trainer_name"]??"",
-        classroom_facility_id: json["classroom_facility_id"]??"",
-        classroom_name: json["classroom_name"]??"",
-        centre_name: json["centre_name"]??"",
-        centre_email: json["centre_email"]??"",
-        centre_phone: json["centre_phone"]??"",
-        centre_address: json["centre_address"]??"",
-        event_start_date: json["event_start_date"]??"",
-        event_start_time: json["event_start_time"]??"",
-        event_end_time: json["event_end_time"]??"",
+      trainer_id: json["trainer_id"]??"",
+      trainer_name: json["trainer_name"]??"",
+      meeting_link: json["meeting_link"]?? "",
+      classroom_facility_id: json["classroom_facility_id"]??"",
+      classroom_name: json["classroom_name"]??"",
+      centre_name: json["centre_name"]??"",
+      centre_email: json["centre_email"]??"",
+      centre_phone: json["centre_phone"]??"",
+      centre_address: json["centre_address"]??"",
+      event_start_date: json["event_start_date"]??"",
+      event_start_time: json["event_start_time"]??"",
+      event_end_time: json["event_end_time"]??"",
     );
   }
 }

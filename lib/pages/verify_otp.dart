@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:skillogic/helper/color.dart';
@@ -213,6 +214,8 @@ class UserOTPService {
           content: const Text("Verification successful",
               textAlign: TextAlign.center),
         ));
+        log("verify otp STATUS: ${response.statusCode}");
+        log("BODY: ${response.body}");
         return true;
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -255,13 +258,14 @@ class ResendOTPService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     baseUrl = prefs.getString("auth_url")??"";
     finalUrl = "$baseUrl$apiPath?email=$email";
-
     http.Response res = await http.get(Uri.parse(finalUrl));
     if (res.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
         Text(json.decode(res.body)['msg'], textAlign: TextAlign.center),
       ));
+      log("resend otp STATUS: ${res.statusCode}");
+      log("BODY: ${res.body}");
       return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

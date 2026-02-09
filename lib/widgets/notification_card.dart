@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../helper/color.dart';
 import '../helper/notification_navigation_helper.dart';
@@ -124,7 +125,7 @@ class _NotificationCardState extends State<NotificationCard> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      widget.notification.created_at!.substring(0, 10),
+                      "${DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.notification.created_at!.substring(0, 10)))}",
                       style: descStyle.copyWith(fontSize: 10),
                     )),
                 const Divider()

@@ -1,4 +1,5 @@
 
+import 'package:intl/intl.dart';
 import 'package:skillogic/helper/color.dart';
 import 'package:skillogic/pages/referral/referral_widgets/neomorphism.dart';
 import 'package:flutter/foundation.dart';
@@ -105,7 +106,7 @@ class ReferralCard extends StatelessWidget {
                       const SizedBox(
                         width: 4,
                       ),
-                      Text(referralModel.candidateModel.created_date),
+                      Text("${DateFormat('dd-MM-yyyy hh:mm a').format(DateTime.parse(referralModel.candidateModel.created_date))}"),
                     ],
                   ),
                   Text(

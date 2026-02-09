@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/freshdesk/freshdesk_response_model.dart';
 import '../../model/user_model.dart';
+import '../contact_us.dart';
 
 class TicketPage extends StatefulWidget {
   const TicketPage({Key? key}) : super(key: key);
@@ -66,6 +67,23 @@ class _TicketPageState extends State<TicketPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tickets"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(13),
+            child:
+            MaterialButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContactUsScreen(
+                            title: "Raise a ticket",
+                            message: "",
+                          )));
+                },child:Text("Raise a Ticket",style:TextStyle(color:Colors.white)),color: const Color(0xffff6767)
+            ),
+          )
+        ],
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder(

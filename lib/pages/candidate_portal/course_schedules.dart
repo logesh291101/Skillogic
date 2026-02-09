@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:skillogic/pages/candidate_portal/data_model/ScheduleModel.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,9 +11,9 @@ import '../../widgets/CustomWidget.dart';
 class CourseSchedules extends StatefulWidget {
   final String title;
   final List<ScheduleModel> courseSchedules;
-
+  final String courseType;
   const CourseSchedules(
-      {Key? key, required this.title, required this.courseSchedules})
+      {Key? key, required this.title, required this.courseSchedules,required this.courseType})
       : super(key: key);
 
   @override
@@ -73,141 +75,81 @@ class _CourseSchedulesState extends State<CourseSchedules> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if(schedule.classroom_facility_id.isNotEmpty) Container(
-                          child: (schedule.classroom_facility_id.isNotEmpty)
-                              ? Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.apartment,
-                                      size: 32,
-                                    ),
-                                    Text(
-                                        "\tCentre: ${schedule.centre_name}\n\tClassroom: ${schedule.classroom_name}")
-                                  ],
-                                )
-                              : const Text(""),
+                        const Icon(Icons.calendar_today_sharp, size: 16),
+                        const SizedBox(width: 8,),
+                        Text(
+                          DateFormat('dd/MM/yyyy').format(DateTime.parse(schedule.event_start_date)),
                         ),
+                        Spacer(),
+                        Icon(Icons.access_time_rounded, size: 18),SizedBox(width: 8,),
+                        Text("${schedule.event_start_time.length == 8 ? schedule.event_start_time.substring(0,5):schedule.event_start_time} "
+                            "to ${schedule.event_end_time.length == 8 ? schedule.event_end_time.substring(0,5):schedule.event_end_time} (IST)"),
                       ],
                     ),
-                    // Text(
-                    //   courseEvent.course_event_description,
-                    //   style: const TextStyle(
-                    //       fontWeight: FontWeight.w600,
-                    //       fontSize: 12,
-                    //       color: Colors.black38),
-                    // ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    if (schedule.event_start_date.isNotEmpty)
-                      Row(
-                        children: [
-                          const Icon(Icons.calendar_today_sharp, size: 14,),
-                          const SizedBox(width: 8,),
-                          Text(
-                            schedule.event_start_date,
-                          ),
-                        ],
-                      ),
-                    if (schedule.event_start_date.isNotEmpty)
-                      Row(
-                        children: [
-                          const Icon(Icons.access_time_rounded, size: 14,),
-                          const SizedBox(width: 8,),
-                          Text("${schedule.event_start_time.length == 8 ? schedule.event_start_time.substring(0,5):schedule.event_start_time} "
-                              "to ${schedule.event_end_time.length == 8 ? schedule.event_end_time.substring(0,5):schedule.event_end_time} (IST)"),
-                        ],
-                      ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                      Container(
+                    SizedBox(height:5),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0,5, 0, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
                           children: [
-                            if (schedule.classroom_facility_id.isNotEmpty)
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Center Details",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-
-                                      if (schedule.centre_email.isNotEmpty)
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.email_outlined,
-                                              size: 18,
-                                            ),
-                                            Text(
-                                                " ${schedule.centre_email}")
-                                          ],
-                                        ),
-
-                                      if (schedule.centre_phone.isNotEmpty)
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.phone_outlined,
-                                              size: 18,
-                                            ),
-                                            Text(
-                                                " ${schedule.centre_phone}")
-                                          ],
-                                        ),
-                                      if (schedule.centre_address.isNotEmpty)
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.location_on_outlined,
-                                              size: 18,
-                                            ),
-                                            Text(
-                                                " ${schedule.centre_address}")
-                                          ],
-                                        ),
-                                    ],
-                                  )),
-                            if (schedule.trainer_id.isNotEmpty)
-                              Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Trainer Details",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      if (schedule.trainer_name.isNotEmpty)
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.person_outline,
-                                              size: 18,
-                                            ),
-                                            Text(
-                                                " ${schedule.trainer_name}")
-                                          ],
-                                        ),
-                                    ],
-                                  )),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.person_outline,
+                                  size: 18,
+                                ),
+                                Text(
+                                    " ${schedule.trainer_name}")
+                              ],
+                            ),
                           ],
-                        ),
-                      )
+                        )),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding:
+                              const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Row(children: [
+                                    Text("Class Type: ",style:TextStyle(fontWeight:FontWeight.bold,color:Colors.redAccent)),
+                                    Text(widget.courseType),
+                                    Spacer(),
+                                    widget.courseType == "Online" ?
+                                    Icon(Icons.video_camera_front,color:Colors.blue,size: 18) :
+                                    Icon(Icons.location_history,color:Colors.blue,size: 18)
+                                  ]),
+                                  SizedBox(height:5),
+                                  widget.courseType == "Classroom" ?  Row(children: [
+                                    Text("Center: "),
+                                    Text(schedule.centre_name)
+                                  ]) :
+                                  Column(crossAxisAlignment:CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Metting Link: ",style:TextStyle(fontWeight:FontWeight.w600)),
+                                        schedule.meeting_link.isEmpty ? Text("Link not available") :
+                                        Row(children: [
+                                          Text(schedule.meeting_link,style:TextStyle(color:Colors.blue)),
+                                          Spacer(),
+                                          IconButton(onPressed:() {
+                                            Clipboard.setData(ClipboardData(text:schedule.meeting_link));
+                                          }, icon:Icon(Icons.copy))
+                                        ],)
+                                      ])
+                                ],
+                              )),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               )

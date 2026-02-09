@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:skillogic/helper/color.dart';
 import 'package:skillogic/model/freshdesk/message_model.dart';
@@ -8,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../helper/text_validation.dart';
+import '../model/ticket_subject.dart';
 
 
 class ContactUsScreen extends StatefulWidget {
@@ -54,7 +53,7 @@ class ContactUsService {
     String password = 'X';
     String basicAuth = base64.encode(utf8.encode('$username:$password'));
     String freshDeskUrl = "https://datamiteshelp.freshdesk.com/api/v2/tickets";
-    http.Response res = await http.post(Uri.parse(freshDeskUrl), body: jsonBody, headers: {"Authorization": basicAuth, "Content-Type": "application/json"});
+    http.Response res = await http.post(Uri.parse(freshDeskUrl), body: jsonBody,headers: {"Authorization": basicAuth, "Content-Type": "application/json"});
     if (kDebugMode) print("Freshdesk ${res.statusCode}");
     if (res.statusCode == 200) {
       if (kDebugMode) {
@@ -79,6 +78,7 @@ class ContactUsService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     baseUrl = prefs.getString("auth_url")??"";
     finalUrl = baseUrl + apiPath;
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/contact";
     http.Response res = await http.post(Uri.parse(finalUrl), body: sendJson);
     if (res.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -126,6 +126,7 @@ class ChangePasswordService {
     baseUrl = prefs.getString("auth_url")!;
     token = prefs.getString("access_token")!;
     finalUrl = baseUrl + apiPath;
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/passwordreset";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -314,11 +315,13 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   }
 
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
+  String? selectedSubject; // Variable to store the selected subject
+  List<SubjectQueryModel> subjectType = [];
+
 
   @override
   void initState() {
@@ -401,36 +404,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           ],
         ));
 
-    // Define a function to show the country picker dialog
-    // void _showCountryPicker(BuildContext context) {
-    //   // showCountryPicker(
-    //   //   context: context,
-    //   //   showPhoneCode: false, // Optionally, show the phone code in the picker
-    //   //   onSelect: (Country country) {
-    //   //     // Handle the selected country
-    //   //     print('Selected country: ${country.displayName}');
-    //   //     // Update your countryCode variable here
-    //   //     countryCode = country.countryCode; // Or any other property you need
-    //   //   },
-    //   // );
-    // }
 
     final phoneCard = Card(
       child: Row(
         children: <Widget>[
-          // InkWell(
-          //   onTap: () {
-          //     _showCountryPicker(context);
-          //   },
-          //   child: Container(
-          //     child: Row(
-          //       children: [
-          //         Text('Selected Country: $countryCode'),
-          //         Icon(Icons.arrow_drop_down), // Optionally, add an icon
-          //       ],
-          //     ),
-          //   ),
-          // ),
           CountryCodePicker(
             onChanged: (text) {
               if (kDebugMode) {
@@ -516,6 +493,53 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             )
           ],
         ));
+
+    final Card subjectCard = Card(
+      child: Row(
+        children: <Widget>[
+          const SizedBox(
+            width: 8.0,
+          ),
+          const Icon(
+            Icons.book,
+            color: Colors.grey,
+          ),
+          const Divider(
+            height: 10,
+            color: Color(0xffeeeeee),
+          ),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              value: selectedSubject, // Default selected subject
+              hint: const Text("Select Subject"),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(0),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(0),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+              ),
+              // Dynamically populate the dropdown based on the API result
+              items: subjectType.map((SubjectQueryModel subject) {
+                return DropdownMenuItem<String>(
+                  value: subject.subject_type_name, // Use the subject_type_id as the value
+                  child: Text(subject.subject_type_name), // Display the subject_type_name
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedSubject = newValue; // Update selected subject
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
 
     showAlert(){
       showDialog(

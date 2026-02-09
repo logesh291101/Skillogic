@@ -74,13 +74,14 @@ class SegmentedReferralTransactionsService {
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
     finalUrl = '${authUrl}candidate/gettingSegmentedReferral?status_id=$statusId&referral_sort_asc=$referralSortAsc';
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/gettingSegmentedReferral?status_id=$statusId&referral_sort_asc=$referralSortAsc";
 
     Map<String, String> qParams = {
       'status_id': statusId.toString(),
       'referral_sort_asc': referralSortAsc.toString()
     };
 
-    Uri uri = Uri.parse(finalUrl);
+    //Uri uri = Uri.parse(finalUrl);
     // finalUri = uri.replace(queryParameters: qParams); //USE THIS
 
     http.Response response = await http.get(Uri.parse(finalUrl),
@@ -158,6 +159,7 @@ class SegmentedCreditTransactionService {
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
     finalUrl = '${authUrl}candidate/gettingSegmentedCredit?status_id=$statusId&credit_sort_asc=$creditSortAsc';
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/gettingSegmentedCredit?status_id=$statusId&credit_sort_asc=$creditSortAsc";
 
     Uri uri = Uri.parse(finalUrl);
 
@@ -267,6 +269,10 @@ class ReferralListService {
         Uri.parse("${base_url}candidate/getTotalRef?query_string=$query_string&sort_asc=$referral_sort_asc"),
         headers: {"jwt": token});
 
+    // resp = await http.get(
+    //     Uri.parse("https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getTotalRef?query_string=$query_string&sort_asc=$referral_sort_asc"),
+    //     headers: {"jwt": token});
+
     if (resp.statusCode == 200) {
       var referralData = json.decode(resp.body);
       List<dynamic> body = referralData['referralData'] as List;
@@ -310,8 +316,9 @@ class GetCampaignService {
     await _refreshToken(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var auth_url = prefs.getString("auth_url")??"";
-    http.Response res =
-      await http.get(Uri.parse("${auth_url}campaign"));
+     http.Response res = await http.get(Uri.parse("${auth_url}campaign"));
+    //http.Response res = await http.get(Uri.parse("https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/campaign"));
+
 
     if (res.statusCode == 200) {
       var campaigns = json.decode(res.body);

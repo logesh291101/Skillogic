@@ -39,8 +39,7 @@ class NotificationApi {
         'Message goes here',
         timezone.TZDateTime.now(timezone.local).add(const Duration(seconds: 10)),
         platformChannelSpecifics,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true);
+      androidScheduleMode:AndroidScheduleMode.exactAllowWhileIdle
+        );
   }
 }

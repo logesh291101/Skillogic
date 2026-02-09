@@ -17,6 +17,7 @@ class UserAuth {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String authUrl = preferences.getString("auth_url") ?? "";
     String url = "${authUrl}password/tokenLogin";
+    //String url = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/tokenLogin";
     int returnValue = 0;
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("jwtToken") ?? "";
@@ -58,6 +59,7 @@ class UserAuth {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String authUrl = preferences.getString("auth_url") ?? "";
     String url = "${authUrl}refresh";
+    //String url = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/refresh";
     int returnValue = 0;
     final prefs = await SharedPreferences.getInstance();
     var refreshToken = prefs.getString("refreshToken") ?? "";

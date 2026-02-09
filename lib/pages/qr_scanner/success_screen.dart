@@ -1,6 +1,11 @@
-import 'package:skillogic/helper/color.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../helper/color.dart';
+import '../../helper/user_details.dart';
+import '../../model/user_model.dart';
+import '../../widgets/CustomWidget.dart';
+//import '../../widgets/custom_widget_2.dart';
 
 class SuccessScreen extends StatefulWidget {
   final String? code;
@@ -16,20 +21,27 @@ class _SuccessScreenState extends State<SuccessScreen> {
   String message = "";
   bool loading = true;
 
+  var userDetails = UserDetails();
+  UserModel? userModel;
+
   checkQR(String? code) async {
-    // TODO checking server the qr code
+    setState(() {
+      loading = true;
+    });
 
     await Future.delayed(const Duration(seconds: 2));
-    if (Random().nextInt(3) != 1) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String valid_qr = prefs.getString("valid_qr") ?? "";
+    if (code != null && code.contains(valid_qr)) {
       setState(() {
         success = true;
-        message = "You attendance is registered";
+        message = "Your attendance is recorded successfully.";
         loading = false;
       });
     } else {
       setState(() {
         success = false;
-        message = "Not a valid qr";
+        message = "Invalid QR code. Attendance recording failed.";
         loading = false;
       });
     }
@@ -44,77 +56,85 @@ class _SuccessScreenState extends State<SuccessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: loading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (success)
-                      const Icon(
-                        Icons.done,
-                        color: Colors.green,
-                        size: 64,
-                      ),
-                    if (!success)
-                      Icon(
-                        Icons.sms_failed,
-                        color: MainColor.darkRed,
-                        size: 64,
-                      ),
-                    if (success)
-                      Text(
-                        "Success",
-                        style:
-                            TextStyle(color: MainColor.darkGreen, fontSize: 32),
-                      ),
-                    if (!success)
-                      Text(
-                        "Failure",
-                        style:
-                            TextStyle(color: MainColor.darkRed, fontSize: 32),
-                      ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      message,
-                      style: TextStyle(
-                          color:
-                              success ? MainColor.darkGreen : MainColor.darkRed,
-                          fontSize: 24),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    MaterialButton(
-                      minWidth: 120.0,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      color: MainColor.darkGreen,
-                      textColor: Colors.white,
-                      child: const Text("Scan Again"),
-                    ),
-                    if (success)
-                      MaterialButton(
-                        minWidth: 120.0,
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        color: MainColor.lightGreen,
-                        textColor: MainColor.darkGreen,
-                        child: const Text("Go Back"),
-                      ),
-                  ],
-                )),
+      appBar: CustomWidget2.getSkillogicAppBar(context, userModel, 1),
+      backgroundColor: Colors.grey.shade100,
+      body: Center(
+        child: loading
+            ? const CircularProgressIndicator()
+            : Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              success
+                  ? Lottie.asset(
+                'assets/success.json', // Animation for success
+                height: 120,
+              )
+                  : Lottie.asset(
+                'assets/failure.json', // Animation for failure
+                height: 120,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                success ? "Success" : "Failure",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: success
+                      ? MainColor.darkGreen
+                      : MainColor.darkRed,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: MainColor.darkGreen,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Scan Again",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: success
+                      ? MainColor.darkGreen
+                      : MainColor.darkRed,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Go Back",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:skillogic/pages/home_page.dart';
+import 'package:skillogic/pages/login_page.dart';
 import 'package:skillogic/pages/verify_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
     var authUrl = prefs.getString("auth_url")??"";
     String apiPath = 'register';
     var finalUrl = "$authUrl$apiPath";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/register";
     var map = <String, dynamic>{};
     map['name'] = name;
     map['paswrd'] = password;
@@ -100,6 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (registered) {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => VerifyOtp(email: email)));
+        //Navigator.push(context,MaterialPageRoute(builder:(context) =>LoginPage()));
       }
     } catch (err) {
       if (kDebugMode) {

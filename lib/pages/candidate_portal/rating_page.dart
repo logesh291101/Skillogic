@@ -73,6 +73,7 @@ class _RatingPageState extends State<RatingPage> {
     String authUrl = prefs.getString("auth_url") ?? "";
     String token = prefs.getString("jwtToken") ?? "";
     String finalUrl = authUrl + apiPath;
+    //String finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/MeetingotpNew";
 
     http.Response res =
     await http.get(Uri.parse(finalUrl), headers: {"jwt": token});
@@ -83,8 +84,8 @@ class _RatingPageState extends State<RatingPage> {
             "Fetching feedback ${authUrl}ClassRating/feedback?type=$feedbackType");
       }
       // getting feedback array
-      http.Response feedResponse = await http
-          .get(Uri.parse("${authUrl}ClassRating/feedback?type=$feedbackType"));
+      http.Response feedResponse = await http.get(Uri.parse("${authUrl}ClassRating/feedback?type=$feedbackType"));
+      //http.Response feedResponse = await http.get(Uri.parse("https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/ClassRatingfeedback?type=$feedbackType"));
       var feedbackList =
       json.decode(feedResponse.body)["feedback"] as List<dynamic>;
       List<String> feedbackStringList =
@@ -162,10 +163,14 @@ class _RatingPageState extends State<RatingPage> {
       intCourseMaterialRating, String classroomFeedback) async {
     context.read<RatingProviderAll>().submitted();
     String requestJson =
-        '{"enrollment_id": "${selectedRating?.enrolment_id}","trainer_schedule_id": "${selectedRating?.trainer_schedule_id}", '
-        '"training_feedback_date": "${selectedRating?.course_event_start_date}","course_event_id": "${selectedRating?.course_event_id}", '
-        '"training_feedback_rating_overall": "$overallRating","training_feedback_rating_facility": "$classroomRating" ,'
-        '"training_feedback_rating_trainer": "$trainerRating" ,"training_feedback_rating_material": "$intCourseMaterialRating", '
+        '{"enrollment_id": "${selectedRating?.enrolment_id}",'
+        '"trainer_schedule_id": "${selectedRating?.trainer_schedule_id}", '
+        '"training_feedback_date": "${selectedRating?.course_event_start_date}",'
+        '"course_event_id": "${selectedRating?.course_event_id}", '
+        '"training_feedback_rating_overall": "$overallRating",'
+        // '"training_feedback_rating_facility": "$classroomRating" ,'
+        // '"training_feedback_rating_trainer": "$trainerRating" ,'
+        // '"training_feedback_rating_material": "$intCourseMaterialRating", '
         '"training_feedback_comment":"$classroomFeedback"  }';
 
     showSnackBar(context, "Submitting rating");
@@ -276,50 +281,50 @@ class _RatingPageState extends State<RatingPage> {
       );
     }
 
-    getClassroomFeedback() {
-      return FeedbackPopupAllClassroom(
-        ratingList: ratingClassroomList,
-        rating: classroomRating,
-        type: "classroom",
-        feedbackList: feedbackClassroomStringList,
-        title: "Classroom rating",
-        className: selectedRating!.course_name,
-        trainerName: selectedRating!.trainer_name,
-        startDate: selectedRating!.course_event_start_date,
-        startTime: selectedRating!.course_event_start_time,
-        endTime: selectedRating!.course_event_end_time,
-      );
-    }
-
-    getTrainerFeedback() {
-      return FeedbackPopupAllClassroom(
-        ratingList: ratingTrainerList,
-        rating: trainerRating,
-        type: "trainer",
-        feedbackList: feedbackTrainerStringList,
-        title: "Trainer rating",
-        className: selectedRating!.course_name,
-        trainerName: selectedRating!.trainer_name,
-        startDate: selectedRating!.course_event_start_date,
-        startTime: selectedRating!.course_event_start_time,
-        endTime: selectedRating!.course_event_end_time,
-      );
-    }
-
-    getCourseMaterialFeedback() {
-      return FeedbackPopupAllClassroom(
-        ratingList: ratingCourseMaterialList,
-        rating: courseMaterialRating,
-        type: "courseMaterial",
-        feedbackList: feedbackCourseMaterialStringList,
-        title: "Course material rating",
-        className: "",
-        trainerName: "",
-        startDate: "",
-        startTime: "",
-        endTime: "",
-      );
-    }
+    // getClassroomFeedback() {
+    //   return FeedbackPopupAllClassroom(
+    //     ratingList: ratingClassroomList,
+    //     rating: classroomRating,
+    //     type: "classroom",
+    //     feedbackList: feedbackClassroomStringList,
+    //     title: "Classroom rating",
+    //     className: selectedRating!.course_name,
+    //     trainerName: selectedRating!.trainer_name,
+    //     startDate: selectedRating!.course_event_start_date,
+    //     startTime: selectedRating!.course_event_start_time,
+    //     endTime: selectedRating!.course_event_end_time,
+    //   );
+    // }
+    //
+    // getTrainerFeedback() {
+    //   return FeedbackPopupAllClassroom(
+    //     ratingList: ratingTrainerList,
+    //     rating: trainerRating,
+    //     type: "trainer",
+    //     feedbackList: feedbackTrainerStringList,
+    //     title: "Trainer rating",
+    //     className: selectedRating!.course_name,
+    //     trainerName: selectedRating!.trainer_name,
+    //     startDate: selectedRating!.course_event_start_date,
+    //     startTime: selectedRating!.course_event_start_time,
+    //     endTime: selectedRating!.course_event_end_time,
+    //   );
+    // }
+    //
+    // getCourseMaterialFeedback() {
+    //   return FeedbackPopupAllClassroom(
+    //     ratingList: ratingCourseMaterialList,
+    //     rating: courseMaterialRating,
+    //     type: "courseMaterial",
+    //     feedbackList: feedbackCourseMaterialStringList,
+    //     title: "Course material rating",
+    //     className: "",
+    //     trainerName: "",
+    //     startDate: "",
+    //     startTime: "",
+    //     endTime: "",
+    //   );
+    // }
 
 
     return WillPopScope(
@@ -375,13 +380,13 @@ class _RatingPageState extends State<RatingPage> {
                 child: Column(
                   children: [
                     getOverallFeedback(),
-                    if (overallRating < totalRating)
-                      getClassroomFeedback(),
-                    if (overallRating < totalRating)
-                      getTrainerFeedback(),
-                    if (overallRating < totalRating)
-                      getCourseMaterialFeedback(),
-                    if (overallRating < totalRating)
+                    // if (overallRating < totalRating)
+                    //   getClassroomFeedback(),
+                    // if (overallRating < totalRating)
+                    //   getTrainerFeedback(),
+                    // if (overallRating < totalRating)
+                    //   getCourseMaterialFeedback(),
+                    if (overallRating <= 4)
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         color: Colors.white,

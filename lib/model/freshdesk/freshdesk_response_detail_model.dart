@@ -1,4 +1,4 @@
-import 'package:flutter_phoenix/generated/i18n.dart';
+//import 'package:flutter_phoenix/generated/i18n.dart';
 
 class FreshdeskResponseDetailModel {
   int id;

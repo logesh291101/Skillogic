@@ -203,6 +203,7 @@ class ResetPasswordService {
     prefs = await SharedPreferences.getInstance();
     authUrl = prefs.getString("auth_url")??"";
     finalUrl = "$authUrl$apiPath?email=$email";
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/forgotpass?email=$email";
     // print(finalUrl);
 
     http.Response response = await http.get(Uri.parse(finalUrl));

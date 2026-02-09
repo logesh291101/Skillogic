@@ -26,26 +26,27 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
   loadData() async {
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Connection Lost"),
-              content: const Text("Please check your internet connection"),
-              actions: [
-                MaterialButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage()),
-                            (route) => false);
-                  },
-                  child: const Text("Ok"),
-                )
-              ],
-            );
-          });
+      CustomWidget.showInternetDialog(context);
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: const Text("Connection Lost"),
+      //         content: const Text("Please check your internet connection"),
+      //         actions: [
+      //           MaterialButton(
+      //             onPressed: () {
+      //               Navigator.pushAndRemoveUntil(
+      //                   context,
+      //                   MaterialPageRoute(
+      //                       builder: (context) => const MainPage()),
+      //                       (route) => false);
+      //             },
+      //             child: const Text("Ok"),
+      //           )
+      //         ],
+      //       );
+      //     });
     } else {
       enrolledCourses = await candidateRestRequest.getCourseEnrollment(context);
       setState(() {
@@ -106,7 +107,10 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
                         padding: EdgeInsets.zero,
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => EnrolledCourseDetails(enrollmentModel: enrolledCourse),
+                            builder: (context) => EnrolledCourseDetails(enrollmentModel: enrolledCourse,enrollmentNumber:
+                            enrolledCourse.enrollment_number,
+                                classType: enrolledCourse
+                                    .bundle_event_type_name),
                           ));
                         },
                         child: Container(
@@ -122,23 +126,26 @@ class _EnrolledCourseState extends State<EnrolledCourse> {
                             children: [
                               Text(
                                 enrolledCourse.bundle_name,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
                               ),
                               Text(enrolledCourse.bundle_event_name),
-                              Text("Duration: ${enrolledCourse.bundle_total_duration} weeks"),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "INR ${enrolledCourse.agreed_price}",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                "Enrollment Unique Number: ${enrolledCourse.enrollment_number}",
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                              Text(
+                                  "Duration: ${enrolledCourse.bundle_total_duration} weeks"),
+                              Row(children: [
+                                Text("Class Type: ",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w700)),
+                                Text(enrolledCourse.bundle_event_type_name)
+                              ]),
+                              const SizedBox(
+                                height: 8,
                               ),
                             ],
                           ),

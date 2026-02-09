@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:skillogic/model/candidate_activities_model.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class ActivityCard extends StatelessWidget {
             children: [
               const Icon(Icons.calendar_today_outlined, size: 16,),
               const SizedBox(width: 8,),
-              Text(candidateActivitiesModel.activityDate, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: MainColor.textColorConst),),
+              Text("${DateFormat('dd-MM-yyyy hh:mm a').format(DateTime.parse(candidateActivitiesModel.activityDate))}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: MainColor.textColorConst),),
             ],
           ),
 

@@ -1,6 +1,5 @@
-import 'package:skillogic/pages/candidate_portal/data_model/ScheduleModel.dart';
-
 import 'CourseModel.dart';
+import 'ScheduleModel.dart';
 
 class CourseEventModel {
   final String course_event_id;
@@ -11,20 +10,22 @@ class CourseEventModel {
   final String course_event_type;
   final String course_duration;
   final String course_event_status;
+  final String course_event_type_name;
   List<CourseModel> courses;
   List<ScheduleModel> schedules;
 
   CourseEventModel(
       {required this.course_event_id,
-      required this.course_event_name,
-      required this.course_event_start_date,
-      required this.course_event_start_time,
-      required this.course_event_end_time,
-      required this.course_event_type,
-      required this.course_duration,
-      required this.course_event_status,
-      required this.courses,
-      required this.schedules});
+        required this.course_event_name,
+        required this.course_event_start_date,
+        required this.course_event_start_time,
+        required this.course_event_end_time,
+        required this.course_event_type,
+        required this.course_duration,
+        required this.course_event_status,
+        required this.course_event_type_name,
+        required this.courses,
+        required this.schedules});
 
   factory CourseEventModel.fromJson(Map<String, dynamic> json) {
     List<dynamic> courseBody = json["course"] as List;
@@ -38,6 +39,7 @@ class CourseEventModel {
         course_event_type: json["course_event_type"] ?? "",
         course_duration: json["course_duration"] ?? "",
         course_event_status: json["course_event_status"] ?? "",
+        course_event_type_name : json["course_event_type_name"] ?? "",
         courses: courseBody
             .map((dynamic item) => CourseModel.fromJson(item))
             .toList(),

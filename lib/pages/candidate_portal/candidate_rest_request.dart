@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:skillogic/pages/candidate_portal/data_model/CertificateModel.dart';
 import 'package:skillogic/pages/candidate_portal/data_model/CourseEventModel.dart';
 import 'package:skillogic/pages/candidate_portal/data_model/RatingModel.dart';
@@ -25,8 +26,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var user_email = prefs.getString("user_email") ?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/getCourse?user_email=$user_email";
+    var finalUrl = "${candidate_portal_url}dm-api/lma_skl/getCourse?user_email=$user_email";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getCourse?user_email=$user_email";
     http.Response response = await http.get(Uri.parse(finalUrl));
     if (kDebugMode) {
       print(finalUrl);
@@ -43,6 +44,12 @@ class CandidateRestRequest {
               (dynamic item) => EnrollmentModel.fromJson(item),
             )
             .toList();
+        prefs.setString(
+          "enrollment_number",
+          enrolledCourses[0].enrollment_number,
+        );
+        prefs.setString("bundle_event_id",enrolledCourses[0].bundle_event_id);
+        log("-----=${enrolledCourses[0].enrollment_number},${enrolledCourses[0].bundle_event_id}");
       } else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -62,8 +69,8 @@ class CandidateRestRequest {
     List<CourseEventModel> courseEvents = [];
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/getCourseEvents?bundle_event_id=$eventId";
+    var finalUrl = "${candidate_portal_url}dm-api/lma_skl/getCourseEvents?bundle_event_id=$eventId";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getCourseEvents?bundle_event_id=$eventId";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -101,8 +108,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/getTrainerFeedbackDetails?email_id=$email";
+    var finalUrl = '${candidate_portal_url}dm-api/lma_skl/getTrainerFeedbackDetails?email_id="$email"';
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getTrainerFeedbackDetails?email_id=\"$email\"";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -140,8 +147,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/getEnrolmentPaymentsDetails?candidate_email=$email";
+    var finalUrl = "${candidate_portal_url}dm-api/lma_skl/getEnrolmentPaymentsDetails?candidate_email=$email";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getEnrolmentPaymentsDetails?candidate_email=$email";
     http.Response response = await http.get(Uri.parse(finalUrl));
 
     try{
@@ -174,8 +181,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var email = prefs.getString("user_email")?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/addTrainerFeedbackDetails?candidate_email=$email";
+    var finalUrl = "${candidate_portal_url}dm-api/lma_skl/addTrainerFeedbackDetails?candidate_email=$email";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/addTrainerFeedbackDetails?candidate_email=$email";
     if (kDebugMode) {
       print(jsonBody);
       print(finalUrl);
@@ -205,8 +212,8 @@ class CandidateRestRequest {
     var prefs = await SharedPreferences.getInstance();
     var candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     var user_email = prefs.getString("user_email") ?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/CandidateCertificationsSkl?email=$user_email";
+    var finalUrl = "${candidate_portal_url}dm-api/CandidateCertificationsSkl?email=$user_email";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/CandidateCertificationsSkl?email=$user_email";
     http.Response response = await http.get(Uri.parse(finalUrl));
     if (kDebugMode) {
       print(finalUrl);

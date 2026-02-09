@@ -50,7 +50,7 @@ class _ClassCodeState extends State<ClassCode> {
     String baseUrl = prefs.getString("auth_url") ?? "";
     String token = prefs.getString("jwtToken") ?? "";
     String finalUrl = baseUrl + apiPath;
-
+      //String finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/MeetingotpNew";
     if (kDebugMode) {
       print("header $token");
       print(finalUrl);
@@ -72,8 +72,8 @@ class _ClassCodeState extends State<ClassCode> {
       classCodeModel = ClassCodeModel.fromJson(response);
 
       // getting feedback array
-      http.Response feedResponse = await http
-          .get(Uri.parse("${baseUrl}ClassRating/feedback"));
+      http.Response feedResponse = await http.get(Uri.parse("${baseUrl}ClassRating/feedback"));
+      //http.Response feedResponse = await http.get(Uri.parse("https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/ClassRatingfeedback"));
       var feedbackList =
           json.decode(feedResponse.body)["feedback"] as List<dynamic>;
       feedback =
@@ -99,6 +99,7 @@ class _ClassCodeState extends State<ClassCode> {
     String baseUrl = prefs.getString("auth_url") ?? "";
     String token = prefs.getString("jwtToken") ?? "";
     String finalUrl = baseUrl + apiPath;
+    //String finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/ClassRatingaddRating";
 
     var ratingBody = <String, dynamic>{};
     ratingBody['rating'] = rating;

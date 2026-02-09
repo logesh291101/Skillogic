@@ -1,17 +1,14 @@
 import 'dart:convert';
-
 import 'package:skillogic/helper/color.dart';
 import 'package:skillogic/helper/user_details.dart';
 import 'package:skillogic/model/freshdesk/frestdesk_code.dart';
-import 'package:skillogic/pages/freshdesk/fresh_desk_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:html/parser.dart';
+import 'package:html/dom.dart' as dom;
 import '../../model/freshdesk/freshdesk_response_detail_model.dart';
 
 class TicketDetailPage extends StatefulWidget {
@@ -29,6 +26,11 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
   Future<FreshdeskResponseDetailModel?> loadWidget() async {
     // FreshdeskResponseDetailModel freshdeskResponseDetailModel = new FreshdeskResponseDetailModel(id: 1, type: "type", subject: "subject", source: 1, status: 2, priority: 1, created_at: "created_at", updated_at: "updated_at", description: "description" ,style: titleStyle);
     return await getTicketDetail();
+  }
+
+  String getHtml(String htmlString){
+    dom.Document document = parse(htmlString);
+    return document.body?.text ?? "Description not available";
   }
 
   Future<FreshdeskResponseDetailModel?> getTicketDetail() async {
@@ -169,12 +171,13 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                               child: Row(
                                 children: [
                                   Expanded(flex: 2, child: Text("Description: " ,style: titleStyle)),
-                                  Expanded(flex: 4, child: Html(
-                                    data: detail.description,
-                                    style: {
-                                      "div": Style(color: MainColor.textColorConst)
-                                    },
-                                  ),),
+                                  // Expanded(flex: 4, child: Html(
+                                  //   data: detail.description,
+                                  //   style: {
+                                  //     "div": Style(color: MainColor.textColorConst)
+                                  //   },
+                                  // ),),
+                                  Expanded(flex:4,child:Text(getHtml(detail.description)))
                                 ],
                               ),
                             ),

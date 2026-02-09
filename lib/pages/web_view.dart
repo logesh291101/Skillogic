@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:skillogic/helper/color.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // // Import for Android features.
@@ -22,11 +22,14 @@ class InternalWebView extends StatefulWidget {
 }
 
 class InternalWebViewState extends State<InternalWebView> {
+  late final WebViewController _controller;
   @override
   void initState() {
     super.initState();
     // Enable hybrid composition.
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    //if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    _controller = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..loadRequest(Uri.parse(widget.external_url));
   }
 
   @override
@@ -51,8 +54,9 @@ class InternalWebViewState extends State<InternalWebView> {
         ],
       ),
       body: SafeArea(
-          child: WebView(
-            initialUrl: widget.external_url,
+          child: WebViewWidget(
+            controller:_controller,
+            // initialUrl: widget.external_url,
           )
       ),
     );

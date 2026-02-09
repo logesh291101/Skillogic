@@ -28,26 +28,27 @@ class _CandidatePaymentPageState extends State<CandidatePaymentPage> {
   _getPayments() async {
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Connection Lost"),
-              content: const Text("Please check your internet connection"),
-              actions: [
-                MaterialButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage()),
-                        (route) => false);
-                  },
-                  child: const Text("Ok"),
-                )
-              ],
-            );
-          });
+      CustomWidget.showInternetDialog(context);
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: const Text("Connection Lost"),
+      //         content: const Text("Please check your internet connection"),
+      //         actions: [
+      //           MaterialButton(
+      //             onPressed: () {
+      //               Navigator.pushAndRemoveUntil(
+      //                   context,
+      //                   MaterialPageRoute(
+      //                       builder: (context) => const MainPage()),
+      //                   (route) => false);
+      //             },
+      //             child: const Text("Ok"),
+      //           )
+      //         ],
+      //       );
+      //     });
     } else {
       setState(() {
         loaded = false;

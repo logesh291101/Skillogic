@@ -863,6 +863,7 @@ class UserProfileUpdateService {
     var authUrl = prefs.getString("auth_url")??"";
     jwtToken = prefs.getString("jwtToken") ?? "";
     finalUrl = authUrl + apiPath;
+    //finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/update";
     // print(finalUrl);
 
     var map = new Map<String, dynamic>();

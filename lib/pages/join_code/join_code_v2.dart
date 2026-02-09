@@ -11,16 +11,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skillogic/widgets/CustomWidget.dart';
 
 import '../../helper/auth.dart';
 import '../../helper/color.dart';
 import '../../helper/user_details.dart';
 import '../../provider/rating_provider_all.dart';
+import '../contact_us.dart';
 import '../login_page.dart';
 import 'feedback_popup_all_classroom.dart';
 
 class JoinCodeV2 extends StatefulWidget {
-  const JoinCodeV2({Key? key}) : super(key: key);
+  final VoidCallback? onRatingSubmitted;
+  const JoinCodeV2({Key? key, this.onRatingSubmitted}) : super(key: key);
 
   @override
   State<JoinCodeV2> createState() => _JoinCodeState();
@@ -64,8 +67,8 @@ class _JoinCodeState extends State<JoinCodeV2> {
 
     String candidate_portal_url = prefs.getString("candidate_portal_url") ?? "";
     String token = prefs.getString("jwtToken") ?? "";
-    var finalUrl =
-        "${candidate_portal_url}dm-api/lma_skl/getLastRatedTrainingDetails/";
+    var finalUrl = "${candidate_portal_url}dm-api/lma_skl/getLastRatedTrainingDetails/";
+    //var finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/getLastRatedTrainingDetails";
     if (kDebugMode) {
       print(finalUrl);
     }
@@ -101,6 +104,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
       String feedback, int rating, String classId) async {
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
+      CustomWidget.showInternetDialog(context);
       AlertDialog(
         title: const Text("Connection Lost"),
         content: const Text("Please check your internet connection"),
@@ -123,6 +127,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
 
       String token = prefs.getString("jwtToken") ?? "";
       String finalUrl = authUrl + apiPath;
+      //String finalUrl = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/ClassRatingaddRating";
 
       if (kDebugMode) {
         print("Rating");
@@ -171,6 +176,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
   Future<void> _refresh() async {
     bool connected = await ConnectionCheck.isAvailable();
     if (!connected) {
+      CustomWidget.showInternetDialog(context);
       showDialog(
           context: context,
           builder: (context) {
@@ -282,6 +288,7 @@ class _JoinCodeState extends State<JoinCodeV2> {
         intCourseMaterialRating, String classroomFeedback) async {
       bool connected = await ConnectionCheck.isAvailable();
       if (!connected) {
+        CustomWidget.showInternetDialog(context);
         AlertDialog(
           title: const Text("Connection Lost"),
           content: const Text("Please check your internet connection"),
@@ -301,11 +308,15 @@ class _JoinCodeState extends State<JoinCodeV2> {
         if (classCodeV2Model.ratings.isNotEmpty) {
           var selectedRating = classCodeV2Model.ratings.first;
           String requestJson =
-              '{"enrollment_id": "${selectedRating.enrolment_id}","trainer_schedule_id": "${selectedRating.trainer_schedule_id}", '
-              '"training_feedback_date": "${selectedRating.course_event_start_date}", "course_event_id": "${selectedRating.course_event_id}", '
-              '"training_feedback_rating_overall": "$overallRating","training_feedback_rating_facility": "$classroomRating" ,'
-              '"training_feedback_rating_trainer": "$trainerRating" ,"training_feedback_rating_material": "$intCourseMaterialRating", '
-              '"training_feedback_comment":"$classroomFeedback"  }';
+              '{"enrollment_id": "${selectedRating.enrolment_id}",'
+              '"trainer_schedule_id": "${selectedRating.trainer_schedule_id}", '
+              '"training_feedback_date": "${selectedRating.course_event_start_date}", '
+              '"course_event_id": "${selectedRating.course_event_id}", '
+              '"training_feedback_rating_overall": "$overallRating",'
+              // '"training_feedback_rating_facility": "$classroomRating" ,'
+              // '"training_feedback_rating_trainer": "$trainerRating" ,'
+              // '"training_feedback_rating_material": "$intCourseMaterialRating", '
+              '"training_feedback_comment":"$classroomFeedback"}';
 
           showSnackBar(context, "Submitting rating");
           bool submitted =
@@ -517,29 +528,27 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    // MaterialButton(
-                                    //   minWidth: 120,
-                                    //   color: Colors.white,
-                                    //   onPressed: () => {
-                                    //     Navigator.push(
-                                    //         context,
-                                    //         MaterialPageRoute(
-                                    //             builder: (context) =>
-                                    //                 const ContactUsScreen(
-                                    //                     title: "Contact us",
-                                    //                     message: "")))
-                                    //   },
-                                    //   child: const Text(
-                                    //     "Contact us",
-                                    //     style: TextStyle(color: Colors.black),
-                                    //   ),
-                                    // )
+                                    MaterialButton(
+                                      minWidth: 120,
+                                      color: Colors.white,
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ContactUsScreen(
+                                                        title: "Contact us",
+                                                        message: "")))
+                                      },
+                                      child: const Text(
+                                        "Contact us",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    )
                                   ],
                                 ))
                             : !classCodeLoaded
-                                ? const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
+                                ? SizedBox()
                                 : (showFeedback)
                                     ? Form(
                                         key: _ratingFormKey,
@@ -570,46 +579,46 @@ class _JoinCodeState extends State<JoinCodeV2> {
                                               endTime: classCodeV2Model.ratings
                                                   .first.course_event_end_time,
                                             ),
-                                            if (overallRating < totalRating)
-                                              FeedbackPopupAllClassroom(
-                                                ratingList: ratingClassroomList,
-                                                rating: classroomRating,
-                                                type: "classroom",
-                                                feedbackList: const [],
-                                                title: "Classroom rating",
-                                                className: classCodeV2Model.ratings.first.course_name,
-                                                trainerName: classCodeV2Model.ratings.first.trainer_name,
-                                                startDate: classCodeV2Model.ratings.first.course_event_start_date,
-                                                startTime: classCodeV2Model.ratings.first.course_event_start_time,
-                                                endTime: classCodeV2Model.ratings.first.course_event_end_time,
-                                              ),
-                                            if (overallRating < totalRating)
-                                              FeedbackPopupAllClassroom(
-                                                ratingList: ratingTrainerList,
-                                                rating: trainerRating,
-                                                type: "trainer",
-                                                feedbackList: const [],
-                                                title: "Trainer rating",
-                                                className: classCodeV2Model.ratings.first.course_name,
-                                                trainerName: classCodeV2Model.ratings.first.trainer_name,
-                                                startDate: classCodeV2Model.ratings.first.course_event_start_date,
-                                                startTime: classCodeV2Model.ratings.first.course_event_start_time,
-                                                endTime: classCodeV2Model.ratings.first.course_event_end_time,
-                                              ),
-                                            if (overallRating < totalRating)
-                                              FeedbackPopupAllClassroom(
-                                                ratingList: ratingCourseMaterialList,
-                                                rating: courseMaterialRating,
-                                                type: "courseMaterial",
-                                                feedbackList: const [],
-                                                title: "Course material rating",
-                                                className: "",
-                                                trainerName: "",
-                                                startDate: "",
-                                                startTime: "",
-                                                endTime: "",
-                                              ),
-                                            if (overallRating < totalRating)
+                                            // if (overallRating < totalRating)
+                                            //   FeedbackPopupAllClassroom(
+                                            //     ratingList: ratingClassroomList,
+                                            //     rating: classroomRating,
+                                            //     type: "classroom",
+                                            //     feedbackList: const [],
+                                            //     title: "Classroom rating",
+                                            //     className: classCodeV2Model.ratings.first.course_name,
+                                            //     trainerName: classCodeV2Model.ratings.first.trainer_name,
+                                            //     startDate: classCodeV2Model.ratings.first.course_event_start_date,
+                                            //     startTime: classCodeV2Model.ratings.first.course_event_start_time,
+                                            //     endTime: classCodeV2Model.ratings.first.course_event_end_time,
+                                            //   ),
+                                            // if (overallRating < totalRating)
+                                            //   FeedbackPopupAllClassroom(
+                                            //     ratingList: ratingTrainerList,
+                                            //     rating: trainerRating,
+                                            //     type: "trainer",
+                                            //     feedbackList: const [],
+                                            //     title: "Trainer rating",
+                                            //     className: classCodeV2Model.ratings.first.course_name,
+                                            //     trainerName: classCodeV2Model.ratings.first.trainer_name,
+                                            //     startDate: classCodeV2Model.ratings.first.course_event_start_date,
+                                            //     startTime: classCodeV2Model.ratings.first.course_event_start_time,
+                                            //     endTime: classCodeV2Model.ratings.first.course_event_end_time,
+                                            //   ),
+                                            // if (overallRating < totalRating)
+                                            //   FeedbackPopupAllClassroom(
+                                            //     ratingList: ratingCourseMaterialList,
+                                            //     rating: courseMaterialRating,
+                                            //     type: "courseMaterial",
+                                            //     feedbackList: const [],
+                                            //     title: "Course material rating",
+                                            //     className: "",
+                                            //     trainerName: "",
+                                            //     startDate: "",
+                                            //     startTime: "",
+                                            //     endTime: "",
+                                            //   ),
+                                            if (overallRating <= 4)
                                               Container(
                                                 padding: const EdgeInsets.all(16.0),
                                                 color: Colors.white,

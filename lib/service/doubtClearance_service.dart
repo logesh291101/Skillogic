@@ -9,8 +9,9 @@ class DoubtClearanceService {
   Future<List<Schedule>> fetchDoubtSession() async{
     var prefs = await SharedPreferences.getInstance();
     var email_id= await prefs.getString("user_email") ?? "";
+    var candidate_portal_url = prefs.getString("candidate_portal_url");
     //var finalUrl="http://13.232.222.140/aks-stage/dm-api/DoubtClearance_api/schedule?email_id=$email_id";
-    var finalUrl = "https://erp.akshayacorp.com/dm-api/DoubtClearance_api/schedule?email_id=$email_id";
+    var finalUrl = "${candidate_portal_url}dm-api/DoubtClearance_api/schedule?email_id=$email_id";
     try{
       log("----try block working");
       final response= await http.get(Uri.parse(finalUrl));
@@ -23,11 +24,14 @@ class DoubtClearanceService {
       }
       else{
        log("else--${response.statusCode}");
-        throw Exception('Unable to fetch data: ${response.statusCode}');
+       // throw Exception('Unable to fetch data: ${response.statusCode}');
+       return [];
       }
     }
-    catch(err){
-      throw Exception('Error -: $err');
+    catch(e){
+      print(e);
+      return [];
+      //throw Exception('Error -: $err');
     }
   }
 

@@ -45,13 +45,13 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
   String totalAmount = "Loading";
   String courseCredit = "", cashCredit = "";
   Color? darkCashColor, lightCashColor, darkCourseColor, lightCourseColor;
-  SegmentedReferralTransactionsService? segmentedReferralPending =
+  SegmentedReferralTransactionsService segmentedReferralPending =
   SegmentedReferralTransactionsService();
-  SegmentedReferralTransactionsService? segmentedReferralApproved =
+  SegmentedReferralTransactionsService segmentedReferralApproved =
   SegmentedReferralTransactionsService();
-  SegmentedReferralTransactionsService? segmentedReferralSettled =
+  SegmentedReferralTransactionsService segmentedReferralSettled =
   SegmentedReferralTransactionsService();
-  SegmentedReferralTransactionsService? segmentedReferralRejected =
+  SegmentedReferralTransactionsService segmentedReferralRejected =
   SegmentedReferralTransactionsService();
 
   SegmentedReferralResponseModel? pendingModel;
@@ -96,6 +96,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     // pendingLoading = true;
     pendingModel = await segmentedReferralPending!.getSegmented;
     pendingLoadingCash = false;
+    if(!mounted) return false;
     setState(() {});
     return true;
   }
@@ -107,6 +108,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     // approvedLoading = true;
     approvedModel = await segmentedReferralApproved!.getSegmented;
     approvedLoadingCash = false;
+    if(!mounted) return false;
     setState(() {});
     return true;
   }
@@ -118,6 +120,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     // settledLoading = true;
     settledModel = await segmentedReferralSettled!.getSegmented;
     settledLoadingCash = false;
+    if(!mounted) return false;
     setState(() {});
     return true;
   }
@@ -130,6 +133,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     rejectedModel = await segmentedReferralRejected!.getSegmented;
 
     rejectedLoadingCash = false;
+    if(!mounted) return false;
     setState(() {});
     return true;
   }
@@ -141,6 +145,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     // pendingLoading = true;
     pendingCreditModel = await segmentedCreditPending!.getSegmented;
     pendingLoadingCourse = false;
+    if(!mounted) return false;
     setState(() {});
     return true;
   }
@@ -153,6 +158,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     approveCreditdModel = await segmentedCreditApproved!.getSegmented;
 
     approvedLoadingCourse = false;
+    if (!mounted) return false;
     setState(() {});
     return true;
   }
@@ -164,6 +170,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     // settledLoading = true;
     settledCreditModel = await segmentedCreditSettled!.getSegmented;
     settledLoadingCourse = false;
+    if (!mounted) return false;
     setState(() {});
     return true;
   }
@@ -176,6 +183,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     rejectedCreditModel = await segmentedCreditRejected!.getSegmented;
     rejectedLoadingCourse = false;
     _refreshController.refreshCompleted();
+    if (!mounted) return false;
     setState(() {});
     return true;
   }
@@ -203,6 +211,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     referralScreen = new ReferralScreenRight(widget.width, 1);
 
     courseBannerText = historyText;
+
     setState(() {});
   }
 
@@ -275,6 +284,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     courseCredit = prefs.getString("course_credit") ?? "";
     cashCredit = prefs.getString("cash_credit") ?? "";
+    if(!mounted) return false;
     setState(() {
 
     });
@@ -284,6 +294,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     if (kDebugMode) {
       print("Fetching details");
     }
+    if (!mounted) return;
     _setDataCash(context);
     _setDataCredit(context);
     await _fetchSegmentedCash(context);
@@ -308,6 +319,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       pendingModel = SegmentedReferralResponseModel.fromJson(data);
       if (pendingModel != null) {
         pendingLoadingCash = false;
+        if(!mounted) return false;
         setState(() {});
       }
 
@@ -352,6 +364,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
         print(err);
       }
     }
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -363,6 +376,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     if (kDebugMode) {
       print("Got data");
     }
+    if (!mounted) return;
     _setDataCash(context);
     _setDataCredit(context);
     _fetchSegmentedCash(context);
@@ -390,7 +404,11 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     darkCourseColor = MainColor.darkGrey;
     lightCourseColor = MainColor.lightGrey;
 
-    _getData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _getData();
+      }
+    });
 
     super.initState();
   }
@@ -399,8 +417,8 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
 
   @override
   void dispose() {
-    super.dispose();
     timer.cancel();
+    super.dispose();
   }
 
   bool courseSelected = false;
@@ -433,8 +451,11 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
       courseSelected = true;
       cashSelected = false;
     }
+    if(!mounted) return false;
     setState(() {});
+    if (!mounted) return;
     _fetchSegmentedCash(context);
+    if (!mounted) return;
     _fetchSegmentedCredit(context);
   }
 
@@ -457,6 +478,7 @@ class _ReferralScreenLeftMainState extends State<ReferralScreenLeftMain> {
     }
 
     referralScreen = new ReferralScreenRight(widget.width, 1);
+    if(!mounted) return false;
     setState(() {});
   }
 

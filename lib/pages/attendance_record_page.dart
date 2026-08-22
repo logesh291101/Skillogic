@@ -5,7 +5,6 @@ import 'package:table_calendar/table_calendar.dart';
 import '../model/attendance_record_model.dart';
 import '../service/attendance_record_service.dart';
 
-
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 

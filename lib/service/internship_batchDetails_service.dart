@@ -39,10 +39,10 @@ class InternshipBatchProvider extends ChangeNotifier {
         }
         notifyListeners();
       } else {
-        throw Exception("Failed to fetch data: ${response.statusCode}");
+        log("Failed to fetch data: ${response.statusCode}");
       }
     } catch (e) {
-      throw Exception("Error fetching batch details: $e");
+      log("Error fetching batch details: $e");
     }
   }
 
@@ -91,7 +91,7 @@ class InternshipBatchProvider extends ChangeNotifier {
             builder: (context) => InternshipSubmissionFailed()));
       }
     } catch (e) {
-      throw Exception("Error fetching post details: $e");
+      log("Error fetching post details: $e");
     }
   }
 }

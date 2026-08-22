@@ -250,7 +250,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 16,),
-
                       MaterialButton(
                         color: Colors.white,
                         onPressed: () {

@@ -97,6 +97,7 @@ class _NotificationPageState extends State<NotificationPage> {
     Database db = await _getDb('skillogic.db');
     var store = StoreRef.main();
     var data = await store.record('notification').get(db) as Map<String, dynamic>;
+    if(data == null) return;
     offlineNotModel = NotificationResponseModel.fromJson(data);
     setState(() {});
   }

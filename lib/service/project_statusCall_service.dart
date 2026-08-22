@@ -7,11 +7,13 @@ import '../model/project_statusCall_model.dart';
 
 
 class ProjectStatusService {
-  late SharedPreferences prefs;
-  //var finalUrl="http://13.232.222.140/akc-erp/dm-api/Project_status_call_api/schedule";
-  var finalUrl= "https://erp.akshayacorp.com/dm-api/Project_status_call_api/schedule";
+
   Future <List<StatusCall>> fetchStatusCall() async{
     try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var candidate_portal_url = prefs.getString("candidate_portal_url");
+      //var finalUrl="http://13.232.222.140/akc-erp/dm-api/Project_status_call_api/schedule";
+      var finalUrl= "${candidate_portal_url}dm-api/Project_status_call_api/schedule";
       log("----try block working");
       final response= await http.get(Uri.parse(finalUrl));
       log("----${response.statusCode}");
@@ -22,11 +24,13 @@ class ProjectStatusService {
         return scheduleList.map((e) => StatusCall.fromJson(e)).toList();
       }
       else{
-        throw Exception('Unable to fetch data: ${response.statusCode}');
+        log('Unable to fetch data: ${response.statusCode}');
+        return [];
       }
     }
     catch(err){
-      throw Exception('Error -: $err');
+      log('Error -: $err');
+      return [];
     }
   }
 }

@@ -19,21 +19,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import '../global.dart';
 import '../helper/auth.dart';
 import '../helper/color.dart';
 import '../helper/connection.dart';
 import '../model/RemoteConfigModel.dart';
 import '../widgets/custom_bottom_bar.dart';
 import 'NotificationHelperPage.dart';
-import 'candidate_analysis_form.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -112,6 +109,13 @@ class _MainPageState extends State<MainPage> {
       update_reason: _remoteConfig.getString('update_reason'),
       certificate_text: _remoteConfig.getString('certificate_text'),
       certificate_subject: _remoteConfig.getString('certificate_subject'),
+
+      android_forceUpdate: _remoteConfig.getString('android_forceUpdate'),
+      android_updateReason: _remoteConfig.getString('android_updateReason'),
+      android_version: _remoteConfig.getString('android_version'),
+      ios_forceUpdate: _remoteConfig.getString('ios_forceUpdate'),
+      ios_updateReason: _remoteConfig.getString('ios_updateReason'),
+
     );
   }
 
@@ -153,7 +157,7 @@ class _MainPageState extends State<MainPage> {
 
   getCurrentVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    currentVersion = packageInfo.version;
+    currentVersion = packageInfo.version.replaceAll(" ", "").trim();
   }
 
   _getConfig() async {
@@ -161,17 +165,21 @@ class _MainPageState extends State<MainPage> {
     RemoteConfigModel remoteConfigModel = await getConfig(context);
     await remoteConfigModel.saveConfigToPrefs(context);
     await setupMessaging();
-    if (remoteConfigModel.new_version != currentVersion) {
+    if (remoteConfigModel.android_version != currentVersion) {
       showUpdateDialog = true;
-      if (remoteConfigModel.force_update == "true") {
+      if (remoteConfigModel.android_forceUpdate == "true") {
         forceUpdate = true;
       }
     }
 
-    FirebaseMessaging.instance.getToken().then((token) {
-      // if (kDebugMode) print("token $token");
-      storeFirebaseToken(token!);
-    });
+    try{
+      FirebaseMessaging.instance.getToken().then((token) {
+        storeFirebaseToken(token!);
+      });
+    }
+    catch(e,s){
+      log("FCM Token Error", error: e, stackTrace: s);
+    }
 
     if (showUpdateDialog) {
       showDialog(
@@ -196,9 +204,9 @@ class _MainPageState extends State<MainPage> {
                             width: MediaQuery.of(context).size.width * 0.15,
                             child: SvgPicture.asset("assets/start-up.svg"),
                           ),
-                          SizedBox(width:10),
+                          SizedBox(width: 10),
                           Text(
-                            "New version available",
+                            "New version available ${remoteConfigModel.android_version}",
                             style: TextStyle(
                               fontSize:
                                   MediaQuery.of(context).size.width * 0.04,
@@ -207,18 +215,17 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ],
                       ),
-                    ),const SizedBox(height:10),
+                    ),
+                    const SizedBox(height: 10),
                     Text(
-                          //"${remoteConfigModel.update_reason}",
-                        "Update now to get the latest features and updates.",
-                          style: TextStyle(
-                            fontSize:17,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                      "${remoteConfigModel.android_updateReason}",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
 
-
-                    const SizedBox(height:10),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -232,7 +239,9 @@ class _MainPageState extends State<MainPage> {
                           ),
                         MaterialButton(
                           onPressed: () {
-                            launchUrl(Uri.parse(remoteConfigModel.playstore_url),);
+                            launchUrl(
+                              Uri.parse(remoteConfigModel.playstore_url),
+                            );
                           },
                           child: const Text(
                             "Update",
@@ -267,7 +276,6 @@ class _MainPageState extends State<MainPage> {
     log("userSession = ${prefs.getString('userSession')}");
     log("jwtToken = ${prefs.getString('jwtToken')}");
 
-
     if (userSession == null || session == null || userSession != session) {
       UserDetails userDetails = UserDetails();
       await userDetails.logoutOnly(context);
@@ -277,7 +285,6 @@ class _MainPageState extends State<MainPage> {
       });
       return;
     }
-
 
     if (refreshed == 1) {
       _navigationOptions = <Widget>[
@@ -291,14 +298,12 @@ class _MainPageState extends State<MainPage> {
         const ReferralScreen(),
         const AccountScreen(),
       ];
-    }
-    else {
+    } else {
       refreshed = await _userAuth.tokenRefresh(context);
       if (refreshed == 1) {
         final prefs = await SharedPreferences.getInstance();
         final userSession = prefs.getString('userSession');
         final session = prefs.getString('session');
-
 
         if (userSession == null || session == null || userSession != session) {
           UserDetails userDetails = UserDetails();
@@ -310,8 +315,7 @@ class _MainPageState extends State<MainPage> {
           return;
         }
         _checkLogin();
-      }
-      else {
+      } else {
         UserDetails userDetails = UserDetails();
         await userDetails.logoutOnly(context);
         setState(() {
@@ -394,9 +398,9 @@ class _MainPageState extends State<MainPage> {
         );
       }
     } catch (err) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(err.toString(), textAlign: TextAlign.center)),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text(err.toString(), textAlign: TextAlign.center)),
+      // );
     }
   }
 
@@ -591,6 +595,63 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  // Future<void> getUserContacts() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String email = prefs.getString("userEmail") ?? "";
+  //   final isContactsSent = prefs.getString("isContactsSent");
+  //   List<Map<String, String>> contactList = [];
+  //   if (isContactsSent == "false") {
+  //     log("-----Contacts function called");
+  //     var status = await Permission.contacts.status;
+  //
+  //     if (status.isDenied || status.isPermanentlyDenied) {
+  //       status = await Permission.contacts.request();
+  //     }
+  //
+  //     if (!status.isGranted) {
+  //       log("Permission denied");
+  //       return;
+  //     }
+  //     log("----getUserContacts function call");
+  //     final contacts = await FlutterContacts.getAll(
+  //       properties: {ContactProperty.name, ContactProperty.phone},
+  //     );
+  //     log("contacts-----$contacts");
+  //    for(var contact in contacts){
+  //     if(contact.phones.isNotEmpty){
+  //       for(var phone in contact.phones){
+  //         contactList.add({
+  //           "name": contact.displayName ?? "",
+  //           "mobile": phone.number
+  //         });
+  //       }
+  //     }
+  //    }
+  //     final body = {
+  //       "email": email,
+  //       "contacts": contactList,
+  //     };
+  //     try {
+  //       final url = Uri.parse("");
+  //       final response = await http.post(
+  //         url,
+  //         headers: {'Content-Type': 'application/json'},
+  //         body: jsonEncode(body),
+  //       );
+  //       if (response.statusCode == 201) {
+  //         prefs.setString("isContactsSent", "true");
+  //       } else {
+  //         log("Failed to add contacts ${response.statusCode}");
+  //         prefs.setString("isContactsSent", "false");
+  //       }
+  //     } catch (e) {
+  //       throw Exception("Error: $e");
+  //     }
+  //   } else {
+  //     log("User contacts has been already sent");
+  //   }
+  // }
+
   //popup
   Future<void> checkOnboardingStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -611,6 +672,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     _doInitialization();
+    //getUserContacts();
     super.initState();
     setState(() {
       showPopup = false;
@@ -691,61 +753,61 @@ class _MainPageState extends State<MainPage> {
             ),
             floatingActionButton: refreshed == 1
                 ? FloatingActionButton(
-              onPressed: () async {
-                LocationPermission permission =
-                await Geolocator.checkPermission();
-                if (permission == LocationPermission.always ||
-                    permission == LocationPermission.whileInUse) {
-                  // Check rating status independently for QR scanner
-                  bool qrRatingNeeded = await _checkQRRatingStatus();
-                  if (qrRatingNeeded) {
-                    // Show rating page, and after submission navigate to QRScanner
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (context) => RatingProviderAll(),
-                          child: MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            home: Scaffold(
-                              appBar: CustomWidget.getSkillogicAppBar(
-                                context,
-                                userModel,
-                                1,
-                              ),
-                              body: SafeArea(
-                                child: JoinCodeV2(
-                                  onRatingSubmitted: () {
-                                    // After rating submission, navigate to QRScanner
-                                    Navigator.pushReplacement(
+                    onPressed: () async {
+                      LocationPermission permission =
+                          await Geolocator.checkPermission();
+                      if (permission == LocationPermission.always ||
+                          permission == LocationPermission.whileInUse) {
+                        // Check rating status independently for QR scanner
+                        bool qrRatingNeeded = await _checkQRRatingStatus();
+                        if (qrRatingNeeded) {
+                          // Show rating page, and after submission navigate to QRScanner
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (context) => RatingProviderAll(),
+                                child: MaterialApp(
+                                  debugShowCheckedModeBanner: false,
+                                  home: Scaffold(
+                                    appBar: CustomWidget.getSkillogicAppBar(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) => QRScanner(),
+                                      userModel,
+                                      1,
+                                    ),
+                                    body: SafeArea(
+                                      child: JoinCodeV2(
+                                        onRatingSubmitted: () {
+                                          // After rating submission, navigate to QRScanner
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => QRScanner(),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    // No rating needed, go directly to QRScanner
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QRScanner(),
-                      ),
-                    );
-                  }
-                } else {
-                  Fluttertoast.showToast(
-                    msg: "Location Permission Required",
-                  );
-                }
-              },
+                          );
+                        } else {
+                          // No rating needed, go directly to QRScanner
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QRScanner(),
+                            ),
+                          );
+                        }
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Location Permission Required",
+                        );
+                      }
+                    },
                     backgroundColor: Colors.purple,
                     child: const Icon(
                       Icons.qr_code_scanner,
@@ -760,7 +822,6 @@ class _MainPageState extends State<MainPage> {
           );
   }
 }
-
 
 // import 'dart:convert';
 // import 'package:flutter_svg/svg.dart';

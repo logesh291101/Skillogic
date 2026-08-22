@@ -63,16 +63,16 @@ class UserAuth {
     int returnValue = 0;
     final prefs = await SharedPreferences.getInstance();
     var refreshToken = prefs.getString("refreshToken") ?? "";
-    if (refreshToken != "") {
+    if (refreshToken.isNotEmpty) {
       http.Response response = await http
           .get(Uri.parse(url), headers: {"refresh_token": refreshToken});
       if (response.statusCode != 403) {
         if (response.statusCode == 200) {
-          prefs.setString("jwtToken", json.decode(response.body)["jwtkey"]);
+          prefs.setString("jwtToken", json.decode(response.body)["jwtkey"] ?? "");
           prefs.setString(
-              "refreshToken", json.decode(response.body)["refreshToken"]);
+              "refreshToken", json.decode(response.body)["refreshToken"] ?? "");
           prefs.setString(
-              "session", json.decode(response.body)["current_active_session_id"]);
+              "session", json.decode(response.body)["current_active_session_id"] ?? "");
           returnValue = 1;
         } else if (response.statusCode == 401) {
           returnValue = 3;

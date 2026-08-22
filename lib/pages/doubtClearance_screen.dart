@@ -34,22 +34,22 @@ class _DoubtClearScreenState extends State<DoubtClearScreen> {
     log("--------");
   }
 
-  Future<void> getIds() async {
-    final provider =
-    Provider.of<InternshipBatchProvider>(context, listen: false);
-    await provider.fetchBatchDetails();
-    final ids = provider.batchDetails?.data.first;
-    if (ids != null) {
-      enrollmentId = int.parse(ids.enrollmentId);
-    }
-    log("enrollmentId----$enrollmentId");
-  }
+  // Future<void> getIds() async {
+  //   final provider =
+  //   Provider.of<InternshipBatchProvider>(context, listen: false);
+  //   await provider.fetchBatchDetails();
+  //   final ids = provider.batchDetails?.data.first;
+  //   if (ids != null) {
+  //     enrollmentId = int.parse(ids.enrollmentId);
+  //   }
+  //   log("enrollmentId----$enrollmentId");
+  // }
 
   @override
   void initState() {
     _getUserDetail();
     super.initState();
-    getIds();
+    //getIds();
     doubtClearenceData = doubtClearanceService.fetchDoubtSession();
   }
 

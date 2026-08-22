@@ -17,7 +17,8 @@ class CoursePercentageService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       var mailId= prefs.getString("user_email");
-      final url = "https://erp.akshayacorp.com/bundle_details_api/getbundledetailsbyemail?email=$mailId&brandId=1";
+      var candidate_portal_url = prefs.getString("candidate_portal_url");
+      final url = "${candidate_portal_url}bundle_details_api/getbundledetailsbyemail?email=$mailId&brandId=1";
 
       log(">>>----------tryyyyy");
       final res = await http.get(Uri.parse(url));
@@ -28,10 +29,10 @@ class CoursePercentageService extends ChangeNotifier {
         log("-------${res.body}");
         log(">>>----------$_courseData");
       } else {
-        throw Exception("Failed to fetch data: ${res.statusCode}");
+        log("Failed to fetch data: ${res.statusCode}");
       }
     } catch (e) {
-      throw Exception("Error: $e");
+      log("Error: $e");
     }
     finally{
       _isLoading =false;

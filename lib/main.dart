@@ -141,11 +141,15 @@ import 'package:skillogic/pages/login_page.dart';
 
 import 'package:skillogic/provider/rating_provider_all.dart';
 import 'package:skillogic/service/course_percentage_service.dart';
+import 'package:skillogic/service/enrolled_certificate_service.dart';
 import 'package:skillogic/service/handbook_service.dart';
 import 'package:skillogic/service/homeScreen_message_service.dart';
 import 'package:skillogic/service/internship_batchDetails_service.dart';
 
 import 'pages/main_page.dart';
+import 'dart:async';
+import 'dart:ui';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 /// Background handler for FCM
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -155,25 +159,35 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+ runZonedGuarded(() async{
+   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyDquuyNNSCkcEo2tfm0ZiBR0Ki6HecQKfg",
-      appId: "1:1048427097869:android:f31d5d4d08eb41589f0a44",
-      messagingSenderId: "1048427097869",
-      projectId: "skillogic-a5248",
-    ),
-  );
+   await Firebase.initializeApp(
+     options: const FirebaseOptions(
+       apiKey: "AIzaSyDquuyNNSCkcEo2tfm0ZiBR0Ki6HecQKfg",
+       appId: "1:1048427097869:android:f31d5d4d08eb41589f0a44",
+       messagingSenderId: "1048427097869",
+       projectId: "skillogic-a5248",
+     ),
+   );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+   await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
-  runApp(const MyApp());
+   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  // Setup FCM AFTER app starts
-  _setupFCM();
+   PlatformDispatcher.instance.onError = (error,stack){
+     FirebaseCrashlytics.instance.recordError(
+       error,stack,fatal:true
+     );
+     return true;
+   };
+   runApp(const MyApp());
+   await _setupFCM();
+ }, (error, stack) {
+     FirebaseCrashlytics.instance.recordError(error,stack,fatal:true);
+ },);
 }
 
 /// FCM setup function (separated)
@@ -228,7 +242,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => InternshipBatchProvider()),
         ChangeNotifierProvider(create: (ctx) => HandbookProvider()),
         ChangeNotifierProvider(create: (ctx) => CoursePercentageService()),
-        ChangeNotifierProvider(create: (ctx) => HomeScreenMessageService())
+        ChangeNotifierProvider(create: (ctx) => HomeScreenMessageService()),
+        ChangeNotifierProvider(create: (context) => EnrolledCertificateProvider())
       ],
       child: MaterialApp(
         title: 'Skillogic',

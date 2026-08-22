@@ -18,7 +18,6 @@ import 'package:skillogic/pages/doubtClearance_screen.dart';
 import 'package:skillogic/pages/freshdesk/ticket_page.dart';
 import 'package:skillogic/pages/handbook_screen.dart';
 import 'package:skillogic/pages/project_statusCall_screen.dart';
-import 'package:skillogic/pages/qr_scanner/qr_scanner.dart';
 import 'package:skillogic/pages/referral/new_referral.dart';
 import 'package:skillogic/pages/referral/referral_page_scaffold.dart';
 import 'package:skillogic/pages/sub_page/course/course_list_page.dart';
@@ -46,10 +45,8 @@ import '../widgets/CustomWidget.dart';
 import 'attendance_record_page.dart';
 import 'candidate_portal/candidate_rest_request.dart';
 import 'candidate_portal/enrolled_certificate.dart';
-import 'candidate_portal/payment_page.dart';
 import 'candidate_portal/rating_page.dart';
 import 'main_page.dart';
-import 'package:flutter_svg/flutter_svg.dart';import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -68,26 +65,29 @@ class _HomePageState extends State<HomePage> {
   String greeting = "Good Morning,";
   String date = "";
   String userName = "";
+
   //final searchController = TextEditingController();
   bool loggedIn = false;
+
   // String userImage =
   //     "https://www.sciencefriday.com/wp-content/uploads/2019/09/face-recognition-resized.png";
   String? sessionId;
   String? ipAddress;
-  String? brand,model;
-  double? lat,long;
+  String? brand, model,platform_version;
+  double? lat, long;
   String? timeStamp;
   String? email;
-  String? appName,version;
-  String jwtToken ="";
+  String? appName, version;
+  String jwtToken = "";
   bool isChecked = false;
-
+  String? platform;
 
   Future<void> _getUserDetail() async {
     userModel = await userDetails.getDetail();
     setState(() {
-      userName =
-      userModel!.getUserName == "" ? "Stranger" : userModel!.getUserName;
+      userName = userModel!.getUserName == ""
+          ? "Stranger"
+          : userModel!.getUserName;
       loggedIn = userModel!.getUserName != "";
       var currentDate = DateTime.now();
       if (kDebugMode) {
@@ -103,14 +103,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getCarousel() async {
-    CarouselResponseModel responseModel =
-    CarouselResponseModel(msg: "", statuscode: 0, carouselList: []);
+    CarouselResponseModel responseModel = CarouselResponseModel(
+      msg: "",
+      statuscode: 0,
+      carouselList: [],
+    );
     var prefs = await SharedPreferences.getInstance();
     var authUrl = prefs.getString("auth_url") ?? "";
     String url = "${authUrl}carousels?class_id=1";
     //String url = "https://f18xa7ot97.execute-api.us-east-1.amazonaws.com/carousels?class_id=1";
-    http.Response response = await http.get(Uri.parse(url),
-        headers: {"jwt": prefs.getString("jwtToken") ?? ""});
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {"jwt": prefs.getString("jwtToken") ?? ""},
+    );
     if (kDebugMode) {
       print(prefs.getString("jwtToken"));
     }
@@ -233,51 +238,53 @@ class _HomePageState extends State<HomePage> {
   Widget _futureBanner() {
     if (bannerUrl.isNotEmpty) {
       return Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: MaterialButton(
-            splashColor: Colors.green,
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              if (kDebugMode) {
-                print(bannerLink);
-              }
-              _gotoUrl(bannerLink);
-            },
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        bannerUrl,
-                      ),
-                      fit: BoxFit.fill)),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: MaterialButton(
+          splashColor: Colors.green,
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            if (kDebugMode) {
+              print(bannerLink);
+            }
+            _gotoUrl(bannerLink);
+          },
+          child: Container(
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: DecorationImage(
+                image: NetworkImage(bannerUrl),
+                fit: BoxFit.fill,
+              ),
             ),
-          ));
+          ),
+        ),
+      );
     } else {
       return Container();
     }
   }
 
   Widget _futureBanner1() {
-      return MaterialButton(
-        splashColor: Colors.green,
-        padding: EdgeInsets.zero,
-        onPressed: () {
-          // _gotoUrl("https://skillogic.com");
-        },
-        child: Container(
-          height: 280,
-          decoration: const BoxDecoration(
-              image:
-              DecorationImage(
-                image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/skillogic-a5248.appspot.com/o/footer.png?alt=media&token=5fb20922-0519-48f0-9a7d-3d9f662ab3ae'),
-                fit: BoxFit.fill,
-              )),
+    return MaterialButton(
+      splashColor: Colors.green,
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        // _gotoUrl("https://skillogic.com");
+      },
+      child: Container(
+        height: 280,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://firebasestorage.googleapis.com/v0/b/skillogic-a5248.appspot.com/o/footer.png?alt=media&token=5fb20922-0519-48f0-9a7d-3d9f662ab3ae',
+            ),
+            fit: BoxFit.fill,
+          ),
         ),
-      );
-    }
-
+      ),
+    );
+  }
 
   Widget topbanner() {
     final DateTime now = DateTime.now();
@@ -302,14 +309,15 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.zero,
       onPressed: () {
         _gotoUrl(bannerLink);
-        },
+      },
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(bannerAsset),
-              fit: BoxFit.fill,
-            )),
+          image: DecorationImage(
+            image: AssetImage(bannerAsset),
+            fit: BoxFit.fill,
+          ),
+        ),
       ),
     );
   }
@@ -318,30 +326,38 @@ class _HomePageState extends State<HomePage> {
     if (showSignIn) {
       return Container();
     } else {
-      return FutureBuilder<String>(future:null,builder: (context, snapshot) {
-        if (carouselList.isNotEmpty) {
-          return FutureBuilder(future:null,builder: (BuildContext context, snapshot) {
-            return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Carousel(carouselList: carouselList));
-          });
-        } else {
-          return const CarouselShimmer();
-        }
-        return const Text("no data yet");
-      });
+      return FutureBuilder<String>(
+        future: null,
+        builder: (context, snapshot) {
+          if (carouselList.isNotEmpty) {
+            return FutureBuilder(
+              future: null,
+              builder: (BuildContext context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Carousel(carouselList: carouselList),
+                );
+              },
+            );
+          } else {
+            return const CarouselShimmer();
+          }
+          return const Text("no data yet");
+        },
+      );
     }
   }
 
   Widget _futureSuccessStories() {
     CarouselModel succesStory1 = CarouselModel(
-        id: "1",
-        image: "https://img.youtube.com/vi/gOLTcIsiwv4/maxresdefault.jpg",
-        action: "3",
-        sub_action: "",
-        external_url:
-        "https://www.youtube.com/watch?v=gOLTcIsiwv4&list=PLg9Hha4rflelJ7Ts7ra0GhN_B0x5kT_zB&index=1",
-        external_action: "1");
+      id: "1",
+      image: "https://img.youtube.com/vi/gOLTcIsiwv4/maxresdefault.jpg",
+      action: "3",
+      sub_action: "",
+      external_url:
+          "https://www.youtube.com/watch?v=gOLTcIsiwv4&list=PLg9Hha4rflelJ7Ts7ra0GhN_B0x5kT_zB&index=1",
+      external_action: "1",
+    );
     // CarouselModel succesStory2 = CarouselModel(
     //     id: "2",
     //     image: "https://img.youtube.com/vi/vOqDyOZL71E/maxresdefault.jpg",
@@ -351,34 +367,47 @@ class _HomePageState extends State<HomePage> {
     //     "https://www.youtube.com/watch?v=vOqDyOZL71E&list=PLg9Hha4rflekclpfab8ewDN-1HRAiAqyP&index=1",
     //     external_action: "1");
     var carouselsList = [succesStory1];
-    return FutureBuilder<String>(future:null,builder: (context, snapshot) {
-      if (showSignIn) {
-        return FutureBuilder(future:null,builder: (BuildContext context, snapshot) {
-          return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Carousel(carouselList: carouselsList));
-        });
-      } else {
-        return Container();
-      }
-    });
+    return FutureBuilder<String>(
+      future: null,
+      builder: (context, snapshot) {
+        if (showSignIn) {
+          return FutureBuilder(
+            future: null,
+            builder: (BuildContext context, snapshot) {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Carousel(carouselList: carouselsList),
+              );
+            },
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
     return Container();
   }
 
   Widget _futureCourseBuilder() {
-    return FutureBuilder<String>(future:null,builder: (context, snapshot) {
-      if (coursesList.isNotEmpty) {
-        return FutureBuilder(future:null,builder: (BuildContext context, snapshot) {
-          return CourseListPage(
-            coursesList: coursesList,
-            title: "Our Courses",
+    return FutureBuilder<String>(
+      future: null,
+      builder: (context, snapshot) {
+        if (coursesList.isNotEmpty) {
+          return FutureBuilder(
+            future: null,
+            builder: (BuildContext context, snapshot) {
+              return CourseListPage(
+                coursesList: coursesList,
+                title: "Our Courses",
+              );
+            },
           );
-        });
-      } else {
-        return const CardCoursePreviewShimmer();
-      }
-      return const Text("no data yet");
-    });
+        } else {
+          return const CardCoursePreviewShimmer();
+        }
+        return const Text("no data yet");
+      },
+    );
   }
 
   Widget _userActivityBuilder() {
@@ -390,57 +419,23 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height:10),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.18,
-          child: ListView( padding:EdgeInsets.all(5),physics:BouncingScrollPhysics(),
-            scrollDirection:Axis.horizontal,
+        SizedBox(height: 10),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.18,
+          child: ListView(
+            padding: EdgeInsets.all(5),
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
             children: [
-            MaterialButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EnrolledCourse()));
-                      },
-                      child: Container(
-                        height: itemHeight,
-                        width: itemWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: const Color(0xffd9ebf2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: SvgPicture.asset(
-                            'assets/Enrollment.svg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-            ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
               MaterialButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MultiProvider(
-                            providers: [
-                              ChangeNotifierProvider(
-                                  create: (_) => RatingProviderAll()),
-                            ],
-                            child: const RatingPage(pageTitle: "My Ratings"),
-                          )));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EnrolledCourse(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -453,7 +448,55 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: SvgPicture.asset(
+                      'assets/Enrollment.svg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+              MaterialButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MultiProvider(
+                        providers: [
+                          ChangeNotifierProvider(
+                            create: (_) => RatingProviderAll(),
+                          ),
+                        ],
+                        child: const RatingPage(pageTitle: "My Ratings"),
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: itemHeight,
+                  width: itemWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xffd9ebf2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -466,14 +509,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const EnrolledCertificate()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EnrolledCertificate(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -486,7 +531,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -499,14 +547,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ReferralScreenScaffold()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReferralScreenScaffold(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -519,7 +569,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -531,23 +584,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                ),
+              ),
             ],
           ),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.18,
-          child: ListView(scrollDirection:Axis.horizontal,
-            physics:BouncingScrollPhysics(),
-            padding:EdgeInsets.all(5),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(5),
             children: [
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TicketPage()));
+                    context,
+                    MaterialPageRoute(builder: (context) => const TicketPage()),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -560,7 +614,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -573,14 +630,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const DoubtClearScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DoubtClearScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -593,7 +652,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -606,14 +668,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProjectStatusScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProjectStatusScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -626,7 +690,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -639,14 +706,16 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HandbookScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HandbookScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: itemHeight,
@@ -659,7 +728,10 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
@@ -675,9 +747,12 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.18,
-          child: ListView( padding:EdgeInsets.all(5),physics:BouncingScrollPhysics(),
-            scrollDirection:Axis.horizontal,
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.18,
+          child: ListView(
+            padding: EdgeInsets.all(5),
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
             children: [
               MaterialButton(
                 padding: EdgeInsets.zero,
@@ -707,12 +782,14 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
-                  child:
-                  ClipRRect(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SvgPicture.asset(
                       'assets/Topics Covered.svg',
@@ -721,7 +798,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(width:MediaQuery.of(context).size.width*0.05),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
               MaterialButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
@@ -750,12 +827,14 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
                       ),
                     ],
                   ),
-                  child:
-                  ClipRRect(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: SvgPicture.asset(
                       'assets/Attendance.svg',
@@ -861,31 +940,28 @@ class _HomePageState extends State<HomePage> {
     if (!connected) {
       CustomWidget.showInternetDialog(context);
       showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Connection Lost"),
-              content: const Text("Please check your internet connection"),
-              actions: [
-                MaterialButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage()),
-                            (route) => false);
-                  },
-                  child: const Text("Ok"),
-                )
-              ],
-            );
-          });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Connection Lost"),
+            content: const Text("Please check your internet connection"),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MainPage()),
+                    (route) => false,
+                  );
+                },
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
     } else {
-      await Future.wait([
-        _getUserDetail(),
-        _getCarousel(),
-        _getBanner()
-      ]);
+      await Future.wait([_getUserDetail(), _getCarousel(), _getBanner()]);
       await requestNotificationPermission();
       //await goTOQRCheck();
       await getLatLong();
@@ -974,25 +1050,33 @@ class _HomePageState extends State<HomePage> {
       } else {
         await showDialog(
           context: context,
-          barrierDismissible: false, // Prevent closing the dialog by tapping outside
+          barrierDismissible: false,
+          // Prevent closing the dialog by tapping outside
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Notification Permission Required"),
               content: const Text(
-                  "To proceed, you must allow notification permissions. Please allow it to continue."),
+                "To proceed, you must allow notification permissions. Please allow it to continue.",
+              ),
               actions: [
                 MaterialButton(
                   onPressed: () async {
                     // Request permission again
-                    PermissionStatus newStatus = (await openAppSettings()) as PermissionStatus;
+                    PermissionStatus newStatus =
+                        (await openAppSettings()) as PermissionStatus;
 
                     if (newStatus.isGranted) {
                       permissionGranted = true; // Update the loop condition
-                      Navigator.pop(context); // Close the dialog if permission is granted
+                      Navigator.pop(
+                        context,
+                      ); // Close the dialog if permission is granted
                     }
                   },
                   color: MainColor.skillogicRed,
-                  child: const Text("Allow", style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    "Allow",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 MaterialButton(
                   onPressed: () {
@@ -1009,14 +1093,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> initUserDatas() async{
+  Future<void> initUserDatas() async {
     await Future.wait([
       getIp(),
       getMobileInfo(),
       getSessionId(),
       getAppDetails(),
       CandidateRestRequest().getCourseEnrollment(context),
+      //CandidateRestRequest().getUserContacts()
     ]);
+    if (loggedIn) {
+      log(" ");
+      sendUserInfo();
+      CandidateRestRequest().getUserContacts();
+    }
   }
 
   Future<void> getIp() async {
@@ -1029,32 +1119,16 @@ class _HomePageState extends State<HomePage> {
         ipAddress = response.body.trim();
         log("Public IP----- $ipAddress");
       } else {
-        throw Exception("Failed to fetch IP: ${response.statusCode}");
+        log("Failed to fetch IP: ${response.statusCode}");
       }
     } catch (e) {
       log("Public IP fetch failed: $e");
-      rethrow; // because IP is mandatory for you
+      //rethrow;
     }
   }
 
-
-  // Future<void> getLatLong() async{
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //   }
-  //   Position position =await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.high);
-  //   lat = position.latitude;
-  //   long = position.longitude;
-  //   timeStamp = position.timestamp.toIso8601String();
-  //   log(position.latitude.toString());
-  //   log(position.longitude.toString());
-  //   log(position.timestamp.toString());
-  //
-  // }
-
   Future<void> getLatLong() async {
-    if (!loggedIn) {
+    if (loggedIn) {
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -1148,84 +1222,139 @@ class _HomePageState extends State<HomePage> {
       lat = position.latitude;
       long = position.longitude;
       timeStamp = position.timestamp.toIso8601String();
-      log(position.latitude.toString());
-      log(position.longitude.toString());
-      log(position.timestamp.toString());
+      log("not login---${position.latitude.toString()}");
+      log("not login---${position.longitude.toString()}");
+      log("not login---${position.timestamp.toString()}");
     }
   }
 
-  Future<void> getMobileInfo()async{
+  Future<void> getMobileInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
+      setState(() {
+        platform = "Android";
+      });
       AndroidDeviceInfo android = await deviceInfo.androidInfo;
-      brand=android.brand;
-      model=android.model;
-      log("${android.brand} ${android.model}");
-    }
-    else if(Platform.isIOS){
+      brand = android.brand;
+      model = android.model;
+      platform_version = android.version.release;
+      log("$platform $brand $model $platform_version");
+    } else if (Platform.isIOS) {
+      setState(() {
+        platform = "IOS";
+      });
       IosDeviceInfo ios = await deviceInfo.iosInfo;
-      brand=ios.name;
-      model=ios.model;
-      log("${ios.model} ${ios.name} ${ios.modelName}");
+      brand = ios.name;
+      model = ios.model;
+      platform_version = ios.modelName;
+      log("$platform $model $brand $ios.modelName");
     }
   }
 
-  Future<void> getSessionId() async{
+  Future<void> getSessionId() async {
     final prefs = await SharedPreferences.getInstance();
-    jwtToken= prefs.getString("jwtToken") ?? "";
+    //jwtToken = prefs.getString("jwtToken") ?? "";
     email = prefs.getString("userEmail");
-    sessionId = jwtToken.split('.').last;
-    log("sessionId---- $sessionId");
+    //sessionId = jwtToken.split('.').last;
+    //log("sessionId---- $sessionId");
     log("email---- $email");
-    log("-----${prefs.getBool('agreement_sent').toString()}");
+    //log("agreement_sent-----${prefs.getBool('agreement_sent').toString()}");
   }
 
-  Future<void> getAppDetails() async{
-    PackageInfo info= await PackageInfo.fromPlatform();
+  Future<void> getAppDetails() async {
+    PackageInfo info = await PackageInfo.fromPlatform();
     appName = info.appName;
     version = info.version;
     log("$appName,$version");
   }
 
-  Future<void> checkToken() async{
+  Future<void> checkToken() async {
     final prefs = await SharedPreferences.getInstance();
-    String jwt_Token= prefs.getString("jwtToken") ?? "";
+    String jwt_Token = prefs.getString("jwtToken") ?? "";
     final showAgreement = prefs.getBool('agreement_sent');
     log("jwtToken------$jwt_Token");
     log("agreement_sent-------$showAgreement");
-    if(showAgreement==false && jwt_Token.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_){
+    if (showAgreement == false && jwt_Token.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         agreementDialog();
       });
     }
   }
 
-  Future<void> sendAgreementData() async{
-    final url =Uri.parse("http://13.232.222.140/aks-stage/dm-api/Learners_agreement_api");
-    try{
-      log("----try works");
-      final response = await http.post(url,headers:{'content-type': 'application/json'},
-          body:jsonEncode({
-            "email": email,
-            "agree": isChecked,
-            "location": {
-              "latitude": lat,
-              "longitude": long,
-              "timestamp": timeStamp
-            },
-            "app_details": {
-              "name": appName,
-              "version": version
-            },
-            "system_generated_from": {
-              "brand": brand,
-              "model": model
-            },
-            "session_id": sessionId,
-            "ip_address": ipAddress
-          })
+  Future<void> sendUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isUserInfoSent = prefs.getBool("isUserInfoSent") ?? false;
+    log("Get user info = $isUserInfoSent");
+    if (!isUserInfoSent) {
+      log("after login user data is fetched");
+      log(
+        "$email,$lat,$long,$timeStamp,$appName,$version,$platform,$brand,$model,$ipAddress",
       );
-      if(response.statusCode == 200){
+      final body = {
+        "email": email,
+        "location": {
+          "latitude": lat,
+          "longitude": long,
+          "timestamp": timeStamp,
+        },
+        "app_details": {"name": appName, "version": version},
+        "system_generated_from": {
+          "platform": platform,
+          "brand": brand,
+          "platform_version": platform_version,
+          "model": model,
+        },
+        "ip_address": ipAddress,
+      };
+      try {
+        final url = Uri.parse("https://erp.akshayacorp.com/dm-api/User_device_info_api/save_device_info");
+        //final url = Uri.parse("http://192.168.1.51/akshayacorp/sudhanshu-erp/dm-api/User_device_info_api/save_device_info");
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(body),
+        );
+        if (response.statusCode == 200) {
+          prefs.setBool("isUserInfoSent", true);
+          log("user info api body --${response.body}");
+          log("-----User data posted successfully");
+        } else {
+          prefs.setBool("isUserInfoSent", false);
+          log("-----Failed to post User data");
+        }
+      } catch (e) {
+        log("Error: $e");
+      }
+    } else {
+      log("-----User Info has been already sent");
+      print("testing");
+    }
+  }
+
+  Future<void> sendAgreementData() async {
+    final url = Uri.parse(
+      "http://13.232.222.140/aks-stage/dm-api/Learners_agreement_api",
+    );
+    try {
+      log("----try works");
+      final response = await http.post(
+        url,
+        headers: {'content-type': 'application/json'},
+        body: jsonEncode({
+          "email": email,
+          "agree": isChecked,
+          "location": {
+            "latitude": lat,
+            "longitude": long,
+            "timestamp": timeStamp,
+          },
+          "app_details": {"name": appName, "version": version},
+          "system_generated_from": {"brand": brand, "model": model},
+          "session_id": sessionId,
+          "ip_address": ipAddress,
+        }),
+      );
+      if (response.statusCode == 200) {
         // final json = jsonDecode(response.body);
         // log("API Response JSON: $json");
         // bool isagreed = (json['agreement_sent']);
@@ -1233,51 +1362,49 @@ class _HomePageState extends State<HomePage> {
         // await prefs.setBool('agreement_sent',isagreed);
         // log(prefs.getBool('agreement_sent').toString());
         // log("-----${response.body}");
-        Fluttertoast.showToast(msg:"Agreed",gravity:ToastGravity.BOTTOM);
+        Fluttertoast.showToast(msg: "Agreed", gravity: ToastGravity.BOTTOM);
+      } else {
+        log("Submission failed: ${response.statusCode}");
       }
-      else{
-        throw Exception("Submission failed: ${response.statusCode}");
-      }
-    }
-    catch(e){
-      throw Exception("Exception: $e");
+    } catch (e) {
+      log("Exception: $e");
     }
   }
 
-  Future<void> agreementDialog() async{
+  Future<void> agreementDialog() async {
     await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {
         return StatefulBuilder(
-            builder: (context,setState) {
-              return Dialog(
-                backgroundColor: Colors.white,
+          builder: (context, setState) {
+            return Dialog(
+              backgroundColor: Colors.white,
 
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                //margin:EdgeInsetsGeometry.all(10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                child: Container(
-                  //margin:EdgeInsetsGeometry.all(10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(crossAxisAlignment:CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "DataMites – Learner Agreement",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "DataMites – Learner Agreement",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
-                      SizedBox(height:5),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Text(
-                            '''
+                    ),
+                    SizedBox(height: 5),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Text('''
                        By enrolling in the training program offered by DataMites, a brand of Skillfloor Solutions Pvt. Ltd., the learner
 (hereinafter referred to as "Student") agrees to the following terms and conditions. This agreement outlines
 the mutual understanding of the program structure, student responsibilities, and the services provided as a
@@ -1328,57 +1455,56 @@ proper support channels and work constructively with the Institute towards resol
 
 By  proceeding  with  enrollment,  the  Student  confirms  having  read,  understood,  and  agreed  to  the  above
 terms and conditions in full.
-''',
-                          ),
+'''),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
                         ),
-                      ),
-                      Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                        children: [
-                          Checkbox(
-                            value: isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            },
-                          ),
-                          SizedBox(width: 10),
-                          // MaterialButton(
-                          //   onPressed: () async{
-                          //     if(isChecked){
-                          //       await postData();
-                          //       Navigator.pop(context);
-                          //       log("-----$isChecked");
-                          //     }
-                          //
-                          //   },
-                          //   child: Text("Agree"),
-                          //   color: const Color(0xffe8e8e8),
-                          // ),
-                          MaterialButton(
-                            onPressed: () async {
-                              if (isChecked) {
-                                try {
-                                  await sendAgreementData();
-                                } catch (e, st) {
-                                  log("postData failed: $e");
-                                } finally {
-                                  Navigator.pop(context);
-                                  log("-----$isChecked");
-                                }
+                        SizedBox(width: 10),
+                        // MaterialButton(
+                        //   onPressed: () async{
+                        //     if(isChecked){
+                        //       await postData();
+                        //       Navigator.pop(context);
+                        //       log("-----$isChecked");
+                        //     }
+                        //
+                        //   },
+                        //   child: Text("Agree"),
+                        //   color: const Color(0xffe8e8e8),
+                        // ),
+                        MaterialButton(
+                          onPressed: () async {
+                            if (isChecked) {
+                              try {
+                                await sendAgreementData();
+                              } catch (e, st) {
+                                log("postData failed: $e");
+                              } finally {
+                                Navigator.pop(context);
+                                log("-----$isChecked");
                               }
-                            },
-                            child: Text("Agree"),
-                            color: const Color(0xffe8e8e8),
-                          )
-
-                        ],
-                      ),
-                    ],
-                  ),
+                            }
+                          },
+                          child: Text("Agree"),
+                          color: const Color(0xffe8e8e8),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            }
+              ),
+            );
+          },
         );
       },
     );
@@ -1418,255 +1544,253 @@ terms and conditions in full.
     return RefreshIndicator(
       onRefresh: _refresh,
       child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 5),
-              if (!loggedIn)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: Text(
-                        "Review Stories",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    _futureSuccessStories(),
-                    // const SizedBox(
-                    //   height: 16,
-                    // ),
-                  ],
-                ),
-              if (loggedIn)
-                // topbanner(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 10),
-                      child: Text(
-                        "Welcome, $userName !",
-
-                        style: TextStyle(
-                          shadows: [
-                            Shadow(
-                              color: Color(0xffededed),
-                              blurRadius: 1,
-                              offset: Offset(2, 1),
-                            ),
-                          ],
-                          color: Colors.black87,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Consumer<CoursePercentageService>(
-                        builder: (context, provider, child) {
-                          if (provider.isLoading) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 0.5,
-                                color: Colors.blue,
-                              ),
-                            );
-                          }
-                          if (provider.courseData.isEmpty) {
-                            log(".....-----${provider.courseData}");
-                            return SizedBox.shrink();
-                          }
-                          final courseDetails = provider.courseData[0];
-                          final double percentValue =
-                              (courseDetails.completionPercentage) / 100;
-                          return Container(
-                            padding: EdgeInsets.all(5),
-                            //height: 130,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(5),
-                              //gradient:LinearGradient(colors:[Colors.lightBlueAccent,Colors.white],begin:Alignment.topLeft,end:Alignment.bottomRight)
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(width: 5),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          courseDetails.bundleEventName,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            //fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    LinearPercentIndicator(
-                                      width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                      animation: true,
-                                      lineHeight: 15,
-                                      percent: percentValue,
-                                      //center:Text("${courseDetails.completionPercentage.toString()}%"),
-                                      linearStrokeCap: LinearStrokeCap.roundAll,
-                                      progressColor: Colors.white,
-                                      backgroundColor: Colors.white60,
-                                      barRadius: Radius.circular(20),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        SizedBox(width: 5),
-                                        Text(
-                                          courseDetails.matchedLocation,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            //fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Consumer<HomeScreenMessageService>(builder:(context, provider, child) {
-                      if(provider.isLoading){
-                        return Center(child:CircularProgressIndicator(
-                          strokeWidth: 0.5,
-                          color: Colors.blue,
-                        ));
-                      }
-                      return provider.message?.isNotEmpty == true ? Padding(
-                        padding: EdgeInsets.only(right: 20, left: 20),
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text( provider.message!,
-                                maxLines: 3,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ) : SizedBox.shrink();
-                    },),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      child: _userActivityBuilder(),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    _futureCarouselBuilder(),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                  ],
-                ),
-
-
-              // _futureCategoryBuilder(),
-              // const SizedBox(
-              //   height: 16.0,
-              // ),
-              _futureBanner(),
-              const SizedBox(
-                height: 16.0,
-              ),
-              _futureBanner1(),
-              if (loggedIn)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 0),
-                  child: MaterialButton(
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {
-                      Route route = MaterialPageRoute(
-                          builder: (context) => AddReferral());
-                      Navigator.push(context, route);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      //height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 88,
-                            height: 88,
-                            decoration: BoxDecoration(
-                                color: MainColor.skillogicRed,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: const Center(
-                              child: Icon(
-                                Icons.person_add,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Text(
-                                      "Refer your friends and family. Win exciting prices and cash backs.",
-                                      textAlign: TextAlign.start,
-                                    ),
-                                    SizedBox(height:5),
-                                    Text(
-                                      "Click here to know more",
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ),
-                              ))
-                        ],
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 5),
+            if (!loggedIn)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    child: Text(
+                      "Review Stories",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
+                  const SizedBox(height: 4),
+                  _futureSuccessStories(),
+                  // const SizedBox(
+                  //   height: 16,
+                  // ),
+                ],
+              ),
+            if (loggedIn)
+              // topbanner(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    child: Text(
+                      "Welcome, $userName !",
+
+                      style: TextStyle(
+                        shadows: [
+                          Shadow(
+                            color: Color(0xffededed),
+                            blurRadius: 1,
+                            offset: Offset(2, 1),
+                          ),
+                        ],
+                        color: Colors.black87,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Consumer<CoursePercentageService>(
+                      builder: (context, provider, child) {
+                        if (provider.isLoading) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 0.5,
+                              color: Colors.blue,
+                            ),
+                          );
+                        }
+                        if (provider.courseData.isEmpty) {
+                          log(".....-----${provider.courseData}");
+                          return SizedBox.shrink();
+                        }
+                        final courseDetails = provider.courseData[0];
+                        final double percentValue =
+                            (courseDetails.completionPercentage) / 100;
+                        return Container(
+                          padding: EdgeInsets.all(5),
+                          //height: 130,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5),
+                            //gradient:LinearGradient(colors:[Colors.lightBlueAccent,Colors.white],begin:Alignment.topLeft,end:Alignment.bottomRight)
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 5),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        courseDetails.bundleEventName,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          //fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  LinearPercentIndicator(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    animation: true,
+                                    lineHeight: 15,
+                                    percent: percentValue,
+                                    //center:Text("${courseDetails.completionPercentage.toString()}%"),
+                                    linearStrokeCap: LinearStrokeCap.roundAll,
+                                    progressColor: Colors.white,
+                                    backgroundColor: Colors.white60,
+                                    barRadius: Radius.circular(20),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      SizedBox(width: 5),
+                                      Text(
+                                        courseDetails.matchedLocation,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          //fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Consumer<HomeScreenMessageService>(
+                    builder: (context, provider, child) {
+                      if (provider.isLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 0.5,
+                            color: Colors.blue,
+                          ),
+                        );
+                      }
+                      return provider.message?.isNotEmpty == true
+                          ? Padding(
+                              padding: EdgeInsets.only(right: 20, left: 20),
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      provider.message!,
+                                      maxLines: 3,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink();
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: _userActivityBuilder(),
+                  ),
+                  const SizedBox(height: 16.0),
+                  _futureCarouselBuilder(),
+                  const SizedBox(height: 16.0),
+                ],
+              ),
+
+            // _futureCategoryBuilder(),
+            // const SizedBox(
+            //   height: 16.0,
+            // ),
+            _futureBanner(),
+            const SizedBox(height: 16.0),
+            _futureBanner1(),
+            if (loggedIn)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 0),
+                child: MaterialButton(
+                  padding: const EdgeInsets.all(0),
+                  onPressed: () {
+                    Route route = MaterialPageRoute(
+                      builder: (context) => AddReferral(),
+                    );
+                    Navigator.push(context, route);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    //height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 88,
+                          height: 88,
+                          decoration: BoxDecoration(
+                            color: MainColor.skillogicRed,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.person_add, color: Colors.white),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text(
+                                  "Refer your friends and family. Win exciting prices and cash backs.",
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  "Click here to know more",
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              // _futureCarouselBuilder(),
-              // _futureCourseBuilder()
-              SizedBox(height:30)
-            ],
-          )
+              ),
+            // _futureCarouselBuilder(),
+            // _futureCourseBuilder()
+            SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }
 }
-
-
-
 
 //
 // import 'dart:convert';

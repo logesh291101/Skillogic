@@ -40,12 +40,17 @@ class _AccountScreenState extends State<AccountScreen> {
   final UserAuth _userAuth = UserAuth();
 
   Future<void> _refresh() async {
-    int refreshed = await _userAuth.tokenRefresh(context);
-    if (refreshed == 1) refreshed = await _userAuth.tokenLogin(context);
+    if (!mounted) return;
+    int? refreshed = await _userAuth.tokenRefresh(context);
+    if (!mounted) return;
+      if (refreshed == 1) refreshed = await _userAuth.tokenLogin(context);
   }
 
-  _getUserDetail(context) async {
+  Future<void> _getUserDetail() async {
+    //await _refresh();
+    if (!mounted) return;
     await _refresh();
+    if (!mounted) return;
     var user = await userDetails.getDetail();
     user_name = user.userName;
     user_email = user.userEmail;
@@ -56,9 +61,14 @@ class _AccountScreenState extends State<AccountScreen> {
     playstore_url = prefs.getString("playstore_url") ?? "";
     candidate_number = prefs.getString("candidate_number") ?? "";
     userModel = await userDetails.getDetail();
-    setState(() {
-      userLoaded = true;
-    });
+    // setState(() {
+    //   userLoaded = true;
+    // });
+    if (mounted) {
+      setState(() {
+        userLoaded = true;
+      });
+    }
   }
 
   List<int> courseArr = [];
@@ -69,6 +79,7 @@ class _AccountScreenState extends State<AccountScreen> {
     if (kDebugMode) {
       print('Videos List: $listMap');
     }
+    if (!mounted) return null;
     setState(() {
       for (var map in listMap) {
         File checkPath = File("${map['path']}/${map['title']}");
@@ -100,10 +111,15 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
-    _getUserDetail(context);
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _getUserDetail();
+      }
+    });
     getCourse();
     getVideos();
-    super.initState();
+
   }
 
   _restart(BuildContext context) async {
@@ -116,10 +132,13 @@ class _AccountScreenState extends State<AccountScreen> {
       ? await launch(_url)
       : throw 'Could not launch $_url';
 
-  _gotoUrl(String page) async {
+  void _gotoUrl(String page) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String url = prefs.getString(page)!;
-    launch(url);
+    String url = prefs.getString(page) ?? "";
+    final uri = Uri.tryParse(url);
+      if(uri != null){
+        launchUrl(uri);
+      }
   }
 
   Future<void> _logout(BuildContext context) async {
@@ -162,7 +181,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 borderRadius: BorderRadius.circular(30.0),
                                 // color: Colors.green,
                                 image: DecorationImage(
-                                    image: NetworkImage(user_image),
+                                    image: NetworkImage(user_image.isNotEmpty ? user_image : ""),
                                     fit: BoxFit.cover)),
                           ),
                           Column(

@@ -21,6 +21,11 @@ class RemoteConfigModel {
   final String add_firebase_token;
   final String certificate_text;
   final String certificate_subject;
+  final String android_forceUpdate;
+  final String android_updateReason;
+  final String android_version;
+  final String ios_forceUpdate;
+  final String ios_updateReason;
 
   RemoteConfigModel(
       {required this.appstore_url,
@@ -41,12 +46,21 @@ class RemoteConfigModel {
         required this.add_firebase_token,
         required this.freshdesk_key,
         required this.certificate_text,
-        required this.certificate_subject});
+        required this.certificate_subject,
+        required this.android_forceUpdate,
+        required this.android_updateReason,
+        required this.android_version,
+        required this.ios_forceUpdate,
+        required this.ios_updateReason,
+
+
+      });
+
 
 
   @override
   String toString() {
-    return 'RemoteConfigModel{appstore_url: $appstore_url, auth_url: $auth_url, auth_url_tm: $auth_url_tm, base_url: $base_url, cash_credit: $cash_credit, course_credit: $course_credit, force_update: $force_update, ios_version: $ios_version, new_version: $new_version, playstore_url: $playstore_url, privacy_policy: $privacy_policy, tel: $tel, tos: $tos, update_reason: $update_reason, candidate_portal_url: $candidate_portal_url, freshdesk_key: $freshdesk_key, add_firebase_token: $add_firebase_token, certificate_text: $certificate_text, certificate_subject: $certificate_subject}';
+    return 'RemoteConfigModel{appstore_url: $appstore_url, auth_url: $auth_url, auth_url_tm: $auth_url_tm, base_url: $base_url, cash_credit: $cash_credit, course_credit: $course_credit, force_update: $force_update, ios_version: $ios_version, new_version: $new_version, playstore_url: $playstore_url, privacy_policy: $privacy_policy, tel: $tel, tos: $tos, update_reason: $update_reason, candidate_portal_url: $candidate_portal_url, freshdesk_key: $freshdesk_key, add_firebase_token: $add_firebase_token, certificate_text: $certificate_text, certificate_subject: $certificate_subject,android_forceUpdate: $android_forceUpdate,android_updateReason: $android_updateReason,android_version: $android_version,ios_forceUpdate: $ios_forceUpdate,ios_updateReason: $ios_updateReason}';
   }
 
   saveConfigToPrefs(BuildContext context) async {
@@ -71,5 +85,11 @@ class RemoteConfigModel {
     prefs.setString("add_firebase_token", add_firebase_token);
     prefs.setString("certificate_text", certificate_text);
     prefs.setString("certificate_subject", certificate_subject);
+
+    prefs.setString("android_forceUpdate", android_forceUpdate);
+    prefs.setString("android_updateReason", android_updateReason);
+    prefs.setString("android_version", android_version);
+    prefs.setString("ios_forceUpdate", ios_forceUpdate);
+    prefs.setString("ios_updateReason", ios_updateReason);
   }
 }

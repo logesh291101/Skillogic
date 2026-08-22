@@ -245,8 +245,8 @@ class _HandbookScreenState extends State<HandbookScreen> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      //handbook.handbookName.toString(),
-                                      "",
+                                      handbook.handbookName.toString(),
+
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
@@ -261,8 +261,7 @@ class _HandbookScreenState extends State<HandbookScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => PdfScreen(
-                                   // link: handbook.handbookLink.toString(),
-                                    link:"",
+                                   link: handbook.handbookLink.toString(),
                                   ),
                                 ),
                               );

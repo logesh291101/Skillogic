@@ -54,15 +54,10 @@ class HandbookProvider extends ChangeNotifier {
       //final url = "http://13.232.222.140/aks-stage//dm-api/Lma/getLearnersHandbook?bundle_event_id=3075";
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['data'] is List) {
-          _handbooks = (data['data'] as List)
-              .map((e) => Datum.fromJson(e))
-              .toList();
-        } else {
-          _handbooks = []; // No data case
-          log("No handbook data found");
-        }
+        log("RESPONSE: ${response.body}");
+       final model = handbookModelFromJson(response.body);
+       _handbooks = model.data;
+       log(_handbooks.toString());
       } else {
         log("Server error: ${response.statusCode}");
         _handbooks = [];

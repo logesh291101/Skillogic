@@ -100,14 +100,15 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
-val flutterVersionCode = project.findProperty("flutter.versionCode")?.toString()?.toInt() ?: 12
-val flutterVersionName = project.findProperty("flutter.versionName")?.toString() ?: "12.0.0"
+val flutterVersionCode = project.findProperty("flutter.versionCode")?.toString()?.toInt() ?: 15
+val flutterVersionName = project.findProperty("flutter.versionName")?.toString() ?: "15.0.0"
 
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
-}
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")}
 
 android {
     namespace = "com.slogicrefer.mobile"
@@ -163,4 +164,9 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation("androidx.multidex:multidex:2.0.1")
+}
+configurations.all {
+    resolutionStrategy {
+        force("com.google.android.recaptcha:recaptcha:18.4.0")
+    }
 }
